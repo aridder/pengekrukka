@@ -11,11 +11,14 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/test/**/*.spec.ts"
+                "-p",
+                "${fileDirname}/../tsconfig.json",
+                "${fileDirname}/**/*.spec.ts",
             ],
+            "cwd": "${fileDirname}",
             "internalConsoleOptions": "openOnSessionStart",
             "name": "Mocha Tests",
-            "program": "${workspaceFolder}/node_modules/ts-mocha/bin/ts-mocha",
+            "program": "${workspaceFolder}/packages/contracts/node_modules/ts-mocha/bin/ts-mocha",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
