@@ -2,7 +2,7 @@
 
 The tests with this configuration makes "a copy" of the external blockchain from the RPC_URL provided. This lets you play with the current state in your tests.
 
-Create a `.env.local` file from the `.env.example`. You need these to run the tests 
+Create a `.env.local` file from the `.env.example`. This is done at the root level of the project. You need these to run the tests 
 - `RPC_URL`: _unquoted_ URL to the RPC with basic authentication
 - `NOK_ADDRESS`: address to the NOK(CBToken) contract 
 - `ME_ADDRESS`: Your address or anyone else. (user to fetch balanceOf of the address)
