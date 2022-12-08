@@ -1,10 +1,10 @@
-import * as dotenv from "dotenv";
-import { HardhatUserConfig } from "hardhat/config";
-import "hardhat-deploy";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-ethers";
+import * as dotenv from "dotenv";
+import "hardhat-deploy";
+import { HardhatUserConfig } from "hardhat/config";
 
-dotenv.config({ path: "./../../.env.local" });
+dotenv.config({ path: "./../../../.env.local" });
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
