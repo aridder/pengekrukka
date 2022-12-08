@@ -9,11 +9,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "@symfoni/vc-tools": "^0.0.24",
     "@tanstack/react-query": "^4.16.0",
     "@trpc/client": "^10.0.0",
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
+    "ethers": "^5.7.2",
     "next": "13.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
