@@ -1,6 +1,6 @@
 cache 
-artifacts 
-typechain-types 
+**/artifacts 
+**/typechain-types 
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,yarn,solidity,macos,visualstudiocode
