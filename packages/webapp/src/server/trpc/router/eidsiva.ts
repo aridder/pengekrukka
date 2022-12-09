@@ -1,22 +1,30 @@
+import { ethers } from "ethers";
 import { VCIssuer } from "@symfoni/vc-tools";
 
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
 const generateVC = async (publicKey: string) => {
+  const wallet = await ethers.Wallet.fromMnemonic(process.env.MNEMONIC!);
+  const withoutPrefix = wallet.privateKey.replace("0x", "");
   const issuer = await VCIssuer.init({
-    dbName: "test",
-    walletSecret: "test test test test test test test test test test test junk",
+    dbName: "db-name",
+    storeEncryptKey: withoutPrefix,
+    walletSecret: wallet.mnemonic.phrase,
     chains: [
       {
         default: true,
         chainId: 5,
-        provider: "TODO_SOMEHOW_GET_A_PROVIDER",
+        provider: {
+          url: process.env.RPC_URL!,
+        },
       },
     ],
   });
-  issuer.createVC({
+  //TODO make sure format if did ethr is correct
+  return await issuer.createVC({
     credentialSubject: {
+      id: `did:ethr:${publicKey}`,
       watt: {
         value: 130,
         unit: "kWh",
