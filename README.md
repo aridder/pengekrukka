@@ -2,27 +2,10 @@
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
-## What's next? How do I make an app with this?
+## Working With Packages 
+Every package is located under `./packages`. The monorepo is configured with [Yarn Workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/). The setup intends you to interact with the packages from root level. To run a command in a package, simply run `yarn <package> <command>`, e.g. `yarn contracts test`.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
-
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Adding a New Package 
+1. add a folder under `./packages`
+2. add `./packages/<YOUR-PACKAGE>/package.json`-file with `{"name": "@pengekrukka/<YOUR-PACKAGE>", "version": "0.0.1", "private": true}`
+3. add `"<YOUR-PACKAGE>": "yarn workspace @pengekrukka/<YOUR-PACKAGE>"` under `"scripts"` in (root) `./package.json`. 
