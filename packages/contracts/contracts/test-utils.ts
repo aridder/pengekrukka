@@ -1,5 +1,5 @@
 import { Contract } from "ethers";
-import { deployments, ethers, network } from "hardhat";
+import * as hardhat from "hardhat";
 
 const getEtherConfig = () => {
   const { NOK_ADDRESS, ME_ADDRESS, WHALE_ADDRESS } = process.env;
@@ -14,7 +14,7 @@ const getEtherConfig = () => {
 const impersonate = (...accounts: string[]) =>
   Promise.all(
     accounts.map((account) =>
-      network.provider.request({
+      hardhat.network.provider.request({
         method: "hardhat_impersonateAccount",
         params: [account],
       })
@@ -24,7 +24,7 @@ const impersonate = (...accounts: string[]) =>
 const _transfer =
   (contract: Contract) =>
   async (options: { amount: number; sender: string; receiver: string }) => {
-    const signer = ethers.provider.getSigner(options.sender);
+    const signer = hardhat.ethers.provider.getSigner(options.sender);
     const tx = await contract
       .connect(signer)
       .transfer(options.receiver, options.amount);
@@ -46,7 +46,7 @@ export const setup = async (contractPath: ContractPath) => {
   const config = getEtherConfig();
 
   // setting up local blockchain stuff
-  const contract = await ethers.getContractAt(
+  const contract = await hardhat.ethers.getContractAt(
     contractPath,
     config.NOK_ADDRESS!
   );
@@ -66,7 +66,7 @@ type DeployedContract = "TokenLock"; // | "More" | "In" | "The" | "Future"
 export const getDeployedContract = async (
   name: DeployedContract
 ): Promise<Contract> => {
-  await deployments.fixture(name);
-  const deployment = await deployments.get(name);
-  return ethers.getContractAt(deployment.abi, deployment.address);
+  await hardhat.deployments.fixture(name);
+  const deployment = await hardhat.deployments.get(name);
+  return hardhat.ethers.getContractAt(deployment.abi, deployment.address);
 };
