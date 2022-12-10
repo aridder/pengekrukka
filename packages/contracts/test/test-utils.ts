@@ -54,15 +54,15 @@ export const setup = async (contractPath: ContractPath) => {
   await impersonate(config.ME_ADDRESS, config.WHALE_ADDRESS);
 
   // generating helper methods
-  const transfer = _transfer(contract);
-  const getBalance = _getBalance(contract);
+  const transfer = _transfer(contract!);
+  const getBalance = _getBalance(contract!);
 
   return { config, contract, transfer, getBalance };
 };
 
 export const setupNOKToken = () => setup("contracts/CBContract.sol:CBToken");
 
-type DeployedContract = "TokenLock"; // | "More" | "In" | "The" | "Future"
+type DeployedContract = "TokenLock" | "EthereumDIDRegistry"; // | "More" | "In" | "The" | "Future"
 export const getDeployedContract = async (
   name: DeployedContract
 ): Promise<Contract> => {
