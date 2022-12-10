@@ -7,7 +7,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deploy } = deployments;
   const { deployer, tokenOwner } = await getNamedAccounts();
 
-  let nokAddress: String | undefined = process.env.NOK_ADDRESS;
+  const nokAddress: string | undefined = process.env.NOK_ADDRESS;
 
   if (hre.network.name === "hardhat") {
   } else {
