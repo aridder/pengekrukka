@@ -42,12 +42,5 @@
     "ts-node": "^10.9.1",
     "typechain": "^8.1.1",
     "typescript": "^4.9.3"
-  },
-  "scripts": {
-    "test": "hardhat test",
-    "clean": "hardhat clean",
-    "compile": "hardhat compile",
-    "console": "hardhat console",
-    "typechain": "typechain --target ethers-v5 --out-dir build/types 'build/contracts/*.json'"
-  },
+  }
 }
