@@ -4,5 +4,11 @@
     "module": "commonjs"
   },
   "extends": "../../tsconfig.json",
-  "include": ["hardhat.config.ts", "./deploy", "./test"]
+  "include": [
+    "hardhat.config.ts",
+    "./deploy",
+    "./test",
+    "contracts/CBToken.test.ts",
+    "contracts/TokenLock.test.ts"
+  ]
 }

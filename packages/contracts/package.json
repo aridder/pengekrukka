@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "test": "hardhat test",
+    "test": "hardhat test contracts/*.ts",
     "clean": "hardhat clean",
     "compile": "hardhat compile",
     "console": "hardhat console",
