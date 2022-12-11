@@ -17,6 +17,6 @@ yarn test
 ```
 
 ### Impersonate accounts
-This is a useful tool if you want to impersonate another address on the network. We do this `CBToken.spec.ts` and `TokenLock.spec.ts` Let's say you want to transfer tokens from someone or call functions on contracts that are only callable by certain addresses
+This is a useful tool if you want to impersonate another address on the network. We do this `CBToken.test.ts` and `TokenLock.test.ts` Let's say you want to transfer tokens from someone or call functions on contracts that are only callable by certain addresses
 
 For deploying contracts, building typescript interfaces to the network please read more in the [Hardhat documentation](https://hardhat.org/docs)
