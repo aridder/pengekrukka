@@ -1,25 +1,20 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-const name = "TokenLock";
+const name = "EthereumDIDRegistry";
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts } = hre;
   const { deploy } = deployments;
-  const { deployer, tokenOwner } = await getNamedAccounts();
-
-  let nokAddress: String | undefined = process.env.NOK_ADDRESS;
+  const { deployer } = await getNamedAccounts();
 
   if (hre.network.name === "hardhat") {
   } else {
     throw new Error("This network is not listed in hardhat.config.ts");
   }
 
-  const now = Math.round(Date.now() / 1000);
-  const oneWeek = 7 * 24 * 60 * 60;
-
-  const res = await deploy("TokenLock", {
+  const res = await deploy(name, {
     from: deployer,
-    args: [nokAddress, now + oneWeek, 0, "MyLock", "ML"],
+    args: [],
   });
 };
 
