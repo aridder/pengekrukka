@@ -62,7 +62,7 @@ export const setup = async (contractPath: ContractPath) => {
 
 export const setupNOKToken = () => setup("contracts/CBContract.sol:CBToken");
 
-type DeployedContract = "TokenLock" | "EthereumDIDRegistry"; // | "More" | "In" | "The" | "Future"
+type DeployedContract = "TokenLock" | "EthereumDIDRegistry";
 export const getDeployedContract = async (
   name: DeployedContract
 ): Promise<Contract> => {
