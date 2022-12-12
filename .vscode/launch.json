@@ -18,7 +18,7 @@
             "cwd": "${fileDirname}",
             "internalConsoleOptions": "openOnSessionStart",
             "name": "Mocha Tests",
-            "program": "${workspaceFolder}/packages/contracts/node_modules/ts-mocha/bin/ts-mocha",
+            "program": "${workspaceFolder}/node_modules/ts-mocha/bin/ts-mocha",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
