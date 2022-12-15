@@ -17,6 +17,11 @@ jobs:
         run: yarn
       - name: Run tests
         run: yarn contracts test
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
+          NOK_ADDRESS: ${{ secrets.NOK_ADDRESS }}
+          ME_ADDRESS: ${{ secrets.ME_ADDRESS }}
+          WHALE_ADDRESS: ${{ secrets.WHALE_ADDRESS }}
 
   test-webapp:
     runs-on: ubuntu-latest
