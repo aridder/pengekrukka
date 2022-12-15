@@ -6,17 +6,6 @@ import { publicProcedure, router } from "../trpc";
 //TODO: the type accessible with ._type with frontend
 const validation = z.object({ publicKey: z.string() });
 
-const exists = <T>(elements: (T | undefined)[]): T[] | Error => {
-  if (elements.every((element) => !!element)) {
-    return {
-      name: "Value does not exist",
-      message: `Expected all elements to be defined.`,
-    };
-  } else {
-    return elements as NonNullable<T>[];
-  }
-};
-
 const getConfig = (): VCConfig => {
   const fromEnv = [process.env.MNEMONIC, process.env.RPC_URL];
 
@@ -38,6 +27,7 @@ export const eidsivaRouter = router({
   getUsageVC: publicProcedure.input(validation).query(async ({ input }) => {
     const config = getConfig();
 
+    //FIXME: some user id validation and lookup of actual kwh
     return {
       vc: await generateVC(
         {
