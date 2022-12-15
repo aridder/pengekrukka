@@ -12,7 +12,7 @@
     "test:watch": "yarn test --watch-files '**/*.ts"
   },
   "dependencies": {
-    "@pengekrukka/vc-shared": "workspace",
+    "@pengekrukka/vc-shared": "0.0.1",
     "@tanstack/react-query": "^4.16.0",
     "@trpc/client": "^10.0.0",
     "@trpc/next": "^10.0.0",
@@ -24,7 +24,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "1.9.1",
-    "zod": "^3.18.0",
+    "zod": "^3.18.0"
   },
   "devDependencies": {
     "@types/expect": "^24.3.0",

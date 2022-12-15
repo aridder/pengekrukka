@@ -1,8 +1,20 @@
 import { VCIssuer } from "@symfoni/vc-tools";
 import { ethers } from "ethers";
 
-export const generateVC = async (publicKey: string) => {
-  const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC!);
+type BaseSubject = {
+  id: `did:ethr:${string}`;
+};
+
+export type VCConfig = {
+  mnemonic: string;
+  rpcUrl: string;
+};
+
+export const generateVC = async <Subject extends BaseSubject>(
+  subject: Subject,
+  options: VCConfig
+) => {
+  const wallet = ethers.Wallet.fromMnemonic(options.mnemonic);
   const withoutPrefix = wallet.privateKey.replace("0x", "");
   const issuer = await VCIssuer.init({
     dbName: "db-name",
@@ -13,19 +25,13 @@ export const generateVC = async (publicKey: string) => {
         default: true,
         chainId: 5,
         provider: {
-          url: process.env.RPC_URL!,
+          url: options.rpcUrl,
         },
       },
     ],
   });
-  //TODO make sure format if did ethr is correct
+
   return await issuer.createVC({
-    credentialSubject: {
-      id: `did:ethr:${publicKey}`,
-      watt: {
-        value: 130,
-        unit: "kWh",
-      },
-    },
+    credentialSubject: subject,
   });
 };
