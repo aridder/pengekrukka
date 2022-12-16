@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getFakeProvider } from "../utils/test";
+import { getFakeProvider } from "../../utils/test";
 import actions from "./actions";
 
 describe("the authentication actions", () => {
