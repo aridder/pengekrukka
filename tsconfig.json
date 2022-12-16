@@ -4,5 +4,6 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
+    "module": "esnext"
   }
 }
