@@ -1,0 +1,39 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  test-contracts:
+    runs-on: ubuntu-latest
+    container: node:16
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use node:16
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: Install dependencies
+        run: yarn
+      - name: Run tests
+        run: yarn contracts test
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
+          NOK_ADDRESS: ${{ secrets.NOK_ADDRESS }}
+          ME_ADDRESS: ${{ secrets.ME_ADDRESS }}
+          WHALE_ADDRESS: ${{ secrets.WHALE_ADDRESS }}
+
+  test-webapp:
+    runs-on: ubuntu-latest
+    container: node:16
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use node:16
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: Install dependencies
+        run: yarn
+      - name: Run tests
+        run: yarn webapp test
