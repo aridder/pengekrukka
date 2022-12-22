@@ -1,16 +1,14 @@
-import React from "react";
+import Header from "../header";
 
-//FIXME: move to separate file when this grows
-const Header = () => <div>TODO HEADER</div>;
-//FIXME: move to separate file when this grows
-const Footer = () => <div>TODO FOOTER</div>;
+interface Props {
+  children: React.ReactNode;
+}
 
-export const Layout = (props: React.PropsWithChildren) => {
+export default function Layout({ children }: Props) {
   return (
     <>
       <Header />
-      {props.children}
-      <Footer />
+      <main>{children}</main>
     </>
   );
-};
+}
