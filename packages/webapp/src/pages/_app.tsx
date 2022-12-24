@@ -7,6 +7,7 @@ import {
   GetSiweMessageOptions,
   RainbowKitSiweNextAuthProvider,
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
+import "@rainbow-me/rainbowkit/styles.css";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { configureChains, createClient, goerli, WagmiConfig } from "wagmi";
