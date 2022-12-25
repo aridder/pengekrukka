@@ -34,7 +34,6 @@ export default async function auth(req: any, res: any) {
             domain: nextAuthUrl.host,
             nonce: await getCsrfToken({ req }),
           });
-          console.log("result", result);
 
           if (result.success) {
             return {
