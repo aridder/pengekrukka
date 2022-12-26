@@ -4,19 +4,15 @@ import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 import { trpc } from "../utils/trpc";
 
-const DoctorPage: NextPage = () => {
+const WelfarePage: NextPage = () => {
   const { address, isConnected } = useAccount();
   const utils = trpc.useContext();
 
   const [vc, setVc] = useState<null | any>(null);
 
   const getVc = useCallback(async () => {
-    // const publicKey = await signer?.getAddress();
-    // console.log("publicKey", publicKey);
-    // console.log("signer", signer);
-
     if (address) {
-      const vc = await utils.client.doctor.glassesProof.query({
+      const vc = await utils.client.welfare.getWelfareVc.query({
         publicKey: address!,
       });
       setVc(vc);
@@ -26,11 +22,11 @@ const DoctorPage: NextPage = () => {
   return (
     <Layout>
       <div>
-        <button onClick={getVc}>Get VC</button>
+        <button onClick={getVc}>Get Welfare VC</button>
         {vc && JSON.stringify(vc)}
       </div>
     </Layout>
   );
 };
 
-export default DoctorPage;
+export default WelfarePage;

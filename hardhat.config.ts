@@ -6,7 +6,6 @@ import { HardhatUserConfig } from "hardhat/config";
 
 dotenv.config({ path: "../../.env.local" });
 
-console.log("HER", process.env.RPC_URL);
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {

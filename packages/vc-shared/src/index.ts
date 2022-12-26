@@ -12,12 +12,14 @@ export type VCConfig = {
 
 export const generateVC = async <Subject extends BaseSubject>(
   subject: Subject,
+  type: string[],
   options: VCConfig
 ) => {
   const wallet = ethers.Wallet.fromMnemonic(options.mnemonic);
   const withoutPrefix = wallet.privateKey.replace("0x", "");
+  const did = `did:ethr:${wallet.address}`;
   const issuer = await VCIssuer.init({
-    dbName: "db-name",
+    dbName: `db-${did}`,
     storeEncryptKey: withoutPrefix,
     walletSecret: wallet.mnemonic.phrase,
     chains: [
@@ -32,6 +34,7 @@ export const generateVC = async <Subject extends BaseSubject>(
   });
 
   return await issuer.createVC({
+    type: type,
     credentialSubject: subject,
   });
 };
