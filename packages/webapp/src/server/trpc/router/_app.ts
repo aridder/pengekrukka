@@ -1,10 +1,8 @@
-import { welfareRouter } from "./welfare";
 import { router } from "../trpc";
 import { doctorRouter } from "./doctor";
-import { exampleRouter } from "./example";
+import { welfareRouter } from "./welfare";
 
 export const appRouter = router({
-  example: exampleRouter,
   doctor: doctorRouter,
   welfare: welfareRouter,
 });
