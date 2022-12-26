@@ -1,8 +1,8 @@
-import { protectedProcedure } from "./../trpc";
 import { generateVC, VCConfig } from "@pengekrukka/vc-shared";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
+import { router } from "../trpc";
+import { protectedProcedure } from "./../trpc";
 
 //TODO: the type accessible with ._type with frontend
 const validation = z.object({ publicKey: z.string() });
