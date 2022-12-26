@@ -1,9 +1,6 @@
-import { sign } from "crypto";
-import { ethers } from "ethers";
 import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
-import { Login } from "../components/authentication/Login";
 import Layout from "../components/layout/Layout";
 import { trpc } from "../utils/trpc";
 
@@ -19,7 +16,6 @@ const DoctorPage: NextPage = () => {
     // console.log("signer", signer);
 
     if (address) {
-      console.log("address", address);
       const vc = await utils.client.doctor.glassesProof.query({
         publicKey: address!,
       });

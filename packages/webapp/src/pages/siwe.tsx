@@ -1,8 +1,8 @@
 import { getCsrfToken, signIn, useSession } from "next-auth/react";
+import { useEffect } from "react";
 import { SiweMessage } from "siwe";
 import { useAccount, useConnect, useNetwork, useSignMessage } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { useEffect, useState } from "react";
 
 function Siwe() {
   const { signMessageAsync } = useSignMessage();
@@ -40,7 +40,6 @@ function Siwe() {
   };
 
   useEffect(() => {
-    console.log(isConnected);
     if (isConnected && !session) {
       handleLogin();
     }

@@ -9,7 +9,6 @@ export const doctorRouter = router({
     .query(async ({ input, ctx }) => {
       const config = getConfig("DOCTOR_MNEMONIC");
       const base_url = process.env.BASE_URL;
-      console.log("ctx", ctx);
 
       return {
         vc: await generateVC(

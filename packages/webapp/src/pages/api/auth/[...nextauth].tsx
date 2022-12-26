@@ -22,7 +22,6 @@ export default async function auth(req: any, res: any) {
         },
       },
       async authorize(credentials) {
-        console.log("credentials", credentials);
         try {
           const siwe = new SiweMessage(
             JSON.parse(credentials?.message || "{}")

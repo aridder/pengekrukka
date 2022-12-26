@@ -30,9 +30,6 @@ export const createContext = async (
     | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>
 ) => {
   const session = await getSession(opts);
-  console.log("session", session);
-
-  console.log("createContext for", session?.user?.name ?? "unknown user");
 
   return {
     session,
