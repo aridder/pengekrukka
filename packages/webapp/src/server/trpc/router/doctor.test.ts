@@ -1,23 +1,16 @@
 import { inferProcedureInput } from "@trpc/server";
-import dotenv from "dotenv";
+import { expect } from "chai";
 import { describe, it, TestContext, TestFunction } from "vitest";
+import { MnemonicConfig } from "../../../utils/config";
 import { AppRouter, appRouter } from "./_app";
 
-const keys = [
-  "WELFARE_MNEMONIC",
-  "DOCTOR_MNEMONIC",
-  "OPTICIAN_MNEMONIC",
-  "FREDRIK_MNEMONIC",
-  "RPC_URL",
-  "BASE_URL",
-] as const;
-
-type TestConfig = { [key in typeof keys[number]]: string };
+const envKeys = [...MnemonicConfig, "RPC_URL", "BASE_URL"] as const;
+type TestEnvironment = { [key in typeof envKeys[number]]: string };
 
 const withConfig =
-  (overrides: Partial<TestConfig>, action: TestFunction) =>
+  (overrides: Partial<TestEnvironment>, action: TestFunction) =>
   async (context: TestContext) => {
-    const config: TestConfig = {
+    const config: TestEnvironment = {
       WELFARE_MNEMONIC:
         "method salon soft whip predict develop shift misery wild exhibit anger curve",
       DOCTOR_MNEMONIC:
@@ -33,7 +26,7 @@ const withConfig =
     };
 
     const original = process.env;
-    for (const key of keys) {
+    for (const key of envKeys) {
       process.env[key] = config[key];
     }
 
@@ -41,29 +34,39 @@ const withConfig =
     process.env = original;
   };
 
+const getAPICaller = () =>
+  appRouter.createCaller({
+    session: {
+      expires: "never",
+      user: {
+        name: "test",
+        email: "",
+      },
+    },
+  });
+
 describe("the doctor router", async () => {
   it(
     "can be called without throwing",
     withConfig({}, async () => {
-      await dotenv.config();
-
-      const caller = appRouter.createCaller({
-        session: {
-          expires: "never",
-          user: {
-            name: "test",
-            email: "",
-          },
-        },
-      });
+      const caller = getAPICaller();
 
       const input: inferProcedureInput<AppRouter["doctor"]["glassesProof"]> = {
         publicKey: "0x123",
       };
 
-      const post = await caller.doctor.glassesProof(input);
+      await caller.doctor.glassesProof(input);
+    })
+  );
 
-      console.log("post", post);
+  it(
+    "does return a VC",
+    withConfig({}, async () => {
+      const caller = getAPICaller();
+
+      const response = await caller.doctor.glassesProof({ publicKey: "0x123" });
+      expect(response.vc.proof).not.to.be.null;
+      expect(response.vc.proof).not.to.be.undefined;
     })
   );
 });
