@@ -1,15 +1,11 @@
 import { generateVC } from "@pengekrukka/vc-shared";
-import { z } from "zod";
 import { getConfig } from "../../../utils/config";
-import { router } from "../trpc";
+import { router, validations } from "../trpc";
 import { protectedProcedure } from "./../trpc";
-
-//TODO: the type accessible with ._type with frontend
-const validation = z.object({ publicKey: z.string() });
 
 export const doctorRouter = router({
   glassesProof: protectedProcedure
-    .input(validation)
+    .input(validations.publicKey)
     .query(async ({ input, ctx }) => {
       const config = getConfig("DOCTOR_MNEMONIC");
       const base_url = process.env.BASE_URL;

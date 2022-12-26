@@ -1,5 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { z } from "zod";
 
 import { type Context } from "./context";
 
@@ -24,6 +25,9 @@ const isAuthed = t.middleware(({ next, ctx }) => {
     },
   });
 });
+
+//TODO: the type accessible with ._type with frontend
+export const validations = { publicKey: z.object({ publicKey: z.string() }) };
 
 export const router = t.router;
 
