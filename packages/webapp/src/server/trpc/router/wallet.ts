@@ -32,18 +32,11 @@ export const walletRouter = router({
   list: protectedProcedure.input(validation).query(async ({ input, ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
 
-    console.log("userdid", userdid);
-    console.log("credentialsTable", credentialsTable);
     const userCredentials = credentialsTable.filter((vc) => vc.credentialSubject.id === userdid);
-    console.log("userCredentials", userCredentials);
     return userCredentials;
   }),
   save: protectedProcedure.input(saveValidation).mutation(async ({ input, ctx }) => {
-    console.log("user", ctx.session.user);
     const userdid = `did:ethr:${ctx.session.address}`;
-    console.log("userdid", userdid);
-    console.log("input.vc.credentialSubject.id", input.vc.credentialSubject.id);
-
     if (input.vc.credentialSubject.id !== userdid) {
       throw new Error("Credential subject does not match user");
     }

@@ -1,5 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { z } from "zod";
 
 import { type Context } from "./context";
 
@@ -11,15 +12,7 @@ const t = initTRPC.context<Context>().create({
 });
 
 const isAuthed = t.middleware(({ next, ctx }) => {
-  console.log("ctx", ctx);
-  if (!ctx.session?.user?.name) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-    });
-  }
-  if ("address" in ctx.session) {
-    console.log("address", ctx.session.address);
-  } else {
+  if (!ctx.session?.user?.name || !("address" in ctx.session)) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
     });
@@ -31,6 +24,9 @@ const isAuthed = t.middleware(({ next, ctx }) => {
     },
   });
 });
+
+//TODO: the type accessible with ._type with frontend
+export const validations = { publicKey: z.object({ publicKey: z.string() }) };
 
 export const router = t.router;
 

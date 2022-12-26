@@ -22,11 +22,8 @@ export default async function auth(req: any, res: any) {
         },
       },
       async authorize(credentials) {
-        console.log("credentials", credentials);
         try {
-          const siwe = new SiweMessage(
-            JSON.parse(credentials?.message || "{}")
-          );
+          const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
           const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
 
           const result = await siwe.verify({
@@ -48,8 +45,7 @@ export default async function auth(req: any, res: any) {
     }),
   ];
 
-  const isDefaultSigninPage =
-    req.method === "GET" && req.query.nextauth.includes("signin");
+  const isDefaultSigninPage = req.method === "GET" && req.query.nextauth.includes("signin");
 
   // Hide Sign-In with Ethereum from default sign page
   if (isDefaultSigninPage) {
