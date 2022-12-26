@@ -1,4 +1,3 @@
-import { inferAsyncReturnType } from "@trpc/server";
 import { VCIssuer } from "@symfoni/vc-tools";
 import { ethers } from "ethers";
 

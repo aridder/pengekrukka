@@ -3,6 +3,7 @@ cache
 **/typechain-types 
 **/deployments/**
 
+**/db-did:*
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,yarn,solidity,macos,visualstudiocode

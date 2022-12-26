@@ -3,7 +3,7 @@
     "description": "Containing common interfaces for VC issuers in our system",
     "version": "0.0.1",
     "private": true,
-    "main": "./src/index.ts",
+    "main": "./out/index.js",
     "scripts": {
         "build": "tsc --declaration"
     },
