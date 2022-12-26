@@ -19,29 +19,26 @@ const getConfig = (): VCConfig => {
   } else {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Configuration was not in expected state: Something was undefined",
+      message: "Configuration was not in expected state: Something was undefined",
     });
   }
 };
 
 export const welfareRouter = router({
-  getWelfareVc: protectedProcedure
-    .input(validation)
-    .query(async ({ input }) => {
-      const config = getConfig();
+  getWelfareVc: protectedProcedure.input(validation).query(async ({ input }) => {
+    const config = getConfig();
 
-      //FIXME: some user id validation and lookup of actual welfare amount
-      // TODO add revocation and type of credential from a config file or something
-      return {
-        vc: await generateVC(
-          {
-            id: `did:ethr:${input.publicKey}`,
-            amount: 100,
-          },
-          ["WelfareCredential", "VerifiableCredential"],
-          config
-        ),
-      };
-    }),
+    //FIXME: some user id validation and lookup of actual welfare amount
+    // TODO add revocation and type of credential from a config file or something
+    return {
+      vc: await generateVC(
+        {
+          id: `did:ethr:${input.publicKey}`,
+          amount: 100,
+        },
+        ["WelfareCredential", "VerifiableCredential"],
+        config
+      ),
+    };
+  }),
 });

@@ -1,3 +1,4 @@
+import { inferAsyncReturnType } from "@trpc/server";
 import { VCIssuer } from "@symfoni/vc-tools";
 import { ethers } from "ethers";
 
@@ -9,6 +10,8 @@ export type VCConfig = {
   mnemonic: string;
   rpcUrl: string;
 };
+
+export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
 
 export const generateVC = async <Subject extends BaseSubject>(
   subject: Subject,
