@@ -3,8 +3,6 @@ import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 import { trpc } from "../utils/trpc";
-import { decodeJWT } from "did-jwt";
-import { an } from "vitest/dist/types-71ccd11d";
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
 
 const FolkeregisteretPage: NextPage = () => {
