@@ -21,8 +21,6 @@ const FolkeregisteretPage: NextPage = () => {
   }, []);
 
   const addToWallet = useCallback(async (vc: VerifiableCredential) => {
-    console.log("address: ", address);
-    console.log("vc: ", vc);
     if (address && vc) {
       console.log("vc: ", vc);
       await utils.client.wallet.save.mutate({ vc });
