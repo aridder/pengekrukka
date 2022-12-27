@@ -22,7 +22,6 @@ const FolkeregisteretPage: NextPage = () => {
 
   const addToWallet = useCallback(async (vc: VerifiableCredential) => {
     if (address && vc) {
-      console.log("vc: ", vc);
       await utils.client.wallet.save.mutate({ vc });
     }
   }, []);
