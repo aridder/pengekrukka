@@ -1,5 +1,5 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { trpc } from "../utils/trpc";
@@ -19,7 +19,7 @@ export default function Wallet() {
       const vcs = await utils.client.wallet.list.query({ publicKey: address! });
       setMyVerifiableCredentials(vcs);
     }
-  }, []);
+  }, [address, isConnected]);
 
   const shortenDid = (did: string) => {
     return did.slice(0, 15) + "..." + did.slice(did.length - 4, did.length);

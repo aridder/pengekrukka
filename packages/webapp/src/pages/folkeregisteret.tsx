@@ -17,17 +17,21 @@ const FolkeregisteretPage: NextPage = () => {
         publicKey: address!,
       });
       setVc(vc);
+    } else {
+      console.error("no address: ", address);
     }
-  }, []);
+  }, [address]);
 
-  const addToWallet = useCallback(async (vc: VerifiableCredential) => {
-    console.log("address: ", address);
-    console.log("vc: ", vc);
-    if (address && vc) {
-      console.log("vc: ", vc);
-      await utils.client.wallet.save.mutate({ vc });
-    }
-  }, []);
+  const addToWallet = useCallback(
+    async (vc: VerifiableCredential) => {
+      if (address && vc) {
+        await utils.client.wallet.save.mutate({ vc });
+      } else {
+        console.error("no address && vc: ", address, vc);
+      }
+    },
+    [address]
+  );
 
   return (
     <Layout>
@@ -35,11 +39,8 @@ const FolkeregisteretPage: NextPage = () => {
         <button onClick={getPersonCredential}>Get PersonCredential VC</button>
         {vc && (
           <div>
-            <p>VC: {JSON.stringify(vc, null, 2)}</p>
             <div className="flex flex-col">
-              {/* <p>VC type: {vc.type[vc.type?.length - 1]}</p> */}
               <p>VC issuanceDate: {vc.issuanceDate}</p>
-              {/* <p>VC credentialSubject.id: {vc.credentialSubject.id}</p> */}
               <button onClick={() => addToWallet(vc)}>Legg til i din wallet</button>
             </div>
           </div>
