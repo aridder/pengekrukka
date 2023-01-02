@@ -30,7 +30,7 @@ const FolkeregisteretPage: NextPage = () => {
         console.error("no address && vc: ", address, vc);
       }
     },
-    [address]
+    [address, vc]
   );
 
   return (
