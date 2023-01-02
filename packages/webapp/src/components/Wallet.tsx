@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { trpc } from "../utils/trpc";
+import { formatDate, shortenDid } from "../utils";
 
 export default function Wallet() {
   const { address, isConnected } = useAccount();
@@ -20,15 +21,6 @@ export default function Wallet() {
       setMyVerifiableCredentials(vcs);
     }
   }, [address, isConnected]);
-
-  const shortenDid = (did: string) => {
-    return did.slice(0, 15) + "..." + did.slice(did.length - 4, did.length);
-  };
-
-  const formatDate = (date: string) => {
-    const dateObj = new Date(date);
-    return dateObj.toLocaleDateString();
-  };
 
   return (
     <div className="flex h-full flex-col items-center space-y-8 bg-green-600">
