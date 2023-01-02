@@ -1,8 +1,7 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+import { protectedProcedure, router, validations } from "../trpc";
 
-const validation = z.object({ publicKey: z.string() });
 const saveValidation = z.object({
   vc: z.object({
     "@context": z.array(z.string()).or(z.string()),
@@ -29,7 +28,7 @@ const saveValidation = z.object({
 const credentialsTable: VerifiableCredential[] = [];
 
 export const walletRouter = router({
-  list: protectedProcedure.input(validation).query(async ({ input, ctx }) => {
+  list: protectedProcedure.input(validations.publicKey).query(async ({ input, ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
 
     const userCredentials = credentialsTable.filter((vc) => vc.credentialSubject.id === userdid);
