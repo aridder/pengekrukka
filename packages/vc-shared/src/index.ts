@@ -1,8 +1,11 @@
 import { VCIssuer } from "@symfoni/vc-tools";
 import { ethers } from "ethers";
 
-type BaseSubject = {
+export type BaseSubject = {
   id: `did:ethr:${string}`;
+  title: string;
+  //ISO string
+  expirationDate: string;
 };
 
 export type VCConfig = {
@@ -10,9 +13,15 @@ export type VCConfig = {
   rpcUrl: string;
 };
 
+export type VerifiableCredentialType =
+  | "WelfareCredential"
+  | "VerifiableCredential"
+  | "GlassesProofCredential"
+  | "VerifiableCredential";
+
 export const generateVC = async <Subject extends BaseSubject>(
   subject: Subject,
-  type: string[],
+  type: VerifiableCredentialType[],
   options: VCConfig
 ) => {
   const wallet = ethers.Wallet.fromMnemonic(options.mnemonic);

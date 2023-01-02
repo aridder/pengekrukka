@@ -14,6 +14,7 @@ export const doctorRouter = router({
         vc: await generateVC(
           {
             id: `did:ethr:${input.publicKey}`,
+            title: "Bevis på brillebehov",
             revocation: `${base_url}/api/doctor/revocation/${`did:ethr:${input.publicKey}`}`,
           },
           ["GlassesProofCredential", "VerifiableCredential"],

@@ -3,6 +3,7 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 import { Login } from "../components/authentication/Login";
+import { VcCard } from "../components/VcCard";
 
 type Site = {
   name: string;
@@ -63,6 +64,10 @@ const Home: NextPage = () => {
 
   return (
     <div>
+      <VcCard
+        subject={{ id: "did:ethr:test", title: "Brillebevis" }}
+        types={["GlassesProofCredential", "VerifiableCredential"]}
+      />
       <h1>Logg inn med din wallet for å begynne demo</h1>
       <Login setSigner={setSigner} />
     </div>
