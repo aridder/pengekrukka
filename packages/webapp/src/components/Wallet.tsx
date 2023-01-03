@@ -14,8 +14,6 @@ export default function Wallet() {
   );
 
   const getVc = useCallback(async () => {
-    console.log("address: ", address);
-    console.log("isConnected: ", isConnected);
     if (address) {
       const vcs = await utils.client.wallet.list.query({ publicKey: address! });
       setMyVerifiableCredentials(vcs);
