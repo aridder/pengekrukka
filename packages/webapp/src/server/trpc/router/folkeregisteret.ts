@@ -1,9 +1,6 @@
 import { generateVC, VCConfig } from "@pengekrukka/vc-shared";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
-
-const validation = z.object({ publicKey: z.string() });
+import { protectedProcedure, router, validations } from "../trpc";
 
 const getConfig = (): VCConfig => {
   const fromEnv = [process.env.FOLKEREGISTERET_MNEMONIC, process.env.RPC_URL];
@@ -22,7 +19,7 @@ const getConfig = (): VCConfig => {
 };
 
 export const folkeregisteretRouter = router({
-  personCredential: protectedProcedure.input(validation).query(async ({ input }) => {
+  personCredential: protectedProcedure.input(validations.publicKey).query(async ({ input }) => {
     const config = getConfig();
     const vc = await generateVC(
       {
