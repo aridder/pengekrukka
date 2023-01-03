@@ -65,7 +65,11 @@ const Home: NextPage = () => {
   return (
     <div>
       <VcCard
-        subject={{ id: "did:ethr:test", title: "Brillebevis" }}
+        subject={{
+          id: "did:ethr:test",
+          title: "Brillebevis",
+          expirationDate: new Date().toISOString(),
+        }}
         types={["GlassesProofCredential", "VerifiableCredential"]}
       />
       <h1>Logg inn med din wallet for å begynne demo</h1>
