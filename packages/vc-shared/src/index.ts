@@ -10,6 +10,8 @@ export type VCConfig = {
   rpcUrl: string;
 };
 
+export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
+
 export const generateVC = async <Subject extends BaseSubject>(
   subject: Subject,
   type: string[],

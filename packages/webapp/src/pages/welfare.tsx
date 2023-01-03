@@ -17,7 +17,7 @@ const WelfarePage: NextPage = () => {
       });
       setVc(vc);
     }
-  }, []);
+  }, [address, isConnected]);
 
   return (
     <Layout>

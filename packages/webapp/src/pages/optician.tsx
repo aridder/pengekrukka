@@ -1,3 +1,9 @@
+import Layout from "../components/layout/Layout";
+
 export default () => {
-  return <div>TODO: optician's store</div>;
+  return (
+    <Layout>
+      <div>TODO: optician's store</div>;
+    </Layout>
+  );
 };

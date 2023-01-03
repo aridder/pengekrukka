@@ -25,9 +25,7 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  **/
 export const createContext = async (
-  opts:
-    | trpcNext.CreateNextContextOptions
-    | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>
+  opts: trpcNext.CreateNextContextOptions | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>
 ) => {
   const session = await getSession(opts);
 
