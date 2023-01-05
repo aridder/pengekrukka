@@ -1,9 +1,8 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
-import { useCallback, useEffect, useState } from "react";
-import { ethers } from "ethers";
+import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
+import { shortenDid, toReadableDate } from "../utils";
 import { trpc } from "../utils/trpc";
-import { formatDate, shortenDid } from "../utils";
 
 export default function Wallet() {
   const { address, isConnected } = useAccount();
@@ -35,7 +34,7 @@ export default function Wallet() {
               >
                 <div className="flex flex-col">
                   {vc.type && <p className="text-s font-bold">{vc.type[vc.type.length - 1]}</p>}
-                  <p>{formatDate(vc.issuanceDate)}</p>
+                  <p>{toReadableDate(vc.issuanceDate)}</p>
                   {vc.credentialSubject.id && <p>{shortenDid(vc.credentialSubject.id)}</p>}
                 </div>
               </div>
