@@ -31,7 +31,8 @@
     "superjson": "1.9.1",
     "vitest": "^0.25.8",
     "wagmi": "^0.9.5",
-    "zod": "^3.18.0"
+    "zod": "^3.18.0",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
@@ -40,7 +41,6 @@
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "autoprefixer": "^10.4.7",
-    "dotenv": "^16.0.3",
     "eslint": "^8.26.0",
     "eslint-config-next": "13.0.2",
     "postcss": "^8.4.14",

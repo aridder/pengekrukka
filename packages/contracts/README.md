@@ -1,11 +1,8 @@
 # Hackathon DSP - Pengekrukka
 
-The tests with this configuration makes "a copy" of the external blockchain from the RPC_URL provided. This lets you play with the current state in your tests.
+The tests with this configuration makes "a copy" of the external blockchain from the RPC_URL provided. This lets you play with the current state in your tests. `./contracts` contains `CBContract.sol` which is the actual contract for NOK token.
 
-Create a `.env.local` file from the `.env.example`. This is done at the root level of the project. You need these to run the tests 
-- `RPC_URL`: _unquoted_ URL to the RPC with basic authentication
-- `NOK_ADDRESS`: address to the NOK(CBToken) contract 
-- `ME_ADDRESS`: Your address or anyone else. (user to fetch balanceOf of the address)
-- `WHALE_ADDRESS`: Address of someone you categorize as a "Whale" in the NOK contract. Used to transfer NOK to you if you want more 💰
+## Expected Environment
+Create a `.env.development` file from the `.env.example`, as specified in [the root README](../../README.md). 
 
-`./contracts` contains `CBContract.sol` which is the actual contract for NOK token.
+
