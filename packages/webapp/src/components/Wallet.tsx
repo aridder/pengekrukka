@@ -2,9 +2,9 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
-import { formatDate, shortenDid } from "../utils";
 import { trpc } from "../utils/trpc";
 import { ClientOnly } from "./utils";
+import { VcCard } from "./VcCard";
 
 export default function Wallet() {
   const { address, isConnected } = useAccount();
@@ -30,18 +30,7 @@ export default function Wallet() {
           <div>
             <button onClick={getVc}>Hent bevis</button>
             {myVerifiableCredentials.map((vc, index) => {
-              return (
-                <div
-                  key={index}
-                  className="flex h-36 w-3/4 flex-col items-center justify-center rounded-xl bg-slate-400"
-                >
-                  <div className="flex flex-col">
-                    {vc.type && <p className="text-s font-bold">{vc.type[vc.type.length - 1]}</p>}
-                    <p>{formatDate(vc.issuanceDate)}</p>
-                    {vc.credentialSubject.id && <p>{shortenDid(vc.credentialSubject.id)}</p>}
-                  </div>
-                </div>
-              );
+              return <VcCard subject={vc.subject} types={vc.types} />;
             })}
           </div>
         )}

@@ -13,6 +13,7 @@ export const welfareRouter = router({
       vc: await generateVC(
         {
           id: `did:ethr:${input.publicKey}`,
+          title: "Støtte til 100,- NOK for briller",
           amount: 100,
         },
         ["WelfareCredential", "VerifiableCredential"],
