@@ -5,7 +5,7 @@ import Layout from "../components/layout/Layout";
 import { trpc } from "../utils/trpc";
 
 const DoctorPage: NextPage = () => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const utils = trpc.useContext();
 
   const [vc, setVc] = useState<null | any>(null);

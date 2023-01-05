@@ -1,8 +1,6 @@
-import { ethers } from "ethers";
 import { type NextPage } from "next";
 import Link from "next/link";
-import React from "react";
-import { Login } from "../components/authentication/Login";
+import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 
 type Site = {
@@ -46,7 +44,7 @@ const SiteList = (props: { sites: Site[] }) => {
       {props.sites.map((site) => (
         <Link
           href={site.link}
-          className="mx-auto flex max-w-sm items-center space-x-4 rounded-xl bg-white p-6 shadow-md"
+          className="m-5 mx-auto flex max-w-sm items-center space-x-4 rounded-xl bg-white p-5 shadow-md"
         >
           <div>
             <div className="text-slate-500">{site.name}</div>
@@ -59,18 +57,11 @@ const SiteList = (props: { sites: Site[] }) => {
 };
 
 const Home: NextPage = () => {
-  const [signer, setSigner] = React.useState<ethers.Signer>();
-
-  if (signer) {
-    return <SiteList sites={sites} />;
-  }
-
+  const { isConnected } = useAccount();
   return (
     <Layout>
-      <div>
-        <h1>Logg inn med din wallet for å begynne demo</h1>
-        <Login setSigner={setSigner} />
-      </div>
+      {isConnected && <SiteList sites={sites} />}
+      {!isConnected && <SiteList sites={sites} />}
     </Layout>
   );
 };
