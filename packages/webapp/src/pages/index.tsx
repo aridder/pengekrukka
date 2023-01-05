@@ -4,7 +4,6 @@ import Link from "next/link";
 import React from "react";
 import { Login } from "../components/authentication/Login";
 import Layout from "../components/layout/Layout";
-import { VcCard } from "../components/VcCard";
 
 type Site = {
   name: string;
@@ -68,15 +67,6 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      FIXME: REMOVE CARD - ONLY FOR DEV
-      <VcCard
-        subject={{
-          id: "did:ethr:test",
-          title: "Brillebevis",
-          expirationDate: new Date().toISOString(),
-        }}
-        types={["GlassesProofCredential", "VerifiableCredential"]}
-      />
       <div>
         <h1>Logg inn med din wallet for å begynne demo</h1>
         <Login setSigner={setSigner} />
