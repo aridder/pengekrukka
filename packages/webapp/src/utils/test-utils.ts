@@ -7,8 +7,7 @@ const envKeys = [...MnemonicConfig, "RPC_URL", "BASE_URL"] as const;
 type TestEnvironment = { [key in typeof envKeys[number]]: string };
 
 export const withIssuerEnv =
-  (overrides: Partial<TestEnvironment>, action: TestFunction) =>
-  async (context: TestContext) => {
+  (overrides: Partial<TestEnvironment>, action: TestFunction) => async (context: TestContext) => {
     const config: TestEnvironment = {
       WELFARE_MNEMONIC:
         "method salon soft whip predict develop shift misery wild exhibit anger curve",
@@ -18,8 +17,7 @@ export const withIssuerEnv =
         "naive apple embrace two gossip current crucial ivory typical toe walk canal",
       FREDRIK_MNEMONIC:
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
-      RPC_URL:
-        "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
+      RPC_URL: "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
       BASE_URL: "http://localhost:3000",
       ...overrides,
     };
@@ -36,10 +34,11 @@ export const withIssuerEnv =
 export const getAPICaller = <T extends AnyRootConfig>() =>
   appRouter.createCaller({
     session: {
+      address: "default-address-from-tests",
       expires: "never",
       user: {
         name: "test",
         email: "",
       },
-    },
+    } as any,
   });
