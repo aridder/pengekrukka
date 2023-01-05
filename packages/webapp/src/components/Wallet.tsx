@@ -1,24 +1,10 @@
 "use client";
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import { formatDate, shortenDid } from "../utils";
 import { trpc } from "../utils/trpc";
-
-function ClientOnly({ children }: { children: React.ReactNode }) {
-  // State / Props
-  const [hasMounted, setHasMounted] = useState(false);
-
-  // Hooks
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  // Render
-  if (!hasMounted) return null;
-
-  return <div>{children}</div>;
-}
+import { ClientOnly } from "./utils";
 
 export default function Wallet() {
   const { address, isConnected } = useAccount();
