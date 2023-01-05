@@ -13,5 +13,6 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  transpilePackages: ['@pengekrukka/vc-shared'],
 };
 export default config;

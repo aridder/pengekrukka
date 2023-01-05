@@ -3,10 +3,7 @@
     "description": "Containing common interfaces for VC issuers in our system",
     "version": "0.0.1",
     "private": true,
-    "main": "./out/index.js",
-    "scripts": {
-        "build": "tsc --declaration"
-    },
+    "main": "./src/index.ts",
     "dependencies": {
         "@symfoni/vc-tools": "^0.0.24",
         "ethers": "^5.7.2"
