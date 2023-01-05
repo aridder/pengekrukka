@@ -4,7 +4,7 @@ import * as dotenv from "dotenv";
 import "hardhat-deploy";
 import { HardhatUserConfig } from "hardhat/config";
 
-dotenv.config({ path: "./../../.env.local" });
+dotenv.config({ path: "./../../.env.development" });
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
