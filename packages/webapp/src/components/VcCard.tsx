@@ -33,8 +33,8 @@ const IconList = (props: { type: VerifiableCredentialType[]; className: string |
   <div className={props.className}>
     {props.type
       .map((type) => Icons[type])
-      .map((Icon) => (
-        <Icon size={20} />
+      .map((Icon, index) => (
+        <Icon size={20} key={index} />
       ))}
   </div>
 );

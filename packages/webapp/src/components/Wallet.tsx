@@ -1,7 +1,9 @@
+"use client";
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import { trpc } from "../utils/trpc";
+import { ClientOnly } from "./utils";
 import { VcCard } from "./VcCard";
 
 export default function Wallet() {
@@ -22,15 +24,17 @@ export default function Wallet() {
   return (
     <div className="flex h-full flex-col items-center space-y-8 bg-green-600">
       <p className="mt-4">Mine digitale bevis</p>
-      {!isConnected && <p>Du må være logget inn for å se dine digitale bevis</p>}
-      {isConnected && (
-        <div>
-          <button onClick={getVc}>Hent bevis</button>
-          {myVerifiableCredentials.map((vc, index) => {
-            return <VcCard subject={vc.subject} types={vc.types} />;
-          })}
-        </div>
-      )}
+      <ClientOnly>
+        {!isConnected && <p>Du må være logget inn for å se dine digitale bevis</p>}
+        {isConnected && (
+          <div>
+            <button onClick={getVc}>Hent bevis</button>
+            {myVerifiableCredentials.map((vc, index) => {
+              return <VcCard subject={vc.subject} types={vc.types} />;
+            })}
+          </div>
+        )}
+      </ClientOnly>
     </div>
   );
 }
