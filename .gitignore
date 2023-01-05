@@ -119,10 +119,10 @@ web_modules/
 
 # dotenv environment variable files
 .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+.env.development.development
+.env.test.development
+.env.production.development
+.env.development
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -327,7 +327,7 @@ yarn-error.log*
 # local env files
 # do not commit any .env files to git, except for the .env.example file. https://create.t3.gg/en/usage/env-variables#using-environment-variables
 .env
-.env*.local
+.env*.development
 
 # vercel
 .vercel

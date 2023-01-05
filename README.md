@@ -14,3 +14,6 @@ Every package is located under `./packages`. The monorepo is configured with [Ya
 1. add a folder under `./packages`
 2. add `./packages/<YOUR-PACKAGE>/package.json`-file with `{"name": "@pengekrukka/<YOUR-PACKAGE>", "version": "0.0.1", "private": true}`
 3. add `"<YOUR-PACKAGE>": "yarn workspace @pengekrukka/<YOUR-PACKAGE>"` under `"scripts"` in (root) `./package.json`. 
+
+## Environment 
+Local development expects a `.env.development`-file at the root level. Use `.env.example` as a reference. 
