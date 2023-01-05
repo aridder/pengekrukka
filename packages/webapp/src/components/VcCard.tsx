@@ -3,8 +3,6 @@ import icons from "react-icons";
 import * as featherIcons from "react-icons/fa";
 import { toReadableDate } from "../utils";
 
-type Props = { subject: BaseSubject; types: VerifiableCredentialType[] };
-
 const Icons: { [key in VerifiableCredentialType]: icons.IconType } = {
   GlassesProofCredential: featherIcons.FaHeart,
   VerifiableCredential: featherIcons.FaUserCheck,
@@ -31,9 +29,9 @@ const getColor = (types: VerifiableCredentialType[]) => {
   return "rgb(243, 30, 226)";
 };
 
-const IconList = (props: { types: VerifiableCredentialType[]; className: string | undefined }) => (
+const IconList = (props: { type: VerifiableCredentialType[]; className: string | undefined }) => (
   <div className={props.className}>
-    {props.types
+    {props.type
       .map((type) => Icons[type])
       .map((Icon) => (
         <Icon size={20} />
@@ -41,12 +39,13 @@ const IconList = (props: { types: VerifiableCredentialType[]; className: string 
   </div>
 );
 
+type Props = { subject: BaseSubject; types: VerifiableCredentialType[] };
 export const VcCard = (props: Props) => (
   <div
     className="border-1 grid h-56 w-96  grid-cols-1 rounded-xl border-black text-cyan-50"
     style={{ backgroundColor: getColor(props.types) }}
   >
-    <IconList types={props.types} className="flex place-self-end px-3" />
+    <IconList type={props.types} className="flex place-self-end px-3" />
     <p className="p-10 text-lg font-bold">{props.subject.title}</p>
     <div className="place-self-end px-4">{toReadableDate(props.subject.expirationDate)} </div>
   </div>

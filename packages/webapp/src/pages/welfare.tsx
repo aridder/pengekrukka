@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
+import { VcCard } from "../components/VcCard";
 import { trpc } from "../utils/trpc";
 
 const WelfarePage: NextPage = () => {
@@ -23,7 +24,7 @@ const WelfarePage: NextPage = () => {
     <Layout>
       <div>
         <button onClick={getVc}>Get Welfare VC</button>
-        {vc && JSON.stringify(vc)}
+        {vc && <VcCard subject={vc.subject} types={vc.types} />}
       </div>
     </Layout>
   );

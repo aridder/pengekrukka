@@ -13,6 +13,7 @@ export const doctorRouter = router({
         {
           id: `did:ethr:${input.publicKey}`,
           title: "Bevis på brillebehov",
+          expirationDate: new Date().toISOString(),
           revocation: `${base_url}/api/doctor/revocation/${`did:ethr:${input.publicKey}`}`,
         },
         ["GlassesProofCredential", "VerifiableCredential"],
