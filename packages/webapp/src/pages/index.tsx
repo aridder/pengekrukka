@@ -3,6 +3,7 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 import { Login } from "../components/authentication/Login";
+import Layout from "../components/layout/Layout";
 import { VcCard } from "../components/VcCard";
 
 type Site = {
@@ -17,7 +18,7 @@ type Site = {
  * to be rendered. In other words, they should explain
  * to the user why they would use the site.
  */
-const sites: Site[] = [
+export const sites: Site[] = [
   {
     name: "Jensens Legekontor",
     link: "/doctor",
@@ -25,13 +26,18 @@ const sites: Site[] = [
   },
   {
     name: "Statens Pengekrukke",
-    link: "/government",
+    link: "/welfare",
     description: "Bruk bevis fra legen til å få et bevis for pengestøtte",
   },
   {
     name: "Hansens Brilleforetning",
     link: "/optician",
     description: "Bruk bevis fra pengekrukka til å få avslag på nye briller",
+  },
+  {
+    name: "Folkeregisteret",
+    link: "/folkeregisteret",
+    description: "Skaff deg et identitetsbevis fra folkeregisteret",
   },
 ];
 
@@ -45,9 +51,7 @@ const SiteList = (props: { sites: Site[] }) => {
         >
           <div>
             <div className="text-slate-500">{site.name}</div>
-            <div className="font-small text-sm text-black">
-              {site.description}
-            </div>
+            <div className="font-small text-sm text-black">{site.description}</div>
           </div>
         </Link>
       ))}
@@ -63,7 +67,8 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div>
+    <Layout>
+      FIXME: REMOVE CARD - ONLY FOR DEV
       <VcCard
         subject={{
           id: "did:ethr:test",
@@ -72,9 +77,11 @@ const Home: NextPage = () => {
         }}
         types={["GlassesProofCredential", "VerifiableCredential"]}
       />
-      <h1>Logg inn med din wallet for å begynne demo</h1>
-      <Login setSigner={setSigner} />
-    </div>
+      <div>
+        <h1>Logg inn med din wallet for å begynne demo</h1>
+        <Login setSigner={setSigner} />
+      </div>
+    </Layout>
   );
 };
 

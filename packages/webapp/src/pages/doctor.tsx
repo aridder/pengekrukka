@@ -11,10 +11,6 @@ const DoctorPage: NextPage = () => {
   const [vc, setVc] = useState<null | any>(null);
 
   const getVc = useCallback(async () => {
-    // const publicKey = await signer?.getAddress();
-    // console.log("publicKey", publicKey);
-    // console.log("signer", signer);
-
     if (address) {
       const vc = await utils.client.doctor.glassesProof.query({
         publicKey: address!,

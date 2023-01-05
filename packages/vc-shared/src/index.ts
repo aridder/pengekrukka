@@ -19,6 +19,8 @@ export type VerifiableCredentialType =
   | "GlassesProofCredential"
   | "VerifiableCredential";
 
+export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
+
 export const generateVC = async <Subject extends BaseSubject>(
   subject: Subject,
   type: VerifiableCredentialType[],

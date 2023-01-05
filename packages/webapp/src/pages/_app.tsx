@@ -26,7 +26,7 @@ const { connectors } = getDefaultWallets({
 
 const client = createClient({
   connectors,
-  autoConnect: true,
+  autoConnect: false,
   provider,
 });
 
@@ -43,9 +43,7 @@ const MyApp = ({
   return (
     <WagmiConfig client={client}>
       <SessionProvider session={pageProps.session} refetchInterval={0}>
-        <RainbowKitSiweNextAuthProvider
-          getSiweMessageOptions={getSiweMessageOptions}
-        >
+        <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
           <RainbowKitProvider chains={chains}>
             <Component {...pageProps} />
           </RainbowKitProvider>
