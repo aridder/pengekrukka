@@ -13,11 +13,15 @@ export type VCConfig = {
   rpcUrl: string;
 };
 
-export type VerifiableCredentialType =
-  | "WelfareCredential"
-  | "VerifiableCredential"
-  | "GlassesProofCredential"
-  | "VerifiableCredential";
+export const verifiableCredentialTypes = [
+  "WelfareCredential",
+  "VerifiableCredential",
+  "GlassesProofCredential",
+  "VerifiableCredential",
+  "PersonCredential",
+] as const;
+
+export type VerifiableCredentialType = typeof verifiableCredentialTypes[number];
 
 export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
 

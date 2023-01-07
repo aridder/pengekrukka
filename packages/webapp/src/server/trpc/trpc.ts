@@ -1,3 +1,4 @@
+import { verifiableCredentialTypes } from "@pengekrukka/vc-shared";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod";
@@ -25,8 +26,27 @@ const isAuthed = t.middleware(({ next, ctx }) => {
   });
 });
 
+const ethereumDid = z.string().startsWith("did:ethr:0x");
+const credential = z.enum(verifiableCredentialTypes);
+
 //TODO: the type accessible with ._type with frontend
-export const validations = { publicKey: z.object({ publicKey: z.string() }) };
+export const schemas = {
+  personalCredential: z.object({
+    did: ethereumDid,
+    service: z.object({
+      host: z.string().url(),
+      base: z.string().startsWith("/"),
+      produces: credential,
+      requires: z
+        .object({
+          type: z.string().regex(/credential/),
+          issuer: ethereumDid,
+          credential: credential,
+        })
+        .array(),
+    }),
+  }),
+};
 
 export const router = t.router;
 
