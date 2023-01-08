@@ -1,11 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { expect } from "chai";
 import { describe, it } from "vitest";
-import Zod, { ZodObject, ZodRawShape } from "zod";
-import { schemas } from "./trpc";
-
-//THINKABOUT: use in rest of codebase as the "main type"?
-type PersonalCredentialSchema = Zod.infer<typeof schemas.personalCredential>;
+import { ZodObject, ZodRawShape } from "zod";
+import { PersonalCredentialSchema, schemas } from "./trpc";
 
 /**
  * Utility function that generates
@@ -27,30 +24,31 @@ const generateTestFunctions = <T extends ZodRawShape>(validator: ZodObject<T, "s
   return { isInvalidWith, isValidWith };
 };
 
-const fakeDid = () => `did:ethr:${faker.finance.ethereumAddress()}`;
-
 describe("TRPC utils", () => {
   describe("The validations", () => {
     describe("personal credential validation", () => {
       const { isValidWith, isInvalidWith } = generateTestFunctions(schemas.personalCredential);
 
-      const valid: () => PersonalCredentialSchema = () => ({
-        did: fakeDid(),
-        service: {
-          host: faker.internet.url(),
-          base: "/identitet",
-          produces: "PersonCredential",
-          required: [
-            {
-              type: "token",
-              issuer: "bankid",
-            },
-          ],
+      const fakeDid = () => `did:ethr:${faker.finance.ethereumAddress()}`;
+      const mockPersonCredential: () => PersonalCredentialSchema = () => ({
+        credentialSubject: {
+          id: fakeDid(),
+          //TODO: add something more
         },
+        "@context": [faker.internet.url()],
+        issuer: {
+          id: fakeDid(),
+        },
+        proof: {
+          type: "proof2020",
+          jwt: faker.datatype.uuid(),
+        },
+        type: "PersonCredential",
+        issuanceDate: faker.date.recent().toISOString(),
       });
 
       it("Does not throw if object conforms to spec", () => {
-        isValidWith(valid());
+        isValidWith(mockPersonCredential());
       });
 
       it("throws irrelevant data", () => {
@@ -59,80 +57,20 @@ describe("TRPC utils", () => {
 
       it("throws if did does not start with 'did:ethr'", () => {
         isInvalidWith({
-          ...valid(),
-          did: "does-not-start-with-did:ethr",
-        });
-      });
-
-      it("throws if produces is not a verifiable credential type", () => {
-        isInvalidWith({
-          ...valid(),
-          service: {
-            ...valid().service,
-            produces: "Not A Credential Type",
-          },
-        } as any as PersonalCredentialSchema);
-      });
-
-      it("Accepts an empty array for 'required'", () => {
-        isValidWith({
-          ...valid(),
-          service: {
-            ...valid().service,
-            required: [],
+          ...mockPersonCredential(),
+          credentialSubject: {
+            ...mockPersonCredential().credentialSubject,
+            id: "does-not-start-with-did:ethr",
           },
         });
-      });
-
-      it("Accepts a list of requirements conforming to spec", () => {
-        isValidWith({
-          ...valid(),
-          service: {
-            ...valid().service,
-            required: [
-              {
-                type: "token",
-                issuer: "bankid",
-              },
-            ],
-          },
-        });
-      });
-
-      it("Does not accept more than one element in required array", () => {
-        isInvalidWith({
-          ...valid(),
-          service: {
-            ...valid().service,
-            required: [
-              {
-                type: "token",
-                issuer: "bankid",
-              },
-              {
-                type: "token",
-                issuer: "bankid",
-              },
-            ],
-          },
-        });
-      });
-
-      it("Does not accept a list of requirements with irrelevant data", () => {
-        isInvalidWith({
-          ...valid(),
-          service: {
-            ...valid().service,
-            required: [{ irrelevant: "data" }],
-          },
-        } as any as PersonalCredentialSchema);
       });
 
       it("Does not allow extra keys", () => {
         isInvalidWith({
-          ...valid(),
+          ...mockPersonCredential(),
+          //@ts-expect-error
           extra: "key",
-        } as any as PersonalCredentialSchema);
+        });
       });
     });
   });

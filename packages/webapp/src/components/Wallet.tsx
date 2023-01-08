@@ -18,18 +18,20 @@ export default function Wallet() {
     if (address) {
       //FIXME: get the VC from user?
       const vcs = await utils.client.wallet.list.query({
-        did: `did:ethr:0xFIXME-proper-id`,
-        service: {
-          host: "https://folkeregisteret.no",
-          base: "/identitet",
-          produces: "PersonCredential",
-          required: [
-            {
-              type: "token",
-              issuer: "bankid",
-            },
-          ],
+        credentialSubject: {
+          id: "did:ethr:0xFIXME-personal-did",
+          //TODO: add something more
         },
+        "@context": ["https://folkeregisteret.no/vc-did-specification"],
+        issuer: {
+          id: "did:ethr:0xFIXME-folkeregister-did",
+        },
+        proof: {
+          type: "proof2020",
+          jwt: "FIXME",
+        },
+        type: "PersonCredential",
+        issuanceDate: new Date().toISOString(),
       });
       setMyVerifiableCredentials(vcs);
     }
@@ -44,7 +46,7 @@ export default function Wallet() {
           <div>
             <button onClick={getVc}>Hent bevis</button>
             {myVerifiableCredentials.map((vc, index) => {
-              return <VcCard subject={vc.subject} types={vc.types} />;
+              return <VcCard vc={vc} />;
             })}
           </div>
         )}

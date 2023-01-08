@@ -3,9 +3,6 @@ import { ethers } from "ethers";
 
 export type BaseSubject = {
   id: string;
-  title: string;
-  //ISO string
-  expirationDate: string;
 };
 
 export type VCConfig = {
@@ -26,7 +23,7 @@ export type VerifiableCredentialType = typeof verifiableCredentialTypes[number];
 export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
 
 export const generateVC = async <Subject extends BaseSubject>(
-  subject: Subject,
+  credentialSubject: Subject,
   type: VerifiableCredentialType[],
   options: VCConfig
 ) => {
@@ -50,6 +47,6 @@ export const generateVC = async <Subject extends BaseSubject>(
 
   return await issuer.createVC({
     type: type,
-    credentialSubject: subject,
+    credentialSubject: credentialSubject,
   });
 };

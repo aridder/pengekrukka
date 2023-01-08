@@ -26,28 +26,30 @@ const isAuthed = t.middleware(({ next, ctx }) => {
   });
 });
 
-const ethereumDid = z.string().startsWith("did:ethr:0x");
-const credentialType = z.enum(verifiableCredentialTypes);
+export type PersonalCredentialSchema = Zod.infer<typeof schemas.personalCredential>;
 
-//TODO: the type accessible with ._type with frontend
-
+const didSchema = z.string().startsWith("did:ethr:0x");
 export const schemas = {
+  userAddressSchema: z.object({
+    publicKey: z.string(),
+  }),
   personalCredential: z
     .object({
-      did: ethereumDid,
-      service: z.object({
-        host: z.string().url(),
-        base: z.string().startsWith("/"),
-        produces: credentialType,
-        required: z
-          .array(
-            z.object({
-              type: z.literal("token"),
-              issuer: z.literal("bankid"),
-            })
-          )
-          .max(1),
+      credentialSubject: z
+        .object({
+          id: didSchema,
+        })
+        .passthrough(),
+      "@context": z.string().url().array(),
+      issuer: z.object({
+        id: didSchema,
       }),
+      proof: z.object({
+        type: z.string(),
+        jwt: z.string(),
+      }),
+      type: z.enum(verifiableCredentialTypes),
+      issuanceDate: z.string(),
     })
     .strict(),
 };

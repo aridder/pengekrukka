@@ -1,8 +1,4 @@
-import {
-  BaseSubject,
-  VerifiableCredential,
-  VerifiableCredentialType,
-} from "@pengekrukka/vc-shared";
+import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
@@ -17,10 +13,23 @@ const DoctorPage: NextPage = () => {
   const [vc, setVc] = useState<null | VerifiableCredential>(null);
 
   const getVc = useCallback(async () => {
+    //FIXME: get the VC from user?
     if (address) {
       const { vc } = await utils.client.doctor.glassesProof.query({
-        //@ts-ignore FIXME: figure out how this should ook and adapt this code + backend
-        publicKey: address!,
+        credentialSubject: {
+          id: "did:ethr:0xFIXME-personal-did",
+          //TODO: add something more
+        },
+        "@context": ["https://folkeregisteret.no/vc-did-specification"],
+        issuer: {
+          id: "did:ethr:0xFIXME-folkeregister-did",
+        },
+        proof: {
+          type: "proof2020",
+          jwt: "FIXME",
+        },
+        type: "PersonCredential",
+        issuanceDate: new Date().toISOString(),
       });
       setVc(vc);
     }
@@ -30,12 +39,7 @@ const DoctorPage: NextPage = () => {
     <Layout>
       <div>
         <button onClick={getVc}>Get VC</button>
-        {vc && (
-          <VcCard
-            subject={vc.credentialSubject as BaseSubject}
-            types={(vc.type as VerifiableCredentialType[]) || []}
-          />
-        )}
+        {vc && <VcCard vc={vc} />}
       </div>
     </Layout>
   );
