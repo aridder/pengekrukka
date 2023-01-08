@@ -32,21 +32,24 @@ const credentialType = z.enum(verifiableCredentialTypes);
 //TODO: the type accessible with ._type with frontend
 
 export const schemas = {
-  personalCredential: z.object({
-    did: ethereumDid,
-    service: z.object({
-      host: z.string().url(),
-      base: z.string().startsWith("/"),
-      produces: credentialType,
-      requires: z.array(
-        z.object({
-          type: z.enum(["credential", "token"] as const),
-          issuer: ethereumDid,
-          credential: credentialType,
-        })
-      ),
-    }),
-  }),
+  personalCredential: z
+    .object({
+      did: ethereumDid,
+      service: z.object({
+        host: z.string().url(),
+        base: z.string().startsWith("/"),
+        produces: credentialType,
+        required: z
+          .array(
+            z.object({
+              type: z.literal("token"),
+              issuer: z.literal("bankid"),
+            })
+          )
+          .max(1),
+      }),
+    })
+    .strict(),
 };
 
 export const router = t.router;

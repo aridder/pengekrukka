@@ -7,6 +7,7 @@ const Icons: { [key in VerifiableCredentialType]: icons.IconType } = {
   GlassesProofCredential: featherIcons.FaHeart,
   VerifiableCredential: featherIcons.FaUserCheck,
   WelfareCredential: featherIcons.FaLifeRing,
+  PersonCredential: featherIcons.FaUser,
 };
 
 /**

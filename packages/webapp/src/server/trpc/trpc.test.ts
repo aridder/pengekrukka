@@ -11,7 +11,7 @@ type PersonalCredentialSchema = Zod.infer<typeof schemas.personalCredential>;
  * Utility function that generates
  * test functions for Zod validations.
  */
-const generateTestFunctions = <T extends ZodRawShape>(validator: ZodObject<T>) => {
+const generateTestFunctions = <T extends ZodRawShape>(validator: ZodObject<T, "strict">) => {
   const isInvalidWith = (data: PersonalCredentialSchema) => {
     expect(() => {
       validator.parse(data);
@@ -38,13 +38,12 @@ describe("TRPC utils", () => {
         did: fakeDid(),
         service: {
           host: faker.internet.url(),
-          base: "/journal",
-          produces: "GlassesProofCredential",
-          requires: [
+          base: "/identitet",
+          produces: "PersonCredential",
+          required: [
             {
-              type: "credential",
-              issuer: fakeDid(),
-              credential: "PersonCredential",
+              type: "token",
+              issuer: "bankid",
             },
           ],
         },
@@ -75,12 +74,12 @@ describe("TRPC utils", () => {
         } as any as PersonalCredentialSchema);
       });
 
-      it("Accepts an empty array for 'requires'", () => {
+      it("Accepts an empty array for 'required'", () => {
         isValidWith({
           ...valid(),
           service: {
             ...valid().service,
-            requires: [],
+            required: [],
           },
         });
       });
@@ -90,21 +89,29 @@ describe("TRPC utils", () => {
           ...valid(),
           service: {
             ...valid().service,
-            requires: [
+            required: [
               {
-                type: "credential",
-                issuer: fakeDid(),
-                credential: "GlassesProofCredential",
+                type: "token",
+                issuer: "bankid",
+              },
+            ],
+          },
+        });
+      });
+
+      it("Does not accept more than one element in required array", () => {
+        isInvalidWith({
+          ...valid(),
+          service: {
+            ...valid().service,
+            required: [
+              {
+                type: "token",
+                issuer: "bankid",
               },
               {
-                type: "credential",
-                issuer: fakeDid(),
-                credential: "VerifiableCredential",
-              },
-              {
-                type: "credential",
-                issuer: fakeDid(),
-                credential: "WelfareCredential",
+                type: "token",
+                issuer: "bankid",
               },
             ],
           },
@@ -116,8 +123,15 @@ describe("TRPC utils", () => {
           ...valid(),
           service: {
             ...valid().service,
-            requires: [{ irrelevant: "data" }],
+            required: [{ irrelevant: "data" }],
           },
+        } as any as PersonalCredentialSchema);
+      });
+
+      it("Does not allow extra keys", () => {
+        isInvalidWith({
+          ...valid(),
+          extra: "key",
         } as any as PersonalCredentialSchema);
       });
     });

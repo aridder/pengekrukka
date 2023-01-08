@@ -2,7 +2,7 @@ import { VCIssuer } from "@symfoni/vc-tools";
 import { ethers } from "ethers";
 
 export type BaseSubject = {
-  id: `did:ethr:${string}`;
+  id: string;
   title: string;
   //ISO string
   expirationDate: string;

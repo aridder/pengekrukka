@@ -16,7 +16,21 @@ export default function Wallet() {
 
   const getVc = useCallback(async () => {
     if (address) {
-      const vcs = await utils.client.wallet.list.query({ publicKey: address! });
+      //FIXME: get the VC from user?
+      const vcs = await utils.client.wallet.list.query({
+        did: `did:ethr:0xFIXME-proper-id`,
+        service: {
+          host: "https://folkeregisteret.no",
+          base: "/identitet",
+          produces: "PersonCredential",
+          required: [
+            {
+              type: "token",
+              issuer: "bankid",
+            },
+          ],
+        },
+      });
       setMyVerifiableCredentials(vcs);
     }
   }, [address, isConnected]);

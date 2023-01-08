@@ -19,6 +19,7 @@ const DoctorPage: NextPage = () => {
   const getVc = useCallback(async () => {
     if (address) {
       const { vc } = await utils.client.doctor.glassesProof.query({
+        //@ts-ignore FIXME: figure out how this should ook and adapt this code + backend
         publicKey: address!,
       });
       setVc(vc);
