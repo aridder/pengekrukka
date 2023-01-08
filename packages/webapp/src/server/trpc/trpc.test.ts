@@ -4,18 +4,21 @@ import { describe, it } from "vitest";
 import Zod, { ZodObject, ZodRawShape } from "zod";
 import { schemas } from "./trpc";
 
+//THINKABOUT: use in rest of codebase as the "main type"?
+type PersonalCredentialSchema = Zod.infer<typeof schemas.personalCredential>;
+
 /**
  * Utility function that generates
  * test functions for Zod validations.
  */
 const generateTestFunctions = <T extends ZodRawShape>(validator: ZodObject<T>) => {
-  const isInvalidWith = (data: unknown) => {
+  const isInvalidWith = (data: PersonalCredentialSchema) => {
     expect(() => {
       validator.parse(data);
     }).to.throw();
   };
 
-  const isValidWith = (data: unknown) => {
+  const isValidWith = (data: PersonalCredentialSchema) => {
     expect(() => {
       validator.parse(data);
     }).not.to.throw();
@@ -31,7 +34,7 @@ describe("TRPC utils", () => {
     describe("personal credential validation", () => {
       const { isValidWith, isInvalidWith } = generateTestFunctions(schemas.personalCredential);
 
-      const valid: () => Zod.infer<typeof schemas.personalCredential> = () => ({
+      const valid: () => PersonalCredentialSchema = () => ({
         did: fakeDid(),
         service: {
           host: faker.internet.url(),
@@ -52,7 +55,7 @@ describe("TRPC utils", () => {
       });
 
       it("throws irrelevant data", () => {
-        isInvalidWith({ a: "a", b: "b" });
+        isInvalidWith({ a: "a", b: "b" } as any as PersonalCredentialSchema);
       });
 
       it("throws if did does not start with 'did:ethr'", () => {
@@ -65,45 +68,57 @@ describe("TRPC utils", () => {
       it("throws if produces is not a verifiable credential type", () => {
         isInvalidWith({
           ...valid(),
-          produces: "Not A Credential Type",
-        });
+          service: {
+            ...valid().service,
+            produces: "Not A Credential Type",
+          },
+        } as any as PersonalCredentialSchema);
       });
 
       it("Accepts an empty array for 'requires'", () => {
         isValidWith({
           ...valid(),
-          requires: [],
+          service: {
+            ...valid().service,
+            requires: [],
+          },
         });
       });
 
       it("Accepts a list of requirements conforming to spec", () => {
         isValidWith({
           ...valid(),
-          requires: [
-            {
-              type: "credential",
-              issuer: fakeDid(),
-              credential: "credential",
-            },
-            {
-              type: "credential",
-              issuer: fakeDid(),
-              credential: "credential",
-            },
-            {
-              type: "credential",
-              issuer: fakeDid(),
-              credential: "credential",
-            },
-          ],
+          service: {
+            ...valid().service,
+            requires: [
+              {
+                type: "credential",
+                issuer: fakeDid(),
+                credential: "GlassesProofCredential",
+              },
+              {
+                type: "credential",
+                issuer: fakeDid(),
+                credential: "VerifiableCredential",
+              },
+              {
+                type: "credential",
+                issuer: fakeDid(),
+                credential: "WelfareCredential",
+              },
+            ],
+          },
         });
       });
 
-      it.only("Does not accept a list of requirements with irrelevant data", () => {
+      it("Does not accept a list of requirements with irrelevant data", () => {
         isInvalidWith({
           ...valid(),
-          requires: [{ irrelevant: "data" }],
-        });
+          service: {
+            ...valid().service,
+            requires: [{ irrelevant: "data" }],
+          },
+        } as any as PersonalCredentialSchema);
       });
     });
   });

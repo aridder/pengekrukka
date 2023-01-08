@@ -27,23 +27,24 @@ const isAuthed = t.middleware(({ next, ctx }) => {
 });
 
 const ethereumDid = z.string().startsWith("did:ethr:0x");
-const credential = z.enum(verifiableCredentialTypes);
+const credentialType = z.enum(verifiableCredentialTypes);
 
 //TODO: the type accessible with ._type with frontend
+
 export const schemas = {
   personalCredential: z.object({
     did: ethereumDid,
     service: z.object({
       host: z.string().url(),
       base: z.string().startsWith("/"),
-      produces: credential,
-      requires: z
-        .object({
-          type: z.string().regex(/credential/),
+      produces: credentialType,
+      requires: z.array(
+        z.object({
+          type: z.enum(["credential", "token"] as const),
           issuer: ethereumDid,
-          credential: credential,
+          credential: credentialType,
         })
-        .array(),
+      ),
     }),
   }),
 };
