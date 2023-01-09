@@ -17,6 +17,8 @@ export const withIssuerEnv =
         "naive apple embrace two gossip current crucial ivory typical toe walk canal",
       FREDRIK_MNEMONIC:
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
+      FOLKEREGISTERET_MNEMONIC:
+        "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
       RPC_URL: "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
       BASE_URL: "http://localhost:3000",
       ...overrides,

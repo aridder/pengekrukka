@@ -12,7 +12,7 @@ export const welfareRouter = router({
     return {
       vc: await generateVC(
         {
-          id: `did:ethr:${input.publicKey}`,
+          id: `did:ethr:${input.credentialSubject.id}`,
           title: "Støtte til 100,- NOK for briller",
           amount: 100,
         },
