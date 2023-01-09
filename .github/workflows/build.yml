@@ -3,7 +3,7 @@ name: Tests
 on: [push]
 
 jobs:
-  test-contracts:
+  build-contracts:
     runs-on: ubuntu-latest
     container: node:16
     steps:
@@ -18,7 +18,7 @@ jobs:
       - name: Build contracts
         run: yarn contracts build
 
-  test-webapp:
+  build-webapp:
     runs-on: ubuntu-latest
     container: node:16
     steps:
