@@ -51,7 +51,7 @@ const getTitle = (types: VerifiableCredentialType[]) => {
     return "Standard VC";
   }
 
-  return "rgb(243, 30, 226)";
+  return "Standard VC uten type"
 };
 
 const IconList = (props: { type: VerifiableCredentialType[]; className: string | undefined }) => (
