@@ -31,7 +31,7 @@ const getColor = (types: VerifiableCredentialType[]) => {
 };
 
 /**
- * fugly way of getting a color
+ * fugly way of getting a title
  * acceptable because it's a hackathon
  */
 const getTitle = (types: VerifiableCredentialType[]) => {
