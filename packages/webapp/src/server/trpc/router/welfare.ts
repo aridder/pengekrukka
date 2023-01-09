@@ -1,6 +1,7 @@
 import { generateVC } from "@pengekrukka/vc-shared";
 import { getConfig } from "../../../utils/config";
-import { router, schemas } from "../trpc";
+import { schemas } from "../schemas";
+import { router } from "../trpc";
 import { protectedProcedure } from "./../trpc";
 
 export const welfareRouter = router({

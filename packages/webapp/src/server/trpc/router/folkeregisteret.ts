@@ -1,6 +1,7 @@
 import { generateVC } from "@pengekrukka/vc-shared";
 import { getConfig } from "../../../utils/config";
-import { protectedProcedure, router, schemas } from "../trpc";
+import { schemas } from "../schemas";
+import { protectedProcedure, router } from "../trpc";
 
 export const folkeregisteretRouter = router({
   personCredential: protectedProcedure.input(schemas.userAddressSchema).query(async ({ input }) => {

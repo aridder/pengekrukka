@@ -1,6 +1,7 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { z } from "zod";
-import { protectedProcedure, router, schemas } from "../trpc";
+import { schemas } from "../schemas";
+import { protectedProcedure, router } from "../trpc";
 
 const saveValidation = z.object({
   vc: z.object({

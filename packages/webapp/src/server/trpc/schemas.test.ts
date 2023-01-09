@@ -1,8 +1,8 @@
-import { faker } from "@faker-js/faker";
 import { expect } from "chai";
 import { describe, it } from "vitest";
 import { ZodObject, ZodRawShape } from "zod";
-import { PersonalCredentialSchema, schemas } from "./trpc";
+import { mockPersonCredential } from "../../utils/test-utils";
+import { PersonalCredentialSchema, schemas } from "./schemas";
 
 /**
  * Utility function that generates
@@ -28,24 +28,6 @@ describe("TRPC utils", () => {
   describe("The validations", () => {
     describe("personal credential validation", () => {
       const { isValidWith, isInvalidWith } = generateTestFunctions(schemas.personalCredential);
-
-      const fakeDid = () => `did:ethr:${faker.finance.ethereumAddress()}`;
-      const mockPersonCredential: () => PersonalCredentialSchema = () => ({
-        credentialSubject: {
-          id: fakeDid(),
-          //TODO: add something more
-        },
-        "@context": [faker.internet.url()],
-        issuer: {
-          id: fakeDid(),
-        },
-        proof: {
-          type: "proof2020",
-          jwt: faker.datatype.uuid(),
-        },
-        type: "PersonCredential",
-        issuanceDate: faker.date.recent().toISOString(),
-      });
 
       it("Does not throw if object conforms to spec", () => {
         isValidWith(mockPersonCredential());
