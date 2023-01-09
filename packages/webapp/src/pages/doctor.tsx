@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 import { Button } from "../components/utils";
 import { VcCard } from "../components/VcCard";
+import { PersonalCredentialSchema } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 
 const DoctorPage: NextPage = () => {
@@ -16,22 +17,12 @@ const DoctorPage: NextPage = () => {
   const getVc = useCallback(async () => {
     //FIXME: get the VC from user?
     if (address) {
-      const { vc } = await utils.client.doctor.glassesProof.query({
-        credentialSubject: {
-          id: "did:ethr:0xFIXME-personal-did",
-          //TODO: add something more
-        },
-        "@context": ["https://folkeregisteret.no/vc-did-specification"],
-        issuer: {
-          id: "did:ethr:0xFIXME-folkeregister-did",
-        },
-        proof: {
-          type: "proof2020",
-          jwt: "FIXME",
-        },
-        type: "PersonCredential",
-        issuanceDate: new Date().toISOString(),
+      const personalCredential = await utils.client.folkeregisteret.personCredential.query({
+        publicKey: address,
       });
+      const { vc } = await utils.client.doctor.glassesProof.query(
+        personalCredential as any as PersonalCredentialSchema
+      );
       setVc(vc);
     }
   }, []);
