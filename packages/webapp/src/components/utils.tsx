@@ -23,3 +23,14 @@ export function ClientOnly({ children }: { children: React.ReactNode }) {
 
   return <div>{children}</div>;
 }
+
+export function Button(props: { onClick: () => Promise<void> | void } & React.PropsWithChildren) {
+  return (
+    <button
+      className="border-l-black-500 max-w-xs rounded-md border-2 border-solid border-black p-1 shadow-sm hover:scale-105 hover:shadow-md"
+      onClick={props.onClick}
+    >
+      {props.children}
+    </button>
+  );
+}

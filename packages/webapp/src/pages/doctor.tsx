@@ -3,6 +3,7 @@ import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
+import { Button } from "../components/utils";
 import { VcCard } from "../components/VcCard";
 import { trpc } from "../utils/trpc";
 
@@ -37,12 +38,33 @@ const DoctorPage: NextPage = () => {
 
   return (
     <Layout>
-      <div>
-        <button onClick={getVc}>Get VC</button>
-        {vc && <VcCard vc={vc} />}
+      <div className="m-10 mx-20 flex flex-col content-center justify-center gap-4">
+        <Heading />
+        {!vc && <Button onClick={getVc}> Hent VC </Button>}
+        {vc && <VCSection vc={vc} />}
       </div>
     </Layout>
   );
 };
 
 export default DoctorPage;
+
+const VCSection = (props: { vc: VerifiableCredential }) => (
+  <div className="flex">
+    <VcCard vc={props.vc} />
+    <div className="mx-2 flex flex-col gap-2 place-self-end">
+      (FIXME: IMPLEMENT BUTTONS)
+      <Button onClick={() => {} /**FIXME: Something */}>Last ned som PDF</Button>
+      <Button onClick={() => {} /**FIXME: Something */}>Flytt til digital lommebok</Button>
+    </div>
+  </div>
+);
+
+const Heading = () => (
+  <div className=" max-w-xl ">
+    <h1 className=" py-4 text-xl underline underline-offset-4">
+      Din Journal hos legekontor Jensen
+    </h1>
+    <h2 className="flex-auto text-left">Du har mottatt digitalt bevis</h2>
+  </div>
+);
