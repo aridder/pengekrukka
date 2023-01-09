@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ButtonHTMLAttributes, DetailedHTMLProps, useEffect, useState } from "react";
 
 /**
  * Wraps components that are only meant to be rendered on client
@@ -24,11 +24,13 @@ export function ClientOnly({ children }: { children: React.ReactNode }) {
   return <div>{children}</div>;
 }
 
-export function Button(props: { onClick: () => Promise<void> | void } & React.PropsWithChildren) {
+export function Button(
+  props: DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+) {
   return (
     <button
-      className="border-l-black-500 max-w-xs rounded-md border-2 border-solid border-black p-1 shadow-sm hover:scale-105 hover:shadow-md"
-      onClick={props.onClick}
+      className="border-l-black-500 max-w-xs rounded-md border-2 border-solid border-black p-1 shadow-sm hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:hover:scale-0"
+      {...props}
     >
       {props.children}
     </button>

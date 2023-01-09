@@ -9,7 +9,7 @@ export const welfareRouter = router({
   convertWelfareToken: protectedProcedure
     .input(validations.publicKey)
     .mutation(async ({ input, ctx }) => {
-      if (ctx.session.address !== input.publicKey) {
+      if (`did:ethr:${ctx.session.address}` !== input.publicKey) {
         throw new TRPCError({
           message: "Not authorized to modify this credential",
           code: "UNAUTHORIZED",
@@ -29,23 +29,4 @@ export const welfareRouter = router({
         config
       );
     }),
-  /* getWelfareVc: protectedProcedure.input(validations.publicKey).query(async ({ input }) => {
-    const config = getConfig("WELFARE_MNEMONIC");
-
-    //FIXME: some user id validation and lookup of actual welfare amount
-    // TODO add revocation and type of credential from a config file or something
-    return {
-      vcs: [
-        await generateVC(
-          {
-            id: `did:ethr:${input.publicKey}`,
-            title: "Støtte til 100,- NOK for briller",
-            amount: 100,
-          },
-          ["WelfareCredential", "VerifiableCredential"],
-          config
-        ),
-      ],
-    };
-  }), */
 });

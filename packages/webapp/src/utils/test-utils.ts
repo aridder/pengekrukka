@@ -1,4 +1,3 @@
-import { AnyRootConfig } from "@trpc/server";
 import { TestContext, TestFunction } from "vitest";
 import { appRouter } from "../server/trpc/router/_app";
 import { MnemonicConfig } from "./config";
@@ -31,10 +30,10 @@ export const withIssuerEnv =
     process.env = original;
   };
 
-export const getAPICaller = <T extends AnyRootConfig>() =>
+export const getAPICaller = (address: string = "default-address-from-tests") =>
   appRouter.createCaller({
     session: {
-      address: "default-address-from-tests",
+      address: address,
       expires: "never",
       user: {
         name: "test",
