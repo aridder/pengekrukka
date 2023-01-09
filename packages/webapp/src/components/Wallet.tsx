@@ -2,6 +2,7 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
+import { PersonalCredentialSchema } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 import { ClientOnly } from "./utils";
 import { VcCard } from "./VcCard";
@@ -16,23 +17,12 @@ export default function Wallet() {
 
   const getVc = useCallback(async () => {
     if (address) {
-      //FIXME: get the VC from user?
-      const vcs = await utils.client.wallet.list.query({
-        credentialSubject: {
-          id: "did:ethr:0xFIXME-personal-did",
-          //TODO: add something more
-        },
-        "@context": ["https://folkeregisteret.no/vc-did-specification"],
-        issuer: {
-          id: "did:ethr:0xFIXME-folkeregister-did",
-        },
-        proof: {
-          type: "proof2020",
-          jwt: "FIXME",
-        },
-        type: "PersonCredential",
-        issuanceDate: new Date().toISOString(),
+      const personalCredential = await utils.client.folkeregisteret.personCredential.query({
+        publicKey: address,
       });
+      const vcs = await utils.client.wallet.list.query(
+        personalCredential as any as PersonalCredentialSchema
+      );
       setMyVerifiableCredentials(vcs);
     }
   }, [address, isConnected]);

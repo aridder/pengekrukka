@@ -15,8 +15,6 @@ export const folkeregisteretRouter = router({
       config
     );
 
-    return {
-      ...vc,
-    };
+    return vc;
   }),
 });
