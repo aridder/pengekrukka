@@ -10,16 +10,6 @@ export const doctorRouter = router({
     .query(async ({ input: personalCredential, ctx }) => {
       const config = getConfig("DOCTOR_MNEMONIC");
 
-      const vc = await generateVC(
-        {
-          id: personalCredential.credentialSubject.id,
-        },
-        ["GlassesProofCredential", "VerifiableCredential"],
-        config
-      );
-
-      vc.credentialSubject;
-
       return {
         vc: await generateVC(
           {
