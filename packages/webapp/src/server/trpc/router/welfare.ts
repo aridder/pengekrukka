@@ -6,12 +6,10 @@ import { router } from "../trpc";
 import { protectedProcedure } from "./../trpc";
 
 export const welfareRouter = router({
-  //FIXME: use personal credential after https://github.com/aridder/pengekrukka/pull/74/files
   convertWelfareToken: protectedProcedure
     .input(schemas.personalCredential)
     .mutation(async ({ input, ctx }) => {
-      //TODO: validate issuer as well
-
+      //TODO: validate folkeregisteret issuer as well
       if (`did:ethr:${ctx.session.address}` !== input.credentialSubject.id) {
         throw new TRPCError({
           message: "Not authorized to modify this credential",

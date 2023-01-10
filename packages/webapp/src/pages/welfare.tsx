@@ -11,12 +11,7 @@ const WelfareCredentials = (props: { vcs: VerifiableCredential[] }) => {
   return (
     <div>
       {props.vcs.map((vc) => {
-        return (
-          <div>
-            <li>{vc.id}</li>
-            <li>{vc.type}</li>
-          </div>
-        );
+        return <VcCard vc={vc} />;
       })}
     </div>
   );
@@ -77,7 +72,7 @@ const UploadSection = (props: {
         type: "proof2020",
         jwt: "testvalue",
       },
-      type: "OTHERCREDENTILATYPE",
+      type: "PersonCredential",
       issuanceDate: new Date().toISOString(),
     },
   ];
@@ -92,7 +87,6 @@ const UploadSection = (props: {
     return (
       <div>
         <h2>Dine bevis</h2>
-        {props.address}
         {credentials.map((credential) => (
           <div>
             <Button onClick={() => onConvert(credential)}>Konverter</Button>
@@ -133,11 +127,13 @@ const WelfarePage: NextPage = () => {
 
   return (
     <Layout>
+      {address}
       <h1>Statens Støtteordnings System</h1>
       <div>
         <WelfareCredentials vcs={generatedVCs}></WelfareCredentials>
       </div>
-      <div className=" my-10 mx-5 max-w-xl bg-slate-100">
+
+      <div className="my-10 mx-5 max-w-xl bg-slate-100">
         <UploadSection
           address={address as string}
           receiveWelfareVC={(welfareVC) => {
