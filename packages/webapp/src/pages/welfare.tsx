@@ -1,10 +1,10 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
-
 import { NextPage } from "next";
 import React, { useEffect } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 import { Button } from "../components/utils";
+import { VcCard } from "../components/VcCard";
 import { trpc } from "../utils/trpc";
 
 const WelfareCredentials = (props: { vcs: VerifiableCredential[] }) => {
@@ -28,10 +28,7 @@ const useWalletVcs = (address: string) => {
   const [credentials, setCredentials] = React.useState<VerifiableCredential[]>([]);
 
   const listWallet = async () => {
-    const credentials = await utils.client.wallet.list.query({
-      publicKey: address,
-    });
-
+    const credentials = await utils.client.wallet.list.query();
     setCredentials(credentials);
   };
 
@@ -86,10 +83,7 @@ const UploadSection = (props: {
   ];
 
   const onConvert = async (credential: VerifiableCredential) => {
-    //FIXME: send entire credential after https://github.com/aridder/pengekrukka/pull/74 is merged
-    const generatedVC = await utils.client.welfare.convertWelfareToken.mutate({
-      publicKey: credential.credentialSubject.id as string,
-    });
+    const generatedVC = await utils.client.welfare.convertWelfareToken.mutate(credential);
 
     props.receiveWelfareVC(generatedVC);
   };
@@ -102,11 +96,7 @@ const UploadSection = (props: {
         {credentials.map((credential) => (
           <div>
             <Button onClick={() => onConvert(credential)}>Konverter</Button>
-            {/* FIXME: use VCCard after https://github.com/aridder/pengekrukka/pull/74 is merged */}
-            <li>
-              {credential.type}
-              {credential.issuanceDate}
-            </li>
+            <VcCard vc={credential} />
           </div>
         ))}
       </div>

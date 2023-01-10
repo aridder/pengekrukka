@@ -1,24 +1,23 @@
 import { generateVC } from "@pengekrukka/vc-shared";
 import { getConfig } from "../../../utils/config";
-import { router, validations } from "../trpc";
+import { schemas } from "../schemas";
+import { router } from "../trpc";
 import { protectedProcedure } from "./../trpc";
 
 export const doctorRouter = router({
-  glassesProof: protectedProcedure.input(validations.publicKey).query(async ({ input, ctx }) => {
-    const config = getConfig("DOCTOR_MNEMONIC");
-    const base_url = process.env.BASE_URL;
+  glassesProof: protectedProcedure
+    .input(schemas.personalCredential)
+    .query(async ({ input: personalCredential, ctx }) => {
+      const config = getConfig("DOCTOR_MNEMONIC");
 
-    return {
-      vc: await generateVC(
-        {
-          id: `did:ethr:${input.publicKey}`,
-          title: "Bevis på brillebehov",
-          expirationDate: new Date().toISOString(),
-          revocation: `${base_url}/api/doctor/revocation/${`did:ethr:${input.publicKey}`}`,
-        },
-        ["GlassesProofCredential", "VerifiableCredential"],
-        config
-      ),
-    };
-  }),
+      return {
+        vc: await generateVC(
+          {
+            id: personalCredential.credentialSubject.id,
+          },
+          ["GlassesProofCredential", "VerifiableCredential"],
+          config
+        ),
+      };
+    }),
 });
