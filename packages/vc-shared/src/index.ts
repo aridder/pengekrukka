@@ -2,10 +2,7 @@ import { VCIssuer } from "@symfoni/vc-tools";
 import { ethers } from "ethers";
 
 export type BaseSubject = {
-  id: `did:ethr:${string}`;
-  title: string;
-  //ISO string
-  expirationDate: string;
+  id: string;
 };
 
 export type VCConfig = {
@@ -13,16 +10,20 @@ export type VCConfig = {
   rpcUrl: string;
 };
 
-export type VerifiableCredentialType =
-  | "WelfareCredential"
-  | "VerifiableCredential"
-  | "GlassesProofCredential"
-  | "VerifiableCredential";
+export const verifiableCredentialTypes = [
+  "WelfareCredential",
+  "VerifiableCredential",
+  "GlassesProofCredential",
+  "VerifiableCredential",
+  "PersonCredential",
+] as const;
+
+export type VerifiableCredentialType = typeof verifiableCredentialTypes[number];
 
 export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
 
 export const generateVC = async <Subject extends BaseSubject>(
-  subject: Subject,
+  credentialSubject: Subject,
   type: VerifiableCredentialType[],
   options: VCConfig
 ) => {
@@ -46,6 +47,6 @@ export const generateVC = async <Subject extends BaseSubject>(
 
   return await issuer.createVC({
     type: type,
-    credentialSubject: subject,
+    credentialSubject: credentialSubject,
   });
 };

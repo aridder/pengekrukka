@@ -1,14 +1,11 @@
-import {
-  BaseSubject,
-  VerifiableCredential,
-  VerifiableCredentialType,
-} from "@pengekrukka/vc-shared";
+import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 import { Button } from "../components/utils";
 import { VcCard } from "../components/VcCard";
+import { PersonalCredentialSchema } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 
 const DoctorPage: NextPage = () => {
@@ -18,10 +15,14 @@ const DoctorPage: NextPage = () => {
   const [vc, setVc] = useState<null | VerifiableCredential>(null);
 
   const getVc = useCallback(async () => {
+    //FIXME: get the VC from user?
     if (address) {
-      const { vc } = await utils.client.doctor.glassesProof.query({
-        publicKey: address!,
+      const personalCredential = await utils.client.folkeregisteret.personCredential.query({
+        publicKey: address,
       });
+      const { vc } = await utils.client.doctor.glassesProof.query(
+        personalCredential as any as PersonalCredentialSchema
+      );
       setVc(vc);
     }
   }, []);
@@ -41,10 +42,7 @@ export default DoctorPage;
 
 const VCSection = (props: { vc: VerifiableCredential }) => (
   <div className="flex">
-    <VcCard
-      subject={props.vc.credentialSubject as BaseSubject}
-      types={(props.vc.type as VerifiableCredentialType[]) || []}
-    />
+    <VcCard vc={props.vc} />
     <div className="mx-2 flex flex-col gap-2 place-self-end">
       (FIXME: IMPLEMENT BUTTONS)
       <Button onClick={() => {} /**FIXME: Something */}>Last ned som PDF</Button>

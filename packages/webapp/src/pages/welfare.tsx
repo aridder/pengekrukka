@@ -1,8 +1,4 @@
-import {
-  BaseSubject,
-  VerifiableCredential,
-  VerifiableCredentialType,
-} from "@pengekrukka/vc-shared";
+import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
@@ -19,6 +15,7 @@ const WelfarePage: NextPage = () => {
   const getVc = useCallback(async () => {
     if (address) {
       const { vc } = await utils.client.welfare.getWelfareVc.query({
+        //@ts-ignore -> Should be solved with https://github.com/aridder/pengekrukka/pull/75
         publicKey: address!,
       });
       setVc(vc);
@@ -29,12 +26,7 @@ const WelfarePage: NextPage = () => {
     <Layout>
       <div>
         <button onClick={getVc}>Get Welfare VC</button>
-        {vc && (
-          <VcCard
-            subject={vc.credentialSubject as BaseSubject}
-            types={(vc.type as VerifiableCredentialType[]) || []}
-          />
-        )}
+        {vc && <VcCard vc={vc} />}
       </div>
     </Layout>
   );

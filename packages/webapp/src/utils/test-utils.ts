@@ -1,6 +1,8 @@
+import { faker } from "@faker-js/faker";
 import { AnyRootConfig } from "@trpc/server";
 import { TestContext, TestFunction } from "vitest";
 import { appRouter } from "../server/trpc/router/_app";
+import { PersonalCredentialSchema } from "../server/trpc/schemas";
 import { MnemonicConfig } from "./config";
 
 const envKeys = [...MnemonicConfig, "RPC_URL", "BASE_URL"] as const;
@@ -16,6 +18,8 @@ export const withIssuerEnv =
       OPTICIAN_MNEMONIC:
         "naive apple embrace two gossip current crucial ivory typical toe walk canal",
       FREDRIK_MNEMONIC:
+        "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
+      FOLKEREGISTERET_MNEMONIC:
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
       RPC_URL: "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
       BASE_URL: "http://localhost:3000",
@@ -42,3 +46,21 @@ export const getAPICaller = <T extends AnyRootConfig>() =>
       },
     } as any,
   });
+
+export const fakeDid = () => `did:ethr:${faker.finance.ethereumAddress()}`;
+export const mockPersonCredential: () => PersonalCredentialSchema = () => ({
+  credentialSubject: {
+    id: fakeDid(),
+    something: "something",
+  },
+  "@context": [faker.internet.url()],
+  issuer: {
+    id: fakeDid(),
+  },
+  proof: {
+    type: "proof2020",
+    jwt: faker.datatype.uuid(),
+  },
+  type: "PersonCredential",
+  issuanceDate: faker.date.recent().toISOString(),
+});

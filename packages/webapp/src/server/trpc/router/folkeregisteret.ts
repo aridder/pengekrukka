@@ -1,9 +1,10 @@
 import { generateVC } from "@pengekrukka/vc-shared";
 import { getConfig } from "../../../utils/config";
-import { protectedProcedure, router, validations } from "../trpc";
+import { schemas } from "../schemas";
+import { protectedProcedure, router } from "../trpc";
 
 export const folkeregisteretRouter = router({
-  personCredential: protectedProcedure.input(validations.publicKey).query(async ({ input }) => {
+  personCredential: protectedProcedure.input(schemas.userAddressSchema).query(async ({ input }) => {
     const config = getConfig("FOLKEREGISTERET_MNEMONIC");
     const vc = await generateVC(
       {
@@ -14,8 +15,6 @@ export const folkeregisteretRouter = router({
       config
     );
 
-    return {
-      ...vc,
-    };
+    return vc;
   }),
 });
