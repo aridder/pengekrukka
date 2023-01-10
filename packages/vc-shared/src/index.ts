@@ -24,7 +24,7 @@ export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
 
 export const generateVC = async <Subject extends BaseSubject>(
   credentialSubject: Subject,
-  type: VerifiableCredentialType[],
+  type: VerifiableCredentialType,
   options: VCConfig
 ) => {
   const wallet = ethers.Wallet.fromMnemonic(options.mnemonic);
@@ -46,7 +46,7 @@ export const generateVC = async <Subject extends BaseSubject>(
   });
 
   return await issuer.createVC({
-    type: type,
+    type: [type],
     credentialSubject: credentialSubject,
   });
 };

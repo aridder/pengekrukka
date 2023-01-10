@@ -56,7 +56,7 @@ const UploadSection = (props: {
         type: "proof2020",
         jwt: "testvalue",
       },
-      type: "GlassesProofCredential",
+      type: ["GlassesProofCredential"],
       issuanceDate: new Date().toISOString(),
     },
     {
@@ -72,7 +72,7 @@ const UploadSection = (props: {
         type: "proof2020",
         jwt: "testvalue",
       },
-      type: "PersonCredential",
+      type: ["PersonCredential"],
       issuanceDate: new Date().toISOString(),
     },
   ];
@@ -88,7 +88,7 @@ const UploadSection = (props: {
       <div>
         <h2>Dine bevis</h2>
         {credentials.map((credential) => (
-          <div>
+          <div key={credential.id}>
             <Button onClick={() => onConvert(credential)}>Konverter</Button>
             <VcCard vc={credential} />
           </div>
@@ -127,7 +127,6 @@ const WelfarePage: NextPage = () => {
 
   return (
     <Layout>
-      {address}
       <h1>Statens Støtteordnings System</h1>
       <div>
         <WelfareCredentials vcs={generatedVCs}></WelfareCredentials>

@@ -2,7 +2,6 @@
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
-import { PersonalCredentialSchema } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 import { ClientOnly } from "./utils";
 import { VcCard } from "./VcCard";
@@ -17,12 +16,7 @@ export default function Wallet() {
 
   const getVc = useCallback(async () => {
     if (address) {
-      const personalCredential = await utils.client.folkeregisteret.personCredential.query({
-        publicKey: address,
-      });
-      const vcs = await utils.client.wallet.list.query(
-        personalCredential as any as PersonalCredentialSchema
-      );
+      const vcs = await utils.client.wallet.list.query();
       setMyVerifiableCredentials(vcs);
     }
   }, [address, isConnected]);

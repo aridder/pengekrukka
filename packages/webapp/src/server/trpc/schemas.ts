@@ -23,7 +23,7 @@ export const schemas = {
         type: z.string(),
         jwt: z.string(),
       }),
-      type: z.enum(verifiableCredentialTypes),
+      type: z.enum(verifiableCredentialTypes).array(),
       issuanceDate: z.string(),
     })
     .strict(),

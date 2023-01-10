@@ -60,6 +60,6 @@ export const mockPersonCredential: () => PersonalCredentialSchema = () => ({
     type: "proof2020",
     jwt: faker.datatype.uuid(),
   },
-  type: "PersonCredential",
+  type: ["PersonCredential"],
   issuanceDate: faker.date.recent().toISOString(),
 });

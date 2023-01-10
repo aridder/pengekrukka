@@ -26,7 +26,7 @@ export const welfareRouter = router({
           title: "Støtte til 100,- NOK for briller",
           amount: 100,
         },
-        ["WelfareCredential", "VerifiableCredential"],
+        "WelfareCredential",
         config
       );
     }),
