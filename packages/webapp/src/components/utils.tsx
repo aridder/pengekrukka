@@ -27,11 +27,12 @@ export function ClientOnly({ children }: { children: React.ReactNode }) {
 export function Button(
   props: DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 ) {
+  //combining the provided classnames with default ones
+  const className = `    
+    border-l-black-500 max-w-xs rounded-md border-2 border-solid border-black p-1 shadow-sm hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:hover:scale-0 ${props.className}`;
+
   return (
-    <button
-      className="border-l-black-500 max-w-xs rounded-md border-2 border-solid border-black p-1 shadow-sm hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:hover:scale-0"
-      {...props}
-    >
+    <button {...props} className={className}>
       {props.children}
     </button>
   );
