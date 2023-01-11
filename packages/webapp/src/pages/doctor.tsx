@@ -1,11 +1,10 @@
-import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 import { Button } from "../components/utils";
 import { VcCard } from "../components/VcCard";
-import { PersonalCredentialSchema } from "../server/trpc/schemas";
+import { VerifiableCredential } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 
 const DoctorPage: NextPage = () => {
@@ -20,9 +19,8 @@ const DoctorPage: NextPage = () => {
       const personalCredential = await utils.client.folkeregisteret.personCredential.query({
         publicKey: address,
       });
-      const { vc } = await utils.client.doctor.glassesProof.query(
-        personalCredential as any as PersonalCredentialSchema
-      );
+      const vc = await utils.client.doctor.glassesProof.query(personalCredential);
+
       setVc(vc);
     }
   }, []);

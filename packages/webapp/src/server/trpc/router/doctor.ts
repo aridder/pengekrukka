@@ -1,7 +1,7 @@
-import { generateVC } from "@pengekrukka/vc-shared";
 import { getConfig } from "../../../utils/config";
 import { schemas } from "../schemas";
 import { router } from "../trpc";
+import { generateVC, VerifiableCredentialType } from "../vc-shared";
 import { protectedProcedure } from "./../trpc";
 
 export const doctorRouter = router({
@@ -10,14 +10,16 @@ export const doctorRouter = router({
     .query(async ({ input: personalCredential, ctx }) => {
       const config = getConfig("DOCTOR_MNEMONIC");
 
-      return {
-        vc: await generateVC(
-          {
-            id: personalCredential.credentialSubject.id,
-          },
-          ["GlassesProofCredential", "VerifiableCredential"],
-          config
-        ),
-      };
+      return await generateVC(
+        {
+          id: personalCredential.credentialSubject.id,
+          needsGlasses: true,
+        },
+        [
+          VerifiableCredentialType.GlassesProofCredential,
+          VerifiableCredentialType.VerifiableCredential,
+        ],
+        config
+      );
     }),
 });

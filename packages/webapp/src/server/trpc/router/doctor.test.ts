@@ -16,9 +16,9 @@ describe("the doctor router", async () => {
     withIssuerEnv({}, async () => {
       const caller = getAPICaller();
 
-      const response = await caller.doctor.glassesProof(mockPersonCredential());
-      expect(response.vc.proof).not.to.be.null;
-      expect(response.vc.proof).not.to.be.undefined;
+      const vc = await caller.doctor.glassesProof(mockPersonCredential());
+      expect(vc.proof).not.to.be.null;
+      expect(vc.proof).not.to.be.undefined;
     })
   );
 });
