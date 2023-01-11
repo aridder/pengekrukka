@@ -43,7 +43,7 @@ export const walletRouter = router({
     const userdid = `did:ethr:${ctx.session.address}`;
 
     const otherCredentials = otherCredentialsDB[userdid] ?? [];
-    const personalCredential = personalCredentialsDB[userdid] ?? [];
+    const personalCredential: VerifiableCredential = personalCredentialsDB[userdid]!!;
 
     return [personalCredential, ...otherCredentials];
   }),
