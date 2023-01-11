@@ -15,6 +15,8 @@ jobs:
           node-version: "16.17.0"
       - name: Install dependencies
         run: yarn
+      - name: Generate typechain
+        run: yarn contracts typechain
       - name: Build contracts
         run: yarn contracts build
 
