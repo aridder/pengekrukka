@@ -1,17 +1,18 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect, it } from "vitest";
+import { addDidPrefix } from "../../../utils";
 import { getAPICaller, mockPersonCredential, withIssuerEnv } from "../../../utils/test-utils";
 
-describe("the doctor router", async () => {
+describe("the welfare router", async () => {
   it(
     "can be called without throwing",
     withIssuerEnv({}, async () => {
-      const address = faker.finance.ethereumAddress();
+      const address = faker.finance.ethereumAddress() as `0x${string}`;
       const caller = getAPICaller(address);
       await caller.welfare.convertWelfareToken({
         ...mockPersonCredential(),
         credentialSubject: {
-          id: address,
+          id: addDidPrefix(address),
         },
       });
     })
@@ -46,7 +47,7 @@ describe("the doctor router", async () => {
       const response = await caller.welfare.convertWelfareToken({
         ...mockPersonCredential(),
         credentialSubject: {
-          id: publicKey,
+          id: addDidPrefix(publicKey),
         },
       });
       expect(response.proof).not.to.be.null;

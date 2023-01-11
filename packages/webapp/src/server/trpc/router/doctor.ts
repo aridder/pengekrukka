@@ -14,6 +14,7 @@ export const doctorRouter = router({
         vc: await generateVC(
           {
             id: personalCredential.credentialSubject.id,
+            needsGlasses: true,
           },
           ["GlassesProofCredential", "VerifiableCredential"],
           config

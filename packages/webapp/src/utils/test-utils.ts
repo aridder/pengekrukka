@@ -46,11 +46,10 @@ export const getAPICaller = (address: string = "default-address-from-tests") =>
     } as any,
   });
 
-export const fakeDid = () => `did:ethr:${faker.finance.ethereumAddress()}`;
+export const fakeDid = () => `did:ethr:0x${faker.finance.ethereumAddress()}`;
 export const mockPersonCredential: () => PersonalCredentialSchema = () => ({
   credentialSubject: {
     id: fakeDid(),
-    something: "something",
   },
   "@context": [faker.internet.url()],
   issuer: {

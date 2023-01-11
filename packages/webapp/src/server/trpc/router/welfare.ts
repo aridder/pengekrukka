@@ -1,5 +1,6 @@
 import { generateVC } from "@pengekrukka/vc-shared";
 import { TRPCError } from "@trpc/server";
+import { addDidPrefix } from "../../../utils";
 import { getConfig } from "../../../utils/config";
 import { schemas } from "../schemas";
 import { router } from "../trpc";
@@ -10,7 +11,7 @@ export const welfareRouter = router({
     .input(schemas.personalCredential)
     .mutation(async ({ input, ctx }) => {
       //TODO: validate folkeregisteret issuer as well
-      if (`did:ethr:${ctx.session.address}` !== input.credentialSubject.id) {
+      if (addDidPrefix(ctx.session.address as `0x${string}`) !== input.credentialSubject.id) {
         throw new TRPCError({
           message: "Not authorized to modify this credential",
           code: "UNAUTHORIZED",
@@ -23,10 +24,9 @@ export const welfareRouter = router({
       return await generateVC(
         {
           id: `did:ethr:${input.credentialSubject.id}`,
-          title: "Støtte til 100,- NOK for briller",
           amount: 100,
         },
-        "WelfareCredential",
+        ["WelfareCredential"],
         config
       );
     }),
