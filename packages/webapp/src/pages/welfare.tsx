@@ -65,7 +65,8 @@ const UploadSection = (props: {
   const credentials = useWalletVcs(props.address);
 
   const onConvert = async (credential: VerifiableCredential) => {
-    const generatedVC = await utils.client.welfare.convertWelfareToken.mutate(credential);
+    //FIXME: Align interfaces for VerifiableCredential accross the system https://github.com/aridder/pengekrukka/issues/81
+    const generatedVC = await utils.client.welfare.convertWelfareToken.mutate(credential as any);
 
     props.receiveWelfareVC(generatedVC);
   };
