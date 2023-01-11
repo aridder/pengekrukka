@@ -27,7 +27,7 @@ const generateTestFunctions = <T extends ZodRawShape>(validator: ZodObject<T, "s
 describe("TRPC utils", () => {
   describe("The validations", () => {
     describe("personal credential validation", () => {
-      const { isValidWith, isInvalidWith } = generateTestFunctions(schemas.personalCredential);
+      const { isValidWith, isInvalidWith } = generateTestFunctions(schemas.verifiableCredential);
 
       it("Does not throw if object conforms to spec", () => {
         isValidWith(mockPersonCredential());

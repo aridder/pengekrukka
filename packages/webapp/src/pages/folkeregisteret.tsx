@@ -2,11 +2,11 @@ import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
+import { VerifiableCredential } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
-import { VerifiableCredential } from "@pengekrukka/vc-shared";
 
 const FolkeregisteretPage: NextPage = () => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const utils = trpc.useContext();
 
   const [vc, setVc] = useState<VerifiableCredential | undefined>(undefined);
@@ -25,7 +25,7 @@ const FolkeregisteretPage: NextPage = () => {
   const addToWallet = useCallback(
     async (vc: VerifiableCredential) => {
       if (address && vc) {
-        await utils.client.wallet.save.mutate({ vc });
+        await utils.client.wallet.save.mutate(vc);
       } else {
         console.error("no address && vc: ", address, vc);
       }
