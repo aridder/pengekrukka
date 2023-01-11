@@ -61,42 +61,8 @@ const UploadSection = (props: {
 }) => {
   const utils = trpc.useContext();
   const [showWalletCredentials, setWalletCredentials] = React.useState(false);
-  //FIXME: use this instead of mock before merging
-  const _credentials = useWalletVcs(props.address);
-  const credentials: VerifiableCredential[] = [
-    {
-      credentialSubject: {
-        id: `did:ethr:${props.address}`,
-        //TODO: add something more
-      },
-      "@context": ["https://folkeregisteret.no/vc-did-specification"],
-      issuer: {
-        id: "did:ethr:0xtestvalue-folkeregister-did",
-      },
-      proof: {
-        type: "proof2020",
-        jwt: "testvalue",
-      },
-      type: ["GlassesProofCredential"],
-      issuanceDate: new Date().toISOString(),
-    },
-    {
-      credentialSubject: {
-        id: `did:ethr:${props.address}`,
-        //TODO: add something more
-      },
-      "@context": ["https://folkeregisteret.no/vc-did-specification"],
-      issuer: {
-        id: "did:ethr:0xtestvalue-folkeregister-did",
-      },
-      proof: {
-        type: "proof2020",
-        jwt: "testvalue",
-      },
-      type: ["PersonCredential"],
-      issuanceDate: new Date().toISOString(),
-    },
-  ];
+
+  const credentials = useWalletVcs(props.address);
 
   const onConvert = async (credential: VerifiableCredential) => {
     const generatedVC = await utils.client.welfare.convertWelfareToken.mutate(credential);
@@ -109,6 +75,7 @@ const UploadSection = (props: {
       <div>
         <h2 className="text-3xl">Dine bevis</h2>
 
+        {credentials.length === 0 && <p>Du har ingen bevis i din lommebok..</p>}
         {credentials.map((credential) => (
           <div key={credential.id} className="my-2 flex space-x-4">
             <VcCard vc={credential} />
