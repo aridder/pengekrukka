@@ -4,6 +4,7 @@ import { VerifiableCredentialType } from "./vc-shared";
 export type PersonalCredentialSchema = Zod.infer<typeof schemas.personalCredential>;
 
 const didSchema = z.string().startsWith("did:ethr:0x");
+const didGoerliSchema = z.string().startsWith("did:ethr:5:0x");
 
 /**
  * Our flavour of [Veramo's VerifiableCredential type](https://github.com/uport-project/veramo/blob/a110e96655c940bc8432c040c078a295e5a1fc79/packages/core/src/types/vc-data-model.ts#L98-L104)
@@ -12,16 +13,16 @@ const verifiableCredential = z
   .object({
     issuer: z
       .object({
-        id: didSchema,
+        id: didSchema.or(didGoerliSchema),
       })
       .or(z.string()),
     credentialSubject: z.object({
-      id: didSchema,
+      id: didSchema.or(didGoerliSchema),
     }),
     type: z.array(z.nativeEnum(VerifiableCredentialType)),
     "@context": z.string().url().array(),
     issuanceDate: z.string(),
-    expirationDate: z.string(),
+    expirationDate: z.string().optional(),
     proof: z.object({
       type: z.string(),
       jwt: z.string(),
@@ -34,7 +35,7 @@ export type VerifiableCredential = z.infer<typeof verifiableCredential>;
 export type PersonalCredential = z.infer<typeof personalCredential>;
 
 const personalCredential = verifiableCredential.extend({
-  type: z.array(z.literal(VerifiableCredentialType.PersonCredential)),
+  /**TODO: make stricter for personalCredential */
 });
 
 export const schemas = {

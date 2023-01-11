@@ -14,10 +14,11 @@ const WelfarePage: NextPage = () => {
 
   const getVc = useCallback(async () => {
     if (address) {
-      const { vc } = await utils.client.welfare.getWelfareVc.query({
-        //@ts-ignore -> Should be solved with https://github.com/aridder/pengekrukka/pull/75
-        publicKey: address!,
+      const personalCredential = await utils.client.wallet.getPersonalCredential.query({
+        publicKey: address as string,
       });
+
+      const { vc } = await utils.client.welfare.getWelfareVc.query(personalCredential);
       setVc(vc);
     }
   }, [address, isConnected]);

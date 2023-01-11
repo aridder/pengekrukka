@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { TestContext, TestFunction } from "vitest";
 import { appRouter } from "../server/trpc/router/_app";
-import { PersonalCredentialSchema } from "../server/trpc/schemas";
+import { PersonalCredential } from "../server/trpc/schemas";
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { MnemonicConfig } from "./config";
 
@@ -48,10 +48,9 @@ export const getAPICaller = () =>
   });
 
 export const fakeDid = () => `did:ethr:${faker.finance.ethereumAddress()}`;
-export const mockPersonCredential: () => PersonalCredentialSchema = () => ({
+export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential => ({
   credentialSubject: {
-    id: fakeDid(),
-    something: "something",
+    id: subjectId,
   },
   "@context": [faker.internet.url()],
   issuer: {
