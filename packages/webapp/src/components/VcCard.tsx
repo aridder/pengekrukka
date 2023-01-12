@@ -1,14 +1,25 @@
-import icons from "react-icons";
 import * as featherIcons from "react-icons/fa";
 import { VerifiableCredential } from "../server/trpc/schemas";
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { toReadableDate } from "../utils";
 
-const Icons: { [key in VerifiableCredentialType]: icons.IconType } = {
-  GlassesProofCredential: featherIcons.FaHeart,
-  VerifiableCredential: featherIcons.FaUserCheck,
-  WelfareCredential: featherIcons.FaLifeRing,
-  PersonCredential: featherIcons.FaUser,
+const IconList = (props: { type: VerifiableCredentialType[]; className: string }) => {
+  const IconComponent = {
+    GlassesProofCredential: featherIcons.FaHeart,
+    VerifiableCredential: featherIcons.FaUserCheck,
+    WelfareCredential: featherIcons.FaLifeRing,
+    PersonCredential: featherIcons.FaUser,
+  };
+
+  return (
+    <div className={props.className}>
+      {props.type
+        .map((type) => IconComponent[type])
+        .map((Icon, index) => (
+          <Icon key={index} />
+        ))}
+    </div>
+  );
 };
 
 /**
@@ -54,16 +65,6 @@ const getTitle = (types: VerifiableCredentialType[]) => {
 
   return "Standard VC uten type";
 };
-
-const IconList = (props: { type: VerifiableCredentialType[]; className: string | undefined }) => (
-  <div className={props.className}>
-    {props.type
-      .map((type) => Icons[type])
-      .map((Icon, index) => (
-        <Icon size={20} key={index} />
-      ))}
-  </div>
-);
 
 type Props = { vc: VerifiableCredential };
 export const VcCard = ({ vc }: Props) => (

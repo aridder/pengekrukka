@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+import { addDidPrefix } from "../../../utils";
 import { getConfig } from "../../../utils/config";
 import { schemas } from "../schemas";
 import { router } from "../trpc";
@@ -5,21 +7,27 @@ import { generateVC, VerifiableCredentialType } from "../vc-shared";
 import { protectedProcedure } from "./../trpc";
 
 export const welfareRouter = router({
-  getWelfareVc: protectedProcedure.input(schemas.personalCredential).query(async ({ input }) => {
-    const config = getConfig("WELFARE_MNEMONIC");
+  convertWelfareToken: protectedProcedure
+    .input(schemas.personalCredential)
+    .mutation(async ({ input, ctx }) => {
+      //TODO: validate folkeregisteret issuer as well
+      if (addDidPrefix(ctx.session.address as `0x${string}`) !== input.credentialSubject.id) {
+        throw new TRPCError({
+          message: "Not authorized to modify this credential",
+          code: "UNAUTHORIZED",
+        });
+      }
 
-    //FIXME: some user id validation and lookup of actual welfare amount
-    // TODO add revocation and type of credential from a config file or something
-    return {
-      vc: await generateVC(
+      //FIXME: use user data in returned VC after https://github.com/aridder/pengekrukka/pull/74/files
+
+      const config = getConfig("WELFARE_MNEMONIC");
+      return await generateVC(
         {
           id: `did:ethr:${input.credentialSubject.id}`,
-          title: "Støtte til 100,- NOK for briller",
           amount: 100,
         },
         [VerifiableCredentialType.WelfareCredential, VerifiableCredentialType.VerifiableCredential],
         config
-      ),
-    };
-  }),
+      );
+    }),
 });

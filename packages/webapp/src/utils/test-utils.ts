@@ -35,10 +35,10 @@ export const withIssuerEnv =
     process.env = original;
   };
 
-export const getAPICaller = () =>
+export const getAPICaller = (address: string = "default-address-from-tests") =>
   appRouter.createCaller({
     session: {
-      address: "default-address-from-tests",
+      address: address,
       expires: "never",
       user: {
         name: "test",
@@ -47,7 +47,7 @@ export const getAPICaller = () =>
     } as any,
   });
 
-export const fakeDid = () => `did:ethr:${faker.finance.ethereumAddress()}`;
+export const fakeDid = () => `did:ethr:0x${faker.finance.ethereumAddress()}`;
 export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential => ({
   credentialSubject: {
     id: subjectId,
