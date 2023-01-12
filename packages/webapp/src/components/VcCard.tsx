@@ -69,7 +69,7 @@ const getTitle = (types: VerifiableCredentialType[]) => {
 type Props = { vc: VerifiableCredential };
 export const VcCard = ({ vc }: Props) => (
   <div
-    className="border-1 grid h-56 w-96  grid-cols-1 rounded-xl border-black text-cyan-50"
+    className="border-1 my-2 grid h-56  w-96 grid-cols-1 rounded-xl border-black text-cyan-50"
     style={{ backgroundColor: getColor(vc.type) }}
   >
     <IconList type={vc.type as []} className="flex place-self-end px-3" />

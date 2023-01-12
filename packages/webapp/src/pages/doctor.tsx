@@ -16,8 +16,8 @@ const DoctorPage: NextPage = () => {
   const getVc = useCallback(async () => {
     //FIXME: get the VC from user?
     if (address) {
-      const personalCredential = await utils.client.folkeregisteret.personCredential.query({
-        publicKey: address,
+      const personalCredential = await utils.client.wallet.getPersonalCredential.query({
+        publicKey: address as string,
       });
       const vc = await utils.client.doctor.glassesProof.query(personalCredential);
 
@@ -29,7 +29,7 @@ const DoctorPage: NextPage = () => {
     <Layout>
       <div className="m-10 mx-20 flex flex-col content-center justify-center gap-4">
         <Heading />
-        {!vc && <Button onClick={getVc}> Hent VC </Button>}
+        {!vc && <Button onClick={getVc}>Hent VC</Button>}
         {vc && <VCSection vc={vc} />}
       </div>
     </Layout>
@@ -54,6 +54,6 @@ const Heading = () => (
     <h1 className=" py-4 text-xl underline underline-offset-4">
       Din Journal hos legekontor Jensen
     </h1>
-    <h2 className="flex-auto text-left">Du har mottatt digitalt bevis</h2>
+    <h2 className="flex-auto text-left">Du har mottatet digitalt bevis!</h2>
   </div>
 );

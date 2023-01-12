@@ -44,7 +44,7 @@ const useWalletVcs = (address: string) => {
   const [credentials, setCredentials] = React.useState<VerifiableCredential[]>([]);
 
   const listWallet = async () => {
-    const credentials = await utils.client.wallet.list.query();
+    const credentials = await utils.client.wallet.list.query({ publicKey: address });
     setCredentials(credentials);
   };
 
