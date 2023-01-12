@@ -1,24 +1,22 @@
-import { PersonalCredential, schemas, VerifiableCredential } from "../schemas";
+import { schemas, VerifiableCredential } from "../schemas";
 import { protectedProcedure, router } from "../trpc";
+
 import { appRouter } from "./_app";
 
-const otherCredentialsDB: { [key in string]: VerifiableCredential[] } = {};
-const personalCredentialsDB: { [key in string]: PersonalCredential } = {};
-
 const ensureUserExists = (userdid: string) => {
-  if (!otherCredentialsDB[userdid]) {
-    otherCredentialsDB[userdid] = [];
+  if (!database.otherCredentialsDB[userdid]) {
+    database.otherCredentialsDB[userdid] = [];
   }
 };
 
 const lacksPersonCredential = (userdid: string) => {
-  return !personalCredentialsDB[userdid];
+  return !database.personalCredentialsDB[userdid];
 };
 
 export const walletRouter = router({
   getPersonalCredential: protectedProcedure.input(schemas.userAddressSchema).query(({ ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
-    const personalCredential = personalCredentialsDB[userdid];
+    const personalCredential = database.personalCredentialsDB[userdid];
     return personalCredential!!;
   }),
   /**
@@ -36,16 +34,20 @@ export const walletRouter = router({
           .createCaller(ctx)
           .folkeregisteret.personCredential(input);
 
-        personalCredentialsDB[userdid] = personalCredential;
+        database.personalCredentialsDB[userdid] = personalCredential;
       }
     }),
-  list: protectedProcedure.input(schemas.userAddressSchema).query(async ({ input, ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
 
-    const otherCredentials = otherCredentialsDB[userdid] ?? [];
-    const personalCredential: VerifiableCredential = personalCredentialsDB[userdid]!!;
+    const otherCredentials = database.otherCredentialsDB[userdid] ?? [];
+    const personalCredential: VerifiableCredential = database.personalCredentialsDB[userdid]!!;
 
-    return [personalCredential, ...otherCredentials];
+    if (personalCredential) {
+      return [personalCredential, ...otherCredentials];
+    } else {
+      return otherCredentials;
+    }
   }),
   save: protectedProcedure.input(schemas.verifiableCredential).mutation(async ({ input, ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
@@ -56,7 +58,7 @@ export const walletRouter = router({
 
     ensureUserExists(userdid);
 
-    (otherCredentialsDB[userdid] as VerifiableCredential[]).push(input);
+    (database.otherCredentialsDB[userdid] as VerifiableCredential[]).push(input);
 
     return input;
   }),

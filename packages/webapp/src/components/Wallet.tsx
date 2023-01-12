@@ -26,7 +26,6 @@ export default function Wallet() {
    */
   useEffect(() => {
     const id = setInterval(() => {
-      console.log("Get VC");
       getVc();
     }, 2000);
 
@@ -35,7 +34,7 @@ export default function Wallet() {
 
   const getVc = useCallback(async () => {
     if (address) {
-      const vcs = await utils.client.wallet.list.query({ publicKey: address as string });
+      const vcs = await utils.client.wallet.list.query();
       setMyVerifiableCredentials(vcs);
     }
   }, [address, isConnected]);

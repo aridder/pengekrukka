@@ -38,16 +38,27 @@ const DoctorPage: NextPage = () => {
 
 export default DoctorPage;
 
-const VCSection = (props: { vc: VerifiableCredential }) => (
-  <div className="flex">
-    <VcCard vc={props.vc} />
-    <div className="mx-2 flex flex-col gap-2 place-self-end">
-      (FIXME: IMPLEMENT BUTTONS)
-      <Button onClick={() => {} /**FIXME: Something */}>Last ned som PDF</Button>
-      <Button onClick={() => {} /**FIXME: Something */}>Flytt til digital lommebok</Button>
+const VCSection = (props: { vc: VerifiableCredential }) => {
+  const utils = trpc.useContext();
+
+  return (
+    <div className="flex">
+      <VcCard vc={props.vc} />
+      <div className="mx-2 flex flex-col gap-2 place-self-end">
+        <Button disabled onClick={() => {} /**FIXME: Something */}>
+          Last ned som PDF
+        </Button>
+        <Button
+          onClick={() => {
+            utils.client.wallet.save.mutate(props.vc);
+          }}
+        >
+          Flytt til digital lommebok
+        </Button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Heading = () => (
   <div className=" max-w-xl ">
