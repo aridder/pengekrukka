@@ -45,7 +45,11 @@ export const walletRouter = router({
     const otherCredentials = otherCredentialsDB[userdid] ?? [];
     const personalCredential: VerifiableCredential = personalCredentialsDB[userdid]!!;
 
-    return [personalCredential, ...otherCredentials];
+    if (personalCredential) {
+      return [personalCredential, ...otherCredentials];
+    }
+
+    return otherCredentials;
   }),
   save: protectedProcedure.input(schemas.verifiableCredential).mutation(async ({ input, ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
