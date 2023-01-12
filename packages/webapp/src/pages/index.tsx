@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 
 type Site = {
@@ -45,6 +44,7 @@ const SiteList = (props: { sites: Site[] }) => {
         <Link
           href={site.link}
           className="m-5 mx-auto flex max-w-sm items-center space-x-4 rounded-xl bg-white p-5 shadow-md"
+          id={site.name}
         >
           <div>
             <div className="text-slate-500">{site.name}</div>
@@ -57,11 +57,9 @@ const SiteList = (props: { sites: Site[] }) => {
 };
 
 const Home: NextPage = () => {
-  const { isConnected } = useAccount();
   return (
     <Layout>
-      {isConnected && <SiteList sites={sites} />}
-      {!isConnected && <SiteList sites={sites} />}
+      <SiteList sites={sites} />
     </Layout>
   );
 };

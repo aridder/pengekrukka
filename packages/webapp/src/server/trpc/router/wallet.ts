@@ -1,51 +1,34 @@
-import { PersonalCredential, schemas, VerifiableCredential } from "../schemas";
+import { PersonalCredential, schemas } from "../schemas";
 import { protectedProcedure, router } from "../trpc";
+import { database } from "./database/database";
 import { appRouter } from "./_app";
 
-const otherCredentialsDB: { [key in string]: VerifiableCredential[] } = {};
-const personalCredentialsDB: { [key in string]: PersonalCredential } = {};
-
-const ensureUserExists = (userdid: string) => {
-  if (!otherCredentialsDB[userdid]) {
-    otherCredentialsDB[userdid] = [];
-  }
-};
-
-const lacksPersonCredential = (userdid: string) => {
-  return !personalCredentialsDB[userdid];
-};
-
 export const walletRouter = router({
-  getPersonalCredential: protectedProcedure.input(schemas.userAddressSchema).query(({ ctx }) => {
-    const userdid = `did:ethr:${ctx.session.address}`;
-    const personalCredential = personalCredentialsDB[userdid];
-    return personalCredential!!;
-  }),
   /**
-   * NOTE: This calls folkeregisteret directly to obtain VC.
+   * NOTE: In additoin to retrieving the PersonCredentia, this also calls folkeregisteret
+   * directly to generate it if it is not present.
    * In a real scenario, the wallet would not do this and the VC would come from elsewhere.
    */
-  generatePersonalCredential: protectedProcedure
+  getPersonalCredential: protectedProcedure
     .input(schemas.userAddressSchema)
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       const userdid = `did:ethr:${ctx.session.address}`;
-      ensureUserExists(userdid);
+      const personalCredential = database.getPersonalCredential(userdid);
 
-      if (lacksPersonCredential(userdid)) {
-        const personalCredential = await appRouter
+      if (personalCredential == null) {
+        const newPersonalCredential: PersonalCredential = await appRouter
           .createCaller(ctx)
-          .folkeregisteret.personCredential(input);
+          .folkeregisteret.personCredential({ publicKey: input.publicKey });
 
-        personalCredentialsDB[userdid] = personalCredential;
+        database.upsert(userdid, newPersonalCredential);
+        return newPersonalCredential;
+      } else {
+        return personalCredential;
       }
     }),
   list: protectedProcedure.input(schemas.userAddressSchema).query(async ({ input, ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
-
-    const otherCredentials = otherCredentialsDB[userdid] ?? [];
-    const personalCredential: VerifiableCredential = personalCredentialsDB[userdid]!!;
-
-    return [personalCredential, ...otherCredentials];
+    return database.list(userdid);
   }),
   save: protectedProcedure.input(schemas.verifiableCredential).mutation(async ({ input, ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
@@ -54,9 +37,7 @@ export const walletRouter = router({
       throw new Error("Credential subject does not match user");
     }
 
-    ensureUserExists(userdid);
-
-    (otherCredentialsDB[userdid] as VerifiableCredential[]).push(input);
+    database.upsert(userdid, input);
 
     return input;
   }),
