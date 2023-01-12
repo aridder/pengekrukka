@@ -1,8 +1,9 @@
-import { VerifiableCredential, VerifiableCredentialType } from "@pengekrukka/vc-shared";
 import * as featherIcons from "react-icons/fa";
+import { VerifiableCredential } from "../server/trpc/schemas";
+import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { toReadableDate } from "../utils";
 
-const Icon = (props: { type: VerifiableCredentialType[]; className: string }) => {
+const IconList = (props: { type: VerifiableCredentialType[]; className: string }) => {
   const IconComponent = {
     GlassesProofCredential: featherIcons.FaHeart,
     VerifiableCredential: featherIcons.FaUserCheck,
@@ -25,16 +26,16 @@ const Icon = (props: { type: VerifiableCredentialType[]; className: string }) =>
  * fugly way of getting a color
  * acceptable because it's a hackathon
  */
-const getColor = (type: VerifiableCredentialType[]) => {
-  if (type.includes("GlassesProofCredential")) {
+const getColor = (types: VerifiableCredentialType[]) => {
+  if (types.includes(VerifiableCredentialType.GlassesProofCredential)) {
     return "rgb(6,57,112)";
   }
 
-  if (type.includes("WelfareCredential")) {
+  if (types.includes(VerifiableCredentialType.WelfareCredential)) {
     return "rgb(226,135,67)";
   }
 
-  if (type.includes("VerifiableCredential")) {
+  if (types.includes(VerifiableCredentialType.VerifiableCredential)) {
     return "rgb(82, 247, 89)";
   }
 
@@ -45,20 +46,20 @@ const getColor = (type: VerifiableCredentialType[]) => {
  * fugly way of getting a title
  * acceptable because it's a hackathon
  */
-const getTitle = (type: VerifiableCredentialType[]) => {
-  if (type.includes("GlassesProofCredential")) {
+const getTitle = (types: VerifiableCredentialType[]) => {
+  if (types.includes(VerifiableCredentialType.GlassesProofCredential)) {
     return "Brillebevis :)";
   }
 
-  if (type.includes("WelfareCredential")) {
+  if (types.includes(VerifiableCredentialType.WelfareCredential)) {
     return "Støtte fra pengekrukka";
   }
 
-  if (type.includes("PersonCredential")) {
+  if (types.includes(VerifiableCredentialType.PersonCredential)) {
     return "Personlig ID";
   }
 
-  if (type.includes("VerifiableCredential")) {
+  if (types.includes(VerifiableCredentialType.VerifiableCredential)) {
     return "Standard VC";
   }
 
@@ -66,18 +67,13 @@ const getTitle = (type: VerifiableCredentialType[]) => {
 };
 
 type Props = { vc: VerifiableCredential };
-export const VcCard = ({ vc }: Props) => {
-  return (
-    <div
-      className="border-1 grid h-56 w-96  grid-cols-1 rounded-xl border-black text-cyan-50"
-      style={{ backgroundColor: getColor(vc.type as VerifiableCredentialType[]) }}
-    >
-      <Icon
-        type={vc.type as VerifiableCredentialType[]}
-        className="flex place-self-end px-3"
-      ></Icon>
-      <p className="p-10 text-lg font-bold">{getTitle(vc.type as VerifiableCredentialType[])}</p>
-      <div className="place-self-end px-4">{toReadableDate(vc.issuanceDate)} </div>
-    </div>
-  );
-};
+export const VcCard = ({ vc }: Props) => (
+  <div
+    className="border-1 grid h-56 w-96  grid-cols-1 rounded-xl border-black text-cyan-50"
+    style={{ backgroundColor: getColor(vc.type) }}
+  >
+    <IconList type={vc.type as []} className="flex place-self-end px-3" />
+    <p className="p-10 text-lg font-bold">{getTitle(vc.type as [])}</p>
+    <div className="place-self-end px-4">{toReadableDate(vc.issuanceDate)} </div>
+  </div>
+);

@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { TestContext, TestFunction } from "vitest";
 import { appRouter } from "../server/trpc/router/_app";
 import { PersonalCredentialSchema } from "../server/trpc/schemas";
+import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { MnemonicConfig } from "./config";
 
 const envKeys = [...MnemonicConfig, "RPC_URL", "BASE_URL"] as const;
@@ -59,6 +60,7 @@ export const mockPersonCredential: () => PersonalCredentialSchema = () => ({
     type: "proof2020",
     jwt: faker.datatype.uuid(),
   },
-  type: ["PersonCredential"],
+  type: [VerifiableCredentialType.PersonCredential],
+  expirationDate: faker.date.soon().toISOString(),
   issuanceDate: faker.date.recent().toISOString(),
 });

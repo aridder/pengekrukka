@@ -1,7 +1,7 @@
 "use client";
-import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
+import { VerifiableCredential } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 import { ClientOnly } from "./utils";
 import { VcCard } from "./VcCard";

@@ -20,8 +20,7 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
-  },
-  transpilePackages: ['@pengekrukka/vc-shared'],
+  }
 };
 
 export default config;

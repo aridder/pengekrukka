@@ -1,9 +1,9 @@
-import { generateVC } from "@pengekrukka/vc-shared";
 import { TRPCError } from "@trpc/server";
 import { addDidPrefix } from "../../../utils";
 import { getConfig } from "../../../utils/config";
 import { schemas } from "../schemas";
 import { router } from "../trpc";
+import { generateVC, VerifiableCredentialType } from "../vc-shared";
 import { protectedProcedure } from "./../trpc";
 
 export const welfareRouter = router({
@@ -26,7 +26,7 @@ export const welfareRouter = router({
           id: `did:ethr:${input.credentialSubject.id}`,
           amount: 100,
         },
-        ["WelfareCredential"],
+        [VerifiableCredentialType.WelfareCredential, VerifiableCredentialType.VerifiableCredential],
         config
       );
     }),

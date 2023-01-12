@@ -1,7 +1,7 @@
-import { generateVC } from "@pengekrukka/vc-shared";
 import { getConfig } from "../../../utils/config";
-import { schemas } from "../schemas";
+import { PersonalCredential, schemas } from "../schemas";
 import { protectedProcedure, router } from "../trpc";
+import { generateVC, VerifiableCredentialType } from "../vc-shared";
 
 export const folkeregisteretRouter = router({
   personCredential: protectedProcedure.input(schemas.userAddressSchema).query(async ({ input }) => {
@@ -11,10 +11,11 @@ export const folkeregisteretRouter = router({
         id: `did:ethr:${input.publicKey}`,
         ssn: "12345678901",
       },
-      ["VerifiableCredential", "PersonCredential"],
+      [VerifiableCredentialType.PersonCredential, VerifiableCredentialType.VerifiableCredential],
       config
     );
 
-    return vc;
+    //THINKABOUT: how to infer and ensure `PersonalCredential` from `generateVC`
+    return vc as PersonalCredential;
   }),
 });
