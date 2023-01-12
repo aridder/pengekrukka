@@ -1,7 +1,7 @@
-import { generateVC } from "@pengekrukka/vc-shared";
 import { getConfig } from "../../../utils/config";
 import { schemas } from "../schemas";
 import { router } from "../trpc";
+import { generateVC, VerifiableCredentialType } from "../vc-shared";
 import { protectedProcedure } from "./../trpc";
 
 export const welfareRouter = router({
@@ -17,7 +17,7 @@ export const welfareRouter = router({
           title: "Støtte til 100,- NOK for briller",
           amount: 100,
         },
-        ["WelfareCredential", "VerifiableCredential"],
+        [VerifiableCredentialType.WelfareCredential, VerifiableCredentialType.VerifiableCredential],
         config
       ),
     };

@@ -1,9 +1,9 @@
-import { VerifiableCredential } from "@pengekrukka/vc-shared";
 import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import Layout from "../components/layout/Layout";
 import { VcCard } from "../components/VcCard";
+import { VerifiableCredential } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 
 const WelfarePage: NextPage = () => {
