@@ -4,7 +4,7 @@ import { protectedProcedure, router } from "../trpc";
 const credentialsTable: VerifiableCredential[] = [];
 
 export const walletRouter = router({
-  list: protectedProcedure.input(schemas.personalCredential).query(async ({ input, ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
 
     const userCredentials = credentialsTable.filter((vc) => vc.credentialSubject.id === userdid);

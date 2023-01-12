@@ -17,10 +17,7 @@ export default function Wallet() {
 
   const getVc = useCallback(async () => {
     if (address) {
-      const personalCredential = await utils.client.folkeregisteret.personCredential.query({
-        publicKey: address,
-      });
-      const vcs = await utils.client.wallet.list.query(personalCredential);
+      const vcs = await utils.client.wallet.list.query();
       setMyVerifiableCredentials(vcs);
     }
   }, [address, isConnected]);
