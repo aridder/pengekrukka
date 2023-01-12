@@ -19,8 +19,6 @@ const DoctorPage: NextPage = () => {
       const personalCredential = await utils.client.wallet.getPersonalCredential.query({
         publicKey: address as string,
       });
-
-      console.log("Calling with", personalCredential);
       const vc = await utils.client.doctor.glassesProof.query(personalCredential);
 
       setVc(vc);

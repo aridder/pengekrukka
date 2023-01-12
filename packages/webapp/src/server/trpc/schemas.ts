@@ -36,6 +36,7 @@ export type PersonalCredential = z.infer<typeof personalCredential>;
 
 const personalCredential = verifiableCredential.extend({
   /**TODO: make stricter for personalCredential */
+  type: z.array(z.literal(VerifiableCredentialType.PersonCredential)),
 });
 
 export const schemas = {
