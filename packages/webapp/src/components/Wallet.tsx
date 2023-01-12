@@ -1,5 +1,6 @@
 "use client";
 import { VerifiableCredential } from "@pengekrukka/vc-shared";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import { PersonalCredentialSchema } from "../server/trpc/schemas";
@@ -41,6 +42,7 @@ export default function Wallet() {
           </div>
         )}
       </ClientOnly>
+      <ConnectButton />
     </div>
   );
 }
