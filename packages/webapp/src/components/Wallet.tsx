@@ -1,4 +1,5 @@
 "use client";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import { VerifiableCredential } from "../server/trpc/schemas";
@@ -38,6 +39,7 @@ export default function Wallet() {
           </div>
         )}
       </ClientOnly>
+      <ConnectButton />
     </div>
   );
 }
