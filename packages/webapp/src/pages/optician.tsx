@@ -3,16 +3,7 @@ import Layout from "../components/layout/Layout";
 import { Glasses } from "../components/optician/Glasses";
 import { UploadSection } from "../components/UploadSection";
 import { ClientOnly } from "../components/utils";
-import { VerifiableCredential, WelfareCredential } from "../server/trpc/schemas";
-import { VerifiableCredentialType } from "../server/trpc/vc-shared";
-
-function isWelfareCredential(credential: VerifiableCredential): credential is WelfareCredential {
-  return (
-    credential.type.includes(VerifiableCredentialType.WelfareCredential) &&
-    (credential as WelfareCredential).credentialSubject.amount !== undefined &&
-    (credential as WelfareCredential).credentialSubject.amount !== null
-  );
-}
+import { isWelfareCredential, VerifiableCredential } from "../server/trpc/schemas";
 
 const DiscountSection = (props: { address: string | undefined }) => {
   if (!props.address) {

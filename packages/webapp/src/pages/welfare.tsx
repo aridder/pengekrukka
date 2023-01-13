@@ -5,7 +5,7 @@ import Layout from "../components/layout/Layout";
 import { UploadSection } from "../components/UploadSection";
 import { Button } from "../components/utils";
 import { VcCard } from "../components/VcCard";
-import { GlassesCredential, VerifiableCredential } from "../server/trpc/schemas";
+import { isGlassesCredential, VerifiableCredential } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 
 const WelfareCredentials = (props: { vcs: VerifiableCredential[] }) => {
@@ -52,13 +52,15 @@ const WelfarePage: NextPage = () => {
         <div className="my-10 mx-5 max-w-xl">
           <UploadSection
             address={address as string}
-            onCredentialSelected={async (assumedPersonalCredential) => {
-              //THINKABOUT: how to handle the user selecting anything other than a personal credential
-
-              const generatedVC = await utils.client.welfare.convertWelfareToken.mutate(
-                assumedPersonalCredential as GlassesCredential
-              );
-              setGeneratedVCs([generatedVC, ...generatedVCs]);
+            onCredentialSelected={async (credential) => {
+              if (!isGlassesCredential(credential)) {
+                alert("Beviset må være et brillebevis");
+              } else {
+                const generatedVC = await utils.client.welfare.convertWelfareToken.mutate(
+                  credential
+                );
+                setGeneratedVCs([generatedVC, ...generatedVCs]);
+              }
             }}
           />
         </div>

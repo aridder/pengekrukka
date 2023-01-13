@@ -37,7 +37,7 @@ const verifiableCredential = z
 
 export type VerifiableCredential = z.infer<typeof verifiableCredential>;
 export type PersonalCredential = z.infer<typeof personalCredential>;
-export type GlassesCredential = z.infer<typeof glassesCredential>;
+export type GlassesProofCredential = z.infer<typeof glassesCredential>;
 export type WelfareCredential = z.infer<typeof welfareCredential>;
 
 const personalCredential = verifiableCredential.extend({
@@ -79,3 +79,23 @@ export const schemas = {
   verifiableCredential,
   glassesCredential,
 };
+
+export function isWelfareCredential(
+  credential: VerifiableCredential
+): credential is WelfareCredential {
+  return (
+    credential.type.includes(VerifiableCredentialType.WelfareCredential) &&
+    (credential as WelfareCredential).credentialSubject.amount !== undefined &&
+    (credential as WelfareCredential).credentialSubject.amount !== null
+  );
+}
+
+export function isGlassesCredential(
+  credential: VerifiableCredential
+): credential is GlassesProofCredential {
+  return (
+    credential.type.includes(VerifiableCredentialType.GlassesProofCredential) &&
+    ((credential as GlassesProofCredential).credentialSubject.needsGlasses === false ||
+      (credential as GlassesProofCredential).credentialSubject.needsGlasses === true)
+  );
+}
