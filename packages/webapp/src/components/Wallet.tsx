@@ -1,6 +1,6 @@
 "use client";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { VerifiableCredential } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
@@ -15,10 +15,22 @@ export default function Wallet() {
     []
   );
 
+  /**
+   * In this hackathon implementation, this call will
+   * also generate the credential as if it came from
+   * Folkeregisteret.
+   *
+   * The `useRef`-call is a **HACK** to ensure
+   * that the credential endpoint is only called
+   * once, avoiding a race condition where we'd
+   * end up with two personal credentials.
+   */
+  const called = React.useRef(false);
   useEffect(() => {
-    utils.client.wallet.generatePersonalCredential
-      .mutate({ publicKey: address as string })
-      .then(() => getVc());
+    if (address && !called.current) {
+      called.current = true;
+      utils.client.wallet.getPersonalCredential.query({ publicKey: address });
+    }
   }, []);
 
   /** Polling for backend updates.
