@@ -89,6 +89,10 @@ export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential 
 
 export const mockGlassesCredential = (subjectId = fakeDid()): GlassesProofCredential => ({
   ...mockAnyCredential(subjectId),
+  credentialSubject: {
+    id: mockAnyCredential().credentialSubject.id,
+    needsGlasses: true,
+  },
   type: [
     VerifiableCredentialType.GlassesProofCredential,
     VerifiableCredentialType.VerifiableCredential,
