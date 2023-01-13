@@ -11,7 +11,7 @@ const useWalletVcs = (address: string) => {
 
   const listWallet = async () => {
     const credentials = await utils.client.wallet.list.query();
-    console.log("Got credentials", credentials);
+
     setCredentials(credentials);
   };
 

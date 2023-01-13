@@ -5,10 +5,14 @@ import Layout from "../components/layout/Layout";
 import { UploadSection } from "../components/UploadSection";
 import { Button } from "../components/utils";
 import { VcCard } from "../components/VcCard";
-import { PersonalCredential, VerifiableCredential } from "../server/trpc/schemas";
+import { GlassesCredential, VerifiableCredential } from "../server/trpc/schemas";
 import { trpc } from "../utils/trpc";
 
 const WelfareCredentials = (props: { vcs: VerifiableCredential[] }) => {
+  const utils = trpc.useContext();
+  const transferToWallet = (credential: VerifiableCredential) => {
+    utils.client.wallet.save.mutate(credential);
+  };
   return (
     <div>
       {props.vcs.map((vc) => {
@@ -20,14 +24,7 @@ const WelfareCredentials = (props: { vcs: VerifiableCredential[] }) => {
             <div className="flex">
               <VcCard vc={vc} />
               <div className="flex flex-col self-end">
-                <Button
-                  onClick={() => {
-                    //FIXME: IMPLEMENT
-                    alert("NOT IMPLEMENTED");
-                  }}
-                >
-                  Overfør til lommebok
-                </Button>
+                <Button onClick={() => transferToWallet(vc)}>Overfør til lommebok</Button>
                 {/*TODO: enable if PDF is enabled */}
                 <Button disabled>Skriv ut</Button>
               </div>
@@ -57,9 +54,9 @@ const WelfarePage: NextPage = () => {
             address={address as string}
             onCredentialSelected={async (assumedPersonalCredential) => {
               //THINKABOUT: how to handle the user selecting anything other than a personal credential
-              console.log(assumedPersonalCredential);
+
               const generatedVC = await utils.client.welfare.convertWelfareToken.mutate(
-                assumedPersonalCredential as PersonalCredential
+                assumedPersonalCredential as GlassesCredential
               );
               setGeneratedVCs([generatedVC, ...generatedVCs]);
             }}

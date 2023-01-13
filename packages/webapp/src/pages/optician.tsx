@@ -3,14 +3,14 @@ import Layout from "../components/layout/Layout";
 import { Glasses } from "../components/optician/Glasses";
 import { UploadSection } from "../components/UploadSection";
 import { ClientOnly } from "../components/utils";
-import { GlassesCredential, VerifiableCredential } from "../server/trpc/schemas";
+import { VerifiableCredential, WelfareCredential } from "../server/trpc/schemas";
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 
-function isGlassesCredential(credential: VerifiableCredential): credential is GlassesCredential {
+function isWelfareCredential(credential: VerifiableCredential): credential is WelfareCredential {
   return (
-    credential.type.includes(VerifiableCredentialType.GlassesProofCredential) &&
-    (credential as GlassesCredential).credentialSubject.amount !== undefined &&
-    (credential as GlassesCredential).credentialSubject.amount !== null
+    credential.type.includes(VerifiableCredentialType.WelfareCredential) &&
+    (credential as WelfareCredential).credentialSubject.amount !== undefined &&
+    (credential as WelfareCredential).credentialSubject.amount !== null
   );
 }
 
@@ -20,8 +20,8 @@ const DiscountSection = (props: { address: string | undefined }) => {
   }
 
   const onUpload = (credential: VerifiableCredential) => {
-    if (!isGlassesCredential(credential)) {
-      alert("Kun brillebevis tillat");
+    if (!isWelfareCredential(credential)) {
+      alert("Kun brillestøtte tillat");
     } else {
       alert("Skal legge til stoette paa " + credential.credentialSubject.amount);
     }
