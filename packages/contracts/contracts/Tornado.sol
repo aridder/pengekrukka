@@ -10,7 +10,7 @@
  */
 
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "./MerkleTreeWithHistory.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -88,7 +88,7 @@ abstract contract Tornado is MerkleTreeWithHistory, ReentrancyGuard {
     require(
       verifier.verifyProof(
         _proof,
-        [uint256(_root), uint256(_nullifierHash), uint256(_recipient), uint256(_relayer), _fee, _refund]
+        [uint256(_root), uint256(_nullifierHash), addressToUint256(_recipient), addressToUint256(_relayer), _fee, _refund]
       ),
       "Invalid withdraw proof"
     );
@@ -96,6 +96,14 @@ abstract contract Tornado is MerkleTreeWithHistory, ReentrancyGuard {
     nullifierHashes[_nullifierHash] = true;
     _processWithdraw(_recipient, _relayer, _fee, _refund);
     emit Withdrawal(_recipient, _nullifierHash, _relayer, _fee);
+  }
+
+  /** @dev converts an address to uint256
+   * Added by olaven to make the contract compatible with 
+   * new type casting (see [new retrictions](https://docs.soliditylang.org/en/v0.8.14/080-breaking-changes.html))
+   */
+  function addressToUint256(address a) internal pure returns (uint256) {
+    return uint256(uint160(a)); 
   }
 
   /** @dev this function is defined in a child contract */
