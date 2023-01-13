@@ -54,6 +54,6 @@ const Heading = () => (
     <h1 className=" py-4 text-xl underline underline-offset-4">
       Din Journal hos legekontor Jensen
     </h1>
-    <h2 className="flex-auto text-left">Du har mottatet digitalt bevis!</h2>
+    <h2 className="flex-auto text-left">Du har mottat et digitalt bevis!</h2>
   </div>
 );

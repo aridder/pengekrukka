@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { TestContext, TestFunction } from "vitest";
 import { appRouter } from "../server/trpc/router/_app";
-import { PersonalCredential } from "../server/trpc/schemas";
+import { PersonalCredential, VerifiableCredential } from "../server/trpc/schemas";
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { MnemonicConfig } from "./config";
 
@@ -48,7 +48,20 @@ export const getAPICaller = (address: string = "default-address-from-tests") =>
   });
 
 export const fakeDid = () => `did:ethr:0x${faker.finance.ethereumAddress()}`;
-export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential => ({
+
+const random = <T>(array: T[]): T => {
+  const index = Math.floor(Math.random() * array.length);
+  const value = array[index];
+
+  return value as T;
+};
+
+const randomCredentialType = () => {
+  const possible = Array.from(Object.values(VerifiableCredentialType));
+  return random(possible);
+};
+
+export const mockAnyCredential = (subjectId = fakeDid()): VerifiableCredential => ({
   credentialSubject: {
     id: subjectId,
   },
@@ -60,7 +73,18 @@ export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential 
     type: "proof2020",
     jwt: faker.datatype.uuid(),
   },
-  type: [VerifiableCredentialType.PersonCredential],
+  type: [randomCredentialType(), randomCredentialType()],
   expirationDate: faker.date.soon().toISOString(),
   issuanceDate: faker.date.recent().toISOString(),
+});
+
+export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential => ({
+  ...mockAnyCredential(),
+  type: [VerifiableCredentialType.PersonCredential],
+});
+
+//FIXME: use GlassesCredential type when https://github.com/aridder/pengekrukka/blob/56e9f32942124682c3d04eb9891f42dcc5553271/packages/webapp/src/server/trpc/schemas.ts#L37 is merged
+export const mockGlassesCredential = (subjectId = fakeDid()): VerifiableCredential => ({
+  ...mockAnyCredential(),
+  type: [VerifiableCredentialType.GlassesProofCredential],
 });
