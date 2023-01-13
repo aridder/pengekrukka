@@ -10,10 +10,10 @@
  */
 
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.17;
 import "hardhat/console.sol";
 import "./MerkleTreeWithHistory.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 interface IVerifier {
   function verifyProof(bytes memory _proof, uint256[6] memory _input) external returns (bool);
