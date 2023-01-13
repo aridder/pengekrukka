@@ -21,5 +21,17 @@
             ],
             "type": "node"
         },
+        {
+            "name": "Next.js: debug full stack",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "yarn dev",
+            "cwd": "${workspaceFolder}/packages/webapp",
+            "serverReadyAction": {
+                "pattern": "started server on .+, url: (https?://.+)",
+                "uriFormat": "%s",
+                "action": "openExternally"
+            }
+        }
     ]
 }
