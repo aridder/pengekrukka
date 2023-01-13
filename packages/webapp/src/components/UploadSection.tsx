@@ -43,7 +43,7 @@ export const UploadSection = (props: {
               className="max-h-10 self-end"
               onClick={() => props.onCredentialSelected(credential)}
             >
-              Konverter
+              Last opp 
             </Button>
           </div>
         ))}
