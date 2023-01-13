@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect, it } from "vitest";
 import { addDidPrefix } from "../../../utils";
-import { getAPICaller, mockPersonCredential, withIssuerEnv } from "../../../utils/test-utils";
+import { getAPICaller, mockGlassesCredential, withIssuerEnv } from "../../../utils/test-utils";
 
 describe("the welfare router", async () => {
   it(
@@ -10,9 +10,10 @@ describe("the welfare router", async () => {
       const address = faker.finance.ethereumAddress() as `0x${string}`;
       const caller = getAPICaller(address);
       await caller.welfare.convertWelfareToken({
-        ...mockPersonCredential(),
+        ...mockGlassesCredential(),
         credentialSubject: {
           id: addDidPrefix(address),
+          needsGlasses: true,
         },
       });
     })
@@ -29,9 +30,10 @@ describe("the welfare router", async () => {
       const caller = getAPICaller(firstAddress);
       await expect(
         caller.welfare.convertWelfareToken({
-          ...mockPersonCredential(),
+          ...mockGlassesCredential(),
           credentialSubject: {
             id: secondAddress,
+            needsGlasses: true,
           },
         })
       ).rejects.toThrow();
@@ -45,9 +47,10 @@ describe("the welfare router", async () => {
 
       const caller = getAPICaller(publicKey);
       const response = await caller.welfare.convertWelfareToken({
-        ...mockPersonCredential(),
+        ...mockGlassesCredential(),
         credentialSubject: {
           id: addDidPrefix(publicKey),
+          needsGlasses: true,
         },
       });
       expect(response.proof).not.to.be.null;

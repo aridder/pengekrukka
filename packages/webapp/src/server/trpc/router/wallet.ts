@@ -4,6 +4,7 @@ import { database } from "./database/database";
 import { appRouter } from "./_app";
 
 export const walletRouter = router({
+
   /**
    * NOTE: In additoin to retrieving the PersonCredentia, this also calls folkeregisteret
    * directly to generate it if it is not present.
@@ -26,8 +27,9 @@ export const walletRouter = router({
         return personalCredential;
       }
     }),
-  list: protectedProcedure.input(schemas.userAddressSchema).query(async ({ input, ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
+
     return database.list(userdid);
   }),
   save: protectedProcedure.input(schemas.verifiableCredential).mutation(async ({ input, ctx }) => {
