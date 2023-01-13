@@ -1,7 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { TestContext, TestFunction } from "vitest";
 import { appRouter } from "../server/trpc/router/_app";
-import { PersonalCredential, VerifiableCredential } from "../server/trpc/schemas";
+import {
+  GlassesProofCredential,
+  PersonalCredential,
+  VerifiableCredential,
+} from "../server/trpc/schemas";
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { MnemonicConfig } from "./config";
 
@@ -79,12 +83,14 @@ export const mockAnyCredential = (subjectId = fakeDid()): VerifiableCredential =
 });
 
 export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential => ({
-  ...mockAnyCredential(),
-  type: [VerifiableCredentialType.PersonCredential],
+  ...mockAnyCredential(subjectId),
+  type: [VerifiableCredentialType.PersonCredential, VerifiableCredentialType.VerifiableCredential],
 });
 
-//FIXME: use GlassesCredential type when https://github.com/aridder/pengekrukka/blob/56e9f32942124682c3d04eb9891f42dcc5553271/packages/webapp/src/server/trpc/schemas.ts#L37 is merged
-export const mockGlassesCredential = (subjectId = fakeDid()): VerifiableCredential => ({
-  ...mockAnyCredential(),
-  type: [VerifiableCredentialType.GlassesProofCredential],
+export const mockGlassesCredential = (subjectId = fakeDid()): GlassesProofCredential => ({
+  ...mockAnyCredential(subjectId),
+  type: [
+    VerifiableCredentialType.GlassesProofCredential,
+    VerifiableCredentialType.VerifiableCredential,
+  ],
 });
