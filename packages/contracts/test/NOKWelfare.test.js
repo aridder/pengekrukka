@@ -39,6 +39,7 @@ function snarkVerify(proof) {
   const verification_key = unstringifyBigInts2(require("../build/circuits/withdraw_verification_key.json"));
   return snarkjs["groth"].isValid(verification_key, proof, proof.publicSignals);
 }
+
 describe("NOKWelfare", () => {
   let tokenDenomination = "1000000000000000000";
 
@@ -92,6 +93,7 @@ describe("NOKWelfare", () => {
       let hasDepositEvent = receipt.events.find((e) => e.event === "Deposit");
       expect(hasDepositEvent).to.not.be.undefined;
     });
+
     it("should not be allowed to deposit ETH", async () => {
       const { tornado } = await loadFixture(fixture);
       await expect(tornado.deposit(toFixedHex(44), { value: 1 })).to.be.revertedWith(

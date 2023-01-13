@@ -7,9 +7,7 @@ import { EthereumDIDRegistry } from "../typechain-types/contracts/EthereumDIDReg
 import { getDeployedContract } from "./test-utils";
 
 describe("EthereumDIDRegistry", async () => {
-  const didRegistry = (await getDeployedContract(
-    "EthereumDIDRegistry"
-  )) as EthereumDIDRegistry;
+  const didRegistry = (await getDeployedContract("EthereumDIDRegistry")) as EthereumDIDRegistry;
 
   describe("Check owner", async () => {
     it("can access both accounts", async () => {
@@ -36,9 +34,7 @@ describe("EthereumDIDRegistry", async () => {
       const ethrDidResolver = getResolver(providerConfig);
       const didResolver = new Resolver(ethrDidResolver);
 
-      const resolved = await didResolver.resolve(
-        `did:ethr:private:${u1.address}`
-      );
+      const resolved = await didResolver.resolve(`did:ethr:private:${u1.address}`);
 
       expect(resolved.didDocument?.service).to.be.undefined;
 
@@ -53,14 +49,10 @@ describe("EthereumDIDRegistry", async () => {
 
       const res = await setAttributeTx.wait();
 
-      const resolvedAfter = await didResolver.resolve(
-        `did:ethr:private:${u1.address}`
-      );
+      const resolvedAfter = await didResolver.resolve(`did:ethr:private:${u1.address}`);
       expect(resolvedAfter.didDocument!.service!.length).to.equal(1);
       expect(resolvedAfter.didDocument!.service![0].type).to.equal("identitet");
-      expect(resolvedAfter.didDocument!.service![0].serviceEndpoint).to.equal(
-        "https://folkeregisteret.no/identitet"
-      );
+      expect(resolvedAfter.didDocument!.service![0].serviceEndpoint).to.equal("https://folkeregisteret.no/identitet");
     });
   });
 });

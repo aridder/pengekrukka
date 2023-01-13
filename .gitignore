@@ -1,3 +1,5 @@
+packages/circuits/build
+packages/contracts/build
 cache 
 **/artifacts 
 **/typechain-types 
