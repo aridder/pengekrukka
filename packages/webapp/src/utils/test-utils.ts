@@ -82,9 +82,17 @@ export const mockAnyCredential = (subjectId = fakeDid()): VerifiableCredential =
   issuanceDate: faker.date.recent().toISOString(),
 });
 
-export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential => ({
+export const mockPersonCredential = (subjectId: string = fakeDid()): PersonalCredential => ({
   ...mockAnyCredential(subjectId),
   type: [VerifiableCredentialType.PersonCredential, VerifiableCredentialType.VerifiableCredential],
+  credentialSubject: {
+    ...mockAnyCredential(subjectId).credentialSubject,
+    ssn: faker.datatype.uuid(),
+    income: {
+      amount: faker.datatype.number({ min: 0, max: 5_000_000 }),
+      currency: "NOK",
+    },
+  },
 });
 
 export const mockGlassesCredential = (subjectId = fakeDid()): GlassesProofCredential => ({
