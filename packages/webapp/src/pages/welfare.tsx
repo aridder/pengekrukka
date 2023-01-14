@@ -6,6 +6,7 @@ import { UploadSection } from "../components/UploadSection";
 import { Button } from "../components/utils";
 import { VcCard } from "../components/VcCard";
 import { isGlassesCredential, VerifiableCredential } from "../server/trpc/schemas";
+import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { trpc } from "../utils/trpc";
 
 const WelfareCredentials = (props: { vcs: VerifiableCredential[] }) => {
@@ -52,6 +53,7 @@ const WelfarePage: NextPage = () => {
         <div className="my-10 mx-5 max-w-xl">
           <UploadSection
             address={address as string}
+            type={VerifiableCredentialType.GlassesProofCredential}
             onCredentialSelected={async (credential) => {
               if (!isGlassesCredential(credential)) {
                 alert("Beviset må være et brillebevis");

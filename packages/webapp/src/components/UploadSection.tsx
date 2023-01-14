@@ -1,18 +1,21 @@
 import React, { useEffect } from "react";
 import { VerifiableCredential } from "../server/trpc/schemas";
+import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { trpc } from "../utils/trpc";
 import { Button } from "./utils";
 import { VcCard } from "./VcCard";
 
-const useWalletVcs = (address: string) => {
+const useWalletVcs = (
+  address: string,
+  filter: (credential: VerifiableCredential) => boolean = () => true
+) => {
   const utils = trpc.useContext();
 
   const [credentials, setCredentials] = React.useState<VerifiableCredential[]>([]);
 
   const listWallet = async () => {
     const credentials = await utils.client.wallet.list.query();
-
-    setCredentials(credentials);
+    setCredentials(credentials.filter(filter));
   };
 
   useEffect(() => {
@@ -25,15 +28,18 @@ const useWalletVcs = (address: string) => {
 export const UploadSection = (props: {
   address: string;
   onCredentialSelected: (welfareVC: VerifiableCredential) => void;
+  type: VerifiableCredentialType;
 }) => {
   const [showWalletCredentials, setWalletCredentials] = React.useState(false);
 
-  const credentials = useWalletVcs(props.address);
+  const credentials = useWalletVcs(props.address, (credential) =>
+    credential.type.includes(props.type)
+  );
 
   if (showWalletCredentials) {
     return (
       <div>
-        <h2 className="text-3xl">Dine bevis</h2>
+        <h2 className="text-3xl">Dine relevante bevis</h2>
 
         {credentials.length === 0 && <p>Du har ingen bevis i din lommebok..</p>}
         {credentials.map((credential) => (
@@ -43,7 +49,7 @@ export const UploadSection = (props: {
               className="max-h-10 self-end"
               onClick={() => props.onCredentialSelected(credential)}
             >
-              Last opp 
+              Last opp
             </Button>
           </div>
         ))}

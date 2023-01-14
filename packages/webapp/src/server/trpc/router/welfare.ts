@@ -24,7 +24,7 @@ export const welfareRouter = router({
       return (await generateVC(
         {
           id: input.credentialSubject.id,
-          amount: 100,
+          amount: 1000,
         },
         [VerifiableCredentialType.WelfareCredential, VerifiableCredentialType.VerifiableCredential],
         config
