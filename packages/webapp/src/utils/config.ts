@@ -1,5 +1,5 @@
-import { VCConfig } from "@pengekrukka/vc-shared";
 import { TRPCError } from "@trpc/server";
+import { VCConfig } from "../server/trpc/vc-shared";
 
 export const MnemonicConfig = [
   "FOLKEREGISTERET_MNEMONIC",

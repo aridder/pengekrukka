@@ -1,5 +1,6 @@
 packages/circuits/build
 packages/contracts/build
+database.json
 cache 
 **/artifacts 
 **/typechain-types 

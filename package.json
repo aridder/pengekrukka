@@ -5,8 +5,7 @@
   "private": true,
   "scripts": {
     "contracts": "yarn workspace @pengekrukka/contracts",
-    "webapp": "yarn workspace @pengekrukka/webapp",
-    "vc-shared": "yarn workspace @pengekrukka/vc-shared"
+    "webapp": "yarn workspace @pengekrukka/webapp"
   },
   "engines": {
     "npm": "please-use-yarn",

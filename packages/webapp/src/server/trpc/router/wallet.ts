@@ -1,46 +1,46 @@
-import { VerifiableCredential } from "@pengekrukka/vc-shared";
-import { z } from "zod";
-import { protectedProcedure, router, validations } from "../trpc";
-
-const saveValidation = z.object({
-  vc: z.object({
-    "@context": z.array(z.string()).or(z.string()),
-    type: z.array(z.string()).or(z.string()).optional(),
-    issuer: z.string().or(
-      z.object({
-        id: z.string(),
-      })
-    ),
-    issuanceDate: z.string(),
-    credentialSubject: z.object({
-      id: z.string().optional(),
-    }),
-    proof: z.object({
-      type: z.string().optional(),
-      created: z.string().optional(),
-      proofPurpose: z.string().optional(),
-      verificationMethod: z.string().optional(),
-      jws: z.string().optional(),
-    }),
-  }),
-});
-
-const credentialsTable: VerifiableCredential[] = [];
+import { PersonalCredential, schemas } from "../schemas";
+import { protectedProcedure, router } from "../trpc";
+import { database } from "./database/database";
+import { appRouter } from "./_app";
 
 export const walletRouter = router({
-  list: protectedProcedure.input(validations.publicKey).query(async ({ input, ctx }) => {
+
+  /**
+   * NOTE: In additoin to retrieving the PersonCredentia, this also calls folkeregisteret
+   * directly to generate it if it is not present.
+   * In a real scenario, the wallet would not do this and the VC would come from elsewhere.
+   */
+  getPersonalCredential: protectedProcedure
+    .input(schemas.userAddressSchema)
+    .query(async ({ ctx, input }) => {
+      const userdid = `did:ethr:${ctx.session.address}`;
+      const personalCredential = database.getPersonalCredential(userdid);
+
+      if (personalCredential == null) {
+        const newPersonalCredential: PersonalCredential = await appRouter
+          .createCaller(ctx)
+          .folkeregisteret.personCredential({ publicKey: input.publicKey });
+
+        database.upsert(userdid, newPersonalCredential);
+        return newPersonalCredential;
+      } else {
+        return personalCredential;
+      }
+    }),
+  list: protectedProcedure.query(async ({ ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
 
-    const userCredentials = credentialsTable.filter((vc) => vc.credentialSubject.id === userdid);
-    return userCredentials;
+    return database.list(userdid);
   }),
-  save: protectedProcedure.input(saveValidation).mutation(async ({ input, ctx }) => {
+  save: protectedProcedure.input(schemas.verifiableCredential).mutation(async ({ input, ctx }) => {
     const userdid = `did:ethr:${ctx.session.address}`;
-    if (input.vc.credentialSubject.id !== userdid) {
+
+    if (input.credentialSubject.id !== userdid) {
       throw new Error("Credential subject does not match user");
     }
 
-    credentialsTable.push(input.vc);
-    return input.vc;
+    database.upsert(userdid, input);
+
+    return input;
   }),
 });

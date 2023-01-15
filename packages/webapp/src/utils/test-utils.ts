@@ -1,6 +1,12 @@
-import { AnyRootConfig } from "@trpc/server";
+import { faker } from "@faker-js/faker";
 import { TestContext, TestFunction } from "vitest";
 import { appRouter } from "../server/trpc/router/_app";
+import {
+  GlassesProofCredential,
+  PersonalCredential,
+  VerifiableCredential,
+} from "../server/trpc/schemas";
+import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { MnemonicConfig } from "./config";
 
 const envKeys = [...MnemonicConfig, "RPC_URL", "BASE_URL"] as const;
@@ -17,6 +23,8 @@ export const withIssuerEnv =
         "naive apple embrace two gossip current crucial ivory typical toe walk canal",
       FREDRIK_MNEMONIC:
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
+      FOLKEREGISTERET_MNEMONIC:
+        "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
       RPC_URL: "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
       BASE_URL: "http://localhost:3000",
       ...overrides,
@@ -31,10 +39,10 @@ export const withIssuerEnv =
     process.env = original;
   };
 
-export const getAPICaller = <T extends AnyRootConfig>() =>
+export const getAPICaller = (address: string = "default-address-from-tests") =>
   appRouter.createCaller({
     session: {
-      address: "default-address-from-tests",
+      address: address,
       expires: "never",
       user: {
         name: "test",
@@ -42,3 +50,51 @@ export const getAPICaller = <T extends AnyRootConfig>() =>
       },
     } as any,
   });
+
+export const fakeDid = () => `did:ethr:0x${faker.finance.ethereumAddress()}`;
+
+const random = <T>(array: T[]): T => {
+  const index = Math.floor(Math.random() * array.length);
+  const value = array[index];
+
+  return value as T;
+};
+
+const randomCredentialType = () => {
+  const possible = Array.from(Object.values(VerifiableCredentialType));
+  return random(possible);
+};
+
+export const mockAnyCredential = (subjectId = fakeDid()): VerifiableCredential => ({
+  credentialSubject: {
+    id: subjectId,
+  },
+  "@context": [faker.internet.url()],
+  issuer: {
+    id: fakeDid(),
+  },
+  proof: {
+    type: "proof2020",
+    jwt: faker.datatype.uuid(),
+  },
+  type: [randomCredentialType(), randomCredentialType()],
+  expirationDate: faker.date.soon().toISOString(),
+  issuanceDate: faker.date.recent().toISOString(),
+});
+
+export const mockPersonCredential = (subjectId = fakeDid()): PersonalCredential => ({
+  ...mockAnyCredential(subjectId),
+  type: [VerifiableCredentialType.PersonCredential, VerifiableCredentialType.VerifiableCredential],
+});
+
+export const mockGlassesCredential = (subjectId = fakeDid()): GlassesProofCredential => ({
+  ...mockAnyCredential(subjectId),
+  credentialSubject: {
+    id: mockAnyCredential().credentialSubject.id,
+    needsGlasses: true,
+  },
+  type: [
+    VerifiableCredentialType.GlassesProofCredential,
+    VerifiableCredentialType.VerifiableCredential,
+  ],
+});

@@ -15,7 +15,7 @@
     "build:circuit": "mkdir -p build/circuits && npm run build:circuit:compile && npm run build:circuit:setup && npm run build:circuit:bin && hardhat compile",
     "build:contract": "hardhat compile",
     "download": "node scripts/downloadKeys.js",
-    "build": "npm run build:circuit && npm run build:contract && npm run build:browserify",
+    "build": "npm run build:circuit && npm run build:contract && tsc",
     "browserify": "npm run build:browserify"
   },
   "devDependencies": {

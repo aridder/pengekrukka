@@ -1,11 +1,9 @@
 import { VCIssuer } from "@symfoni/vc-tools";
 import { ethers } from "ethers";
+import { VerifiableCredential } from "./schemas";
 
 export type BaseSubject = {
-  id: `did:ethr:${string}`;
-  title: string;
-  //ISO string
-  expirationDate: string;
+  id: string;
 };
 
 export type VCConfig = {
@@ -13,19 +11,18 @@ export type VCConfig = {
   rpcUrl: string;
 };
 
-export type VerifiableCredentialType =
-  | "WelfareCredential"
-  | "VerifiableCredential"
-  | "GlassesProofCredential"
-  | "VerifiableCredential";
-
-export type VerifiableCredential = Awaited<ReturnType<typeof generateVC>>;
+export enum VerifiableCredentialType {
+  WelfareCredential = "WelfareCredential",
+  GlassesProofCredential = "GlassesProofCredential",
+  VerifiableCredential = "VerifiableCredential",
+  PersonCredential = "PersonCredential",
+}
 
 export const generateVC = async <Subject extends BaseSubject>(
-  subject: Subject,
+  credentialSubject: Subject,
   type: VerifiableCredentialType[],
   options: VCConfig
-) => {
+): Promise<VerifiableCredential> => {
   const wallet = ethers.Wallet.fromMnemonic(options.mnemonic);
   const withoutPrefix = wallet.privateKey.replace("0x", "");
   const did = `did:ethr:${wallet.address}`;
@@ -44,8 +41,10 @@ export const generateVC = async <Subject extends BaseSubject>(
     ],
   });
 
-  return await issuer.createVC({
+  const vc = await issuer.createVC({
     type: type,
-    credentialSubject: subject,
+    credentialSubject: credentialSubject,
   });
+
+  return vc as VerifiableCredential;
 };
