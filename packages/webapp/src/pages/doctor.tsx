@@ -27,9 +27,9 @@ const DoctorPage: NextPage = () => {
 
   return (
     <Layout>
-      <div className="m-10 mx-20 flex flex-col content-center justify-center gap-4">
+      <div className="m-10 justify-center gap-4 max-w-xl mx-auto">
         <Heading />
-        {!vc && <Button onClick={getVc}>Hent VC</Button>}
+        {!vc && <Button className="my-10" onClick={getVc}>Hent brillebevis</Button>}
         {vc && <VCSection vc={vc} />}
       </div>
     </Layout>
@@ -61,8 +61,8 @@ const VCSection = (props: { vc: VerifiableCredential }) => {
 };
 
 const Heading = () => (
-  <div className=" max-w-xl ">
-    <h1 className=" py-4 text-xl underline underline-offset-4">
+  <div className=" max-w-xl mx-auto">
+    <h1 className=" py-4 text-4xl underline underline-offset-4">
       Din Journal hos legekontor Jensen
     </h1>
     <h2 className="flex-auto text-left">Du har mottat et digitalt bevis!</h2>

@@ -7,7 +7,7 @@ import { Button, ClientOnly } from "../components/utils";
 import {
   isWelfareCredential,
   VerifiableCredential,
-  WelfareCredential,
+  WelfareCredential
 } from "../server/trpc/schemas";
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 
@@ -51,25 +51,26 @@ export default () => {
 
   return (
     <Layout>
-      <div>TODO: optician's store</div>
-      <h1 className="text-6xl">Hansens Brilleforetning</h1>
-      <Glasses price={PRICE} />
-      {!discountCredential && (
-        <ClientOnly>
-          <DiscountSection address={address} onDiscount={setDiscountCredential} />
-        </ClientOnly>
-      )}
-      {discountCredential && (
-        <div className="text-gray-500">
-          <b>Støtte: </b>
-          <span>
-            {PRICE} - {discountCredential.credentialSubject.amount}
-          </span>
+      <div className="mx-auto bg-orange-300">
+        <h1 className="text-6xl">Hansens Brilleforetning</h1>
+        <Glasses price={PRICE} />
+        {!discountCredential && (
+          <ClientOnly>
+            <DiscountSection address={address} onDiscount={setDiscountCredential} />
+          </ClientOnly>
+        )}
+        {discountCredential && (
+          <div className="text-gray-500">
+            <b>Støtte: </b>
+            <span>
+              {PRICE} - {discountCredential.credentialSubject.amount}
+            </span>
+          </div>
+        )}
+        <div className="my-8 flex">
+          <p>Total: {total}</p>
+          <Button className="mx-4">Kjøp</Button>
         </div>
-      )}
-      <div className="my-8 flex">
-        <p>Total: {total}</p>
-        <Button className="mx-4">Kjøp</Button>
       </div>
     </Layout>
   );

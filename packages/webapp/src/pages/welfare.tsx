@@ -24,7 +24,7 @@ const WelfareCredentials = (props: { vcs: VerifiableCredential[] }) => {
             </p>
             <div className="flex">
               <VcCard vc={vc} />
-              <div className="flex flex-col self-end">
+              <div className="flex flex-col self-end mx-4">
                 <Button onClick={() => transferToWallet(vc)}>Overfør til lommebok</Button>
                 {/*TODO: enable if PDF is enabled */}
                 <Button disabled>Skriv ut</Button>
@@ -44,7 +44,7 @@ const WelfarePage: NextPage = () => {
 
   return (
     <Layout>
-      <h1 className="text-4xl">Statens Støtteordnings System</h1>
+      <h1 className="text-6xl">Statens Støtteordnings System</h1>
       <div>
         <WelfareCredentials vcs={generatedVCs}></WelfareCredentials>
       </div>
