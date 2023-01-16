@@ -1,10 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import { addDidPrefix } from "../../../utils";
 import { getConfig } from "../../../utils/config";
 import { schemas, WelfareCredential } from "../schemas";
 import { router } from "../trpc";
-import { generateVC, VerifiableCredentialType } from "../vc-shared";
+import { generateVC, OpticianName, VerifiableCredentialType } from "../vc-shared";
 import { protectedProcedure } from "./../trpc";
 
 /**
@@ -29,20 +30,25 @@ export const calculateGlassesVoucherAmount = (amount: number) => {
 
 export const welfareRouter = router({
   convertWelfareToken: protectedProcedure
-    .input(schemas.glassesCredential)
-    .mutation(async ({ input, ctx }) => {
+    .input(
+      z.object({ credential: schemas.glassesCredential, optician: z.nativeEnum(OpticianName) })
+    )
+    .mutation(async ({ input: { credential, optician }, ctx }) => {
       //TODO: validate folkeregisteret issuer as well
-      if (addDidPrefix(ctx.session.address as `0x${string}`) !== input.credentialSubject.id) {
+      if (addDidPrefix(ctx.session.address as `0x${string}`) !== credential.credentialSubject.id) {
         throw new TRPCError({
           message: "Not authorized to modify this credential",
           code: "UNAUTHORIZED",
         });
       }
 
+      //FIXME: use optician to encrypt tornado note with the opticians public key
+      // https://github.com/aridder/pengekrukka/issues/98
+
       const config = getConfig("WELFARE_MNEMONIC");
       return (await generateVC(
         {
-          id: input.credentialSubject.id,
+          id: credential.credentialSubject.id,
           amount: calculateGlassesVoucherAmount(
             //NOTE: income just set to a random number for now
             faker.datatype.number({ min: 50_000, max: 950_000 })

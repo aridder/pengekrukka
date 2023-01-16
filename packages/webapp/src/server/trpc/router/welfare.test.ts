@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { describe, expect, it } from "vitest";
 import { addDidPrefix } from "../../../utils";
 import { getAPICaller, mockGlassesCredential, withIssuerEnv } from "../../../utils/test-utils";
+import { OpticianName } from "../vc-shared";
 import { calculateGlassesVoucherAmount } from "./welfare";
 
 describe("the welfare router", async () => {
@@ -11,11 +12,14 @@ describe("the welfare router", async () => {
       const address = faker.finance.ethereumAddress() as `0x${string}`;
       const caller = getAPICaller(address);
       await caller.welfare.convertWelfareToken({
-        ...mockGlassesCredential(),
-        credentialSubject: {
-          id: addDidPrefix(address),
-          needsGlasses: true,
-        },
+        credential: {
+          ...mockGlassesCredential(),
+          credentialSubject: {
+            id: addDidPrefix(address),
+            needsGlasses: true,
+          },
+        }, 
+        optician: OpticianName.Specsavers
       });
     })
   );
@@ -31,11 +35,14 @@ describe("the welfare router", async () => {
       const caller = getAPICaller(firstAddress);
       await expect(
         caller.welfare.convertWelfareToken({
-          ...mockGlassesCredential(),
-          credentialSubject: {
-            id: secondAddress,
-            needsGlasses: true,
-          },
+          credential: {
+            ...mockGlassesCredential(),
+            credentialSubject: {
+              id: secondAddress,
+              needsGlasses: true,
+            },
+          }, 
+          optician: OpticianName.Hansens_Brilleforetning
         })
       ).rejects.toThrow();
     })
@@ -48,11 +55,14 @@ describe("the welfare router", async () => {
 
       const caller = getAPICaller(publicKey);
       const response = await caller.welfare.convertWelfareToken({
-        ...mockGlassesCredential(),
-        credentialSubject: {
-          id: addDidPrefix(publicKey),
-          needsGlasses: true,
-        },
+        credential: {
+          ...mockGlassesCredential(),
+          credentialSubject: {
+            id: addDidPrefix(publicKey),
+            needsGlasses: true,
+          },
+        }, 
+        optician: OpticianName.Brilleland
       });
       expect(response.proof).not.to.be.null;
       expect(response.credentialSubject).not.to.be.undefined;
