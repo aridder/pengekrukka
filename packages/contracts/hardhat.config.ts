@@ -37,6 +37,9 @@ const config: HardhatUserConfig = {
       },
     ],
   },
+  typechain: {
+    outDir: "./src/typechain",
+  },
   namedAccounts: {
     deployer: 0,
   },

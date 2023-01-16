@@ -1,27 +1,45 @@
+import { ERC20Mock } from "./../src/typechain/contracts/ERC20Mock";
 import assert from "assert";
+import fs from "fs";
 import circomlib from "circomlib";
 import crypto from "crypto";
-import { Signer } from "ethers";
+import { BytesLike, Signer } from "ethers";
 import merkleTree from "fixed-merkle-tree";
-import fs from "fs";
-import { deployments, ethers } from "hardhat";
+import { ethers, deployments } from "hardhat";
 import { bigInt } from "snarkjs";
-import buildGroth16 from "websnark/src/groth16";
+import buildGroth16, { Groth16 } from "websnark/src/groth16";
 import websnarkUtils from "websnark/src/utils";
-import { ERC20Tornado } from "../typechain-types/contracts/ERC20Tornado";
-import { ERC20Tornado__factory } from "../typechain-types/factories/contracts/ERC20Tornado__factory";
+import { DepositEvent, ERC20Tornado } from "../typechain-types/contracts/ERC20Tornado";
+import { Tornado } from "./../typechain-types/contracts/Tornado.sol/Tornado";
 
-let web3, contract, netId, circuit, proving_key, groth16;
-const MERKLE_TREE_HEIGHT = 20;
+type Deposit = {
+  nullifier: BigInt;
+  secret: BigInt;
+  preimage: Buffer;
+  commitment: string;
+  nullifierHash: string;
+};
 
-const { RPC_URL, FREDRIK_MNEMONIC } = process.env;
-const userSigner = ethers.Wallet.fromMnemonic(FREDRIK_MNEMONIC);
+type MerkleProof = {
+  pathElements: string[];
+  pathIndices: string[];
+  root: string;
+};
 
-const AMOUNT = "1";
+export type WithdrawArgs = {
+  root: string;
+  nullifierHash: string;
+  recipient: string;
+  relayer: string;
+  fee: string;
+  refund: string;
+};
 
-// CURRENCY = 'ETH'
+export type SnarkProof = {
+  proof: BytesLike;
+  args: WithdrawArgs;
+};
 
-/** Generate random number of specified byte length */
 const rbigint = (nbytes: number) => bigInt.leBuff2int(crypto.randomBytes(nbytes));
 
 /** Compute pedersen hash */
@@ -31,10 +49,46 @@ const pedersenHash = (data: Buffer) => circomlib.babyJub.unpackPoint(circomlib.p
 const toHex = (number: any, length = 32) =>
   "0x" + (number instanceof Buffer ? number.toString("hex") : bigInt(number).toString(16)).padStart(length * 2, "0");
 
+async function deposit(amount: string, contract: ERC20Tornado, signer: Signer) {
+  const netId = (await ethers.getDefaultProvider().getNetwork()).chainId;
+  const deposit = createDeposit(amount, rbigint(31), rbigint(31));
+  console.log("Deposit:", deposit);
+
+  const tx = await contract.connect(signer).deposit(toHex(deposit.commitment));
+  const receipt = await tx.wait();
+  console.log("Deposit transaction:", receipt.transactionHash);
+
+  return `tornado-eth-${amount}-${netId}-${toHex(deposit.preimage, 62)}`;
+}
+
+/**
+ * Do an ETH withdrawal
+ * @param note Note to withdraw
+ * @param recipient Recipient address
+ */
+async function withdraw(contract: ERC20Tornado, note: string, recipient: string, groth16: Groth16, rpcUrl: string) {
+  const circuit = require(__dirname + "/../build/circuits/withdraw.json");
+  const proving_key = fs.readFileSync(__dirname + "/../build/circuits/withdraw_proving_key.bin").buffer;
+  const deposit = parseNote(note);
+  console.log("Withdrawal deposit:", deposit);
+  const { proof, args } = await generateSnarkProof(contract, deposit, recipient, groth16, circuit, proving_key);
+  console.log("Sending withdrawal transaction...");
+  const tx = await contract.withdraw(
+    proof,
+    args.root,
+    args.nullifierHash,
+    args.recipient,
+    args.relayer,
+    args.fee,
+    args.refund
+  );
+  return await tx.wait();
+}
+
 /**
  * Create deposit object from secret and nullifier
  */
-function createDeposit(nullifier: BigInt, secret: BigInt) {
+function createDeposit(amount: string, nullifier: BigInt, secret: BigInt): Deposit {
   const deposit = { nullifier, secret };
   const preimage = Buffer.concat([(deposit.nullifier as any).leInt2Buff(31), (deposit.secret as any).leInt2Buff(31)]);
 
@@ -47,67 +101,53 @@ function createDeposit(nullifier: BigInt, secret: BigInt) {
 }
 
 /**
- * Make an ETH deposit
- */
-async function deposit(contract: ERC20Tornado, signer: Signer) {
-
-  const netId = (await ethers.getDefaultProvider().getNetwork()).chainId
-  const deposit = createDeposit(rbigint(31), rbigint(31));
-
-  await contract.connect(signer).deposit(toHex(deposit.commitment));
-
-  return `tornado-eth-${AMOUNT}-${netId}-${toHex(deposit.preimage, 62)}`;
-}
-
-/**
- * Do an ETH withdrawal
- * @param note Note to withdraw
- * @param recipient Recipient address
- */
-async function withdraw(note: string, recipient: string) {
-  const deposit = parseNote(note);
-  const { proof, args } = await generateSnarkProof(deposit, recipient);
-  console.log("Sending withdrawal transaction...");
-  const tx = await contract.methods.withdraw(proof, ...args).send({ from: web3.eth.defaultAccount, gas: 1e6 });
-  console.log(`https://kovan.etherscan.io/tx/${tx.transactionHash}`);
-}
-
-/**
  * Parses Tornado.cash note
  * @param noteString the note
  */
-function parseNote(noteString) {
+function parseNote(noteString: string): Deposit {
   const noteRegex = /tornado-(?<currency>\w+)-(?<amount>[\d.]+)-(?<netId>\d+)-0x(?<note>[0-9a-fA-F]{124})/g;
   const match = noteRegex.exec(noteString);
 
+  if (!match) {
+    throw new Error("Invalid note");
+  }
+
   // we are ignoring `currency`, `amount`, and `netId` for this minimal example
-  const buf = Buffer.from(match.groups.note, "hex");
+  const buf = Buffer.from(match.groups!!.note!!, "hex");
+  const amount = match.groups!!.amount!!;
   const nullifier = bigInt.leBuff2int(buf.slice(0, 31));
   const secret = bigInt.leBuff2int(buf.slice(31, 62));
-  return createDeposit(nullifier, secret);
+  return createDeposit(amount, nullifier, secret);
 }
 
-/**
- * Generate merkle tree for a deposit.
- * Download deposit events from the contract, reconstructs merkle tree, finds our deposit leaf
- * in it and generates merkle proof
- * @param deposit Deposit object
- */
-async function generateMerkleProof(deposit) {
+export async function generateMerkleProof(
+  contract: ERC20Tornado,
+  deposit: Deposit,
+  fromBlock: number = 0,
+  treeHeight: number = 20
+): Promise<MerkleProof> {
+  const eventFilter = contract.filters.Deposit();
+  let events: DepositEvent[] = (await contract.queryFilter(eventFilter, fromBlock, "latest")) as DepositEvent[];
   console.log("Getting contract state...");
-  const events = await contract.getPastEvents("Deposit", { fromBlock: 0, toBlock: "latest" });
+  // const DepositEvent = contract.interface.getEvent("Deposit");
+  // const events = await contract.getPastEvents("Deposit", {
+  //   fromBlock: fromBlock,
+  //   toBlock: "latest",
+  // });
+  console.log("Got events:", events.length);
   const leaves = events
-    .sort((a, b) => a.returnValues.leafIndex - b.returnValues.leafIndex) // Sort events in chronological order
-    .map((e) => e.returnValues.commitment);
-  const tree = new merkleTree(MERKLE_TREE_HEIGHT, leaves);
+    .sort((a, b) => a.args.leafIndex - b.args.leafIndex) // Sort events in chronological order
+    .map((e) => e.args.commitment);
+  const tree = new merkleTree(treeHeight, leaves);
 
   // Find current commitment in the tree
-  let depositEvent = events.find((e) => e.returnValues.commitment === toHex(deposit.commitment));
-  let leafIndex = depositEvent ? depositEvent.returnValues.leafIndex : -1;
+  let depositEvent = events.find((e) => e.args.commitment === toHex(deposit.commitment));
+  let leafIndex = depositEvent ? depositEvent.args.leafIndex : -1;
 
   // Validate that our data is correct (optional)
-  const isValidRoot = await contract.methods.isKnownRoot(toHex(tree.root())).call();
-  const isSpent = await contract.methods.isSpent(toHex(deposit.nullifierHash)).call();
+  const isValidRoot = await contract.isKnownRoot!!(toHex(tree.root()));
+  const isSpent = await contract.isSpent!!(toHex(deposit.nullifierHash));
+
   assert(isValidRoot === true, "Merkle tree is corrupted");
   assert(isSpent === false, "The note is already spent");
   assert(leafIndex >= 0, "The deposit is not found in the tree");
@@ -122,9 +162,16 @@ async function generateMerkleProof(deposit) {
  * @param deposit Deposit object
  * @param recipient Funds recipient
  */
-async function generateSnarkProof(deposit, recipient) {
+async function generateSnarkProof(
+  contract: ERC20Tornado,
+  deposit: Deposit,
+  recipient: string,
+  groth16: Groth16,
+  circuit: any,
+  proving_key: any
+): Promise<SnarkProof> {
   // Compute merkle proof of our commitment
-  const { root, pathElements, pathIndices } = await generateMerkleProof(deposit);
+  const { root, pathElements, pathIndices } = await generateMerkleProof(contract, deposit);
 
   // Prepare circuit input
   const input = {
@@ -147,36 +194,48 @@ async function generateSnarkProof(deposit, recipient) {
   const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, proving_key);
   const { proof } = websnarkUtils.toSolidityInput(proofData);
 
-  const args = [
-    toHex(input.root),
-    toHex(input.nullifierHash),
-    toHex(input.recipient, 20),
-    toHex(input.relayer, 20),
-    toHex(input.fee),
-    toHex(input.refund),
-  ];
+  const args: WithdrawArgs = {
+    root: toHex(input.root),
+    nullifierHash: toHex(input.nullifierHash),
+    recipient: toHex(input.recipient, 20),
+    relayer: toHex(input.relayer, 20),
+    fee: toHex(input.fee),
+    refund: toHex(input.refund),
+  };
 
   return { proof, args };
 }
 
 async function main() {
-  circuit = require(__dirname + "/../build/circuits/withdraw.json");
-  proving_key = fs.readFileSync(__dirname + "/../build/circuits/withdraw_proving_key.bin").buffer;
-
-  groth16 = await buildGroth16();
-
-  
+  const groth16 = await buildGroth16();
+  const amount = "1";
 
   await deployments.fixture("Tornado");
   const deployedTornadoContract = await deployments.get("ERC20Tornado");
+  const erc20Contract = await deployments.get("ERC20Mock");
+  const userSigner = await (await ethers.getSigners())[0];
+  const recipient = await (await ethers.getSigners())[1];
 
-  const contract = ERC20Tornado__factory.connect(deployedTornadoContract.address, userSigner);
+  const tornado = new ethers.Contract(
+    deployedTornadoContract.address,
+    deployedTornadoContract.abi,
+    userSigner
+  ) as ERC20Tornado;
 
-  const note = await deposit(contract, userSigner);
+  const erc20 = new ethers.Contract(erc20Contract.address, erc20Contract.abi, userSigner) as ERC20Mock;
+
+  await erc20.mint(userSigner.address, ethers.utils.parseEther(amount));
+  await erc20.approve(tornado.address, ethers.utils.parseEther(amount));
+
+  const note = await deposit(amount, tornado, userSigner);
   console.log("Deposited note:", note);
-  await withdraw(note, userSigner.address);
+  await withdraw(tornado, note, recipient.address, groth16, "http://localhost:8545");
+
+  const balance = await erc20.balanceOf(userSigner.address);
+  const recipientBalance = await erc20.balanceOf(recipient.address);
+  console.log("Balance:", balance.toString());
+  console.log("Recipient balance:", recipientBalance.toString());
   console.log("Done");
-  process.exit();
 }
 
 describe("The Demo", () => {

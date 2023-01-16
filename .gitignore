@@ -3,8 +3,11 @@ packages/contracts/build
 database.json
 cache 
 **/artifacts 
-**/typechain-types 
+**/typechain-types
+**/lib/*
+**/typechain/
 **/deployments/**
+
 
 **/db-did:*
 
