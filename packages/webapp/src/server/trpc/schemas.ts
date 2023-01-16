@@ -47,6 +47,13 @@ const personalCredential = verifiableCredential.extend({
       .literal(VerifiableCredentialType.VerifiableCredential)
       .or(z.literal(VerifiableCredentialType.PersonCredential))
   ),
+  credentialSubject: baseSubjectSchema.extend({
+    ssn: z.string(),
+    income: z.object({
+      amount: z.number(),
+      currency: z.literal("NOK"),
+    }),
+  }),
 });
 
 const glassesCredential = verifiableCredential.extend({

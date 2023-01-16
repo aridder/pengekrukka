@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { describe, expect, it } from "vitest";
 import { addDidPrefix } from "../../../utils";
 import { getAPICaller, mockGlassesCredential, withIssuerEnv } from "../../../utils/test-utils";
+import { calculateGlassesVoucherAmount } from "./welfare";
 
 describe("the welfare router", async () => {
   it(
@@ -57,4 +58,27 @@ describe("the welfare router", async () => {
       expect(response.credentialSubject).not.to.be.undefined;
     })
   );
+
+  describe("the calculation of welfare amount", () => {
+    it("Does return a number", () => {
+      const result = calculateGlassesVoucherAmount(100);
+      expect(typeof result).to.be.equal("number");
+    });
+
+    function testRange(options: { from: number; to: number; expected: number }) {
+      it(`Returns ${options.expected},- for incomes between ${options.from} and ${options.to}`, () => {
+        for (let income = options.from; income < options.from; income += 10) {
+          const result = calculateGlassesVoucherAmount(income);
+          expect(result).to.be.equal(options.expected);
+        }
+      });
+    }
+
+    [
+      { from: 0, to: 200_000, expected: 2000 },
+      { from: 600_000, to: 800_000, expected: 500 },
+      { from: 800_000, to: 5_000_000, expected: 250 },
+      { from: 200_000, to: 600_000, expected: 500 },
+    ].map(testRange);
+  });
 });

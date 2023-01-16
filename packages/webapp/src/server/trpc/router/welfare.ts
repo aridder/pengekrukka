@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
 import { addDidPrefix } from "../../../utils";
 import { getConfig } from "../../../utils/config";
@@ -5,6 +6,26 @@ import { schemas, WelfareCredential } from "../schemas";
 import { router } from "../trpc";
 import { generateVC, VerifiableCredentialType } from "../vc-shared";
 import { protectedProcedure } from "./../trpc";
+
+/**
+ * @param amount yearly income in NOK
+ * @returns the amount of support granted
+ */
+export const calculateGlassesVoucherAmount = (amount: number) => {
+  if (amount < 200_000) {
+    return 2000;
+  }
+
+  if (amount > 600_000) {
+    return 500;
+  }
+
+  if (amount > 800_000) {
+    return 250;
+  }
+
+  return 1000;
+};
 
 export const welfareRouter = router({
   convertWelfareToken: protectedProcedure
@@ -18,13 +39,14 @@ export const welfareRouter = router({
         });
       }
 
-      //TODO: something about the user used to generate support amount?
-
       const config = getConfig("WELFARE_MNEMONIC");
       return (await generateVC(
         {
           id: input.credentialSubject.id,
-          amount: 1000,
+          amount: calculateGlassesVoucherAmount(
+            //NOTE: income just set to a random number for now
+            faker.datatype.number({ min: 50_000, max: 950_000 })
+          ),
         },
         [VerifiableCredentialType.WelfareCredential, VerifiableCredentialType.VerifiableCredential],
         config
