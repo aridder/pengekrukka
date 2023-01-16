@@ -48,3 +48,14 @@ export const generateVC = async <Subject extends BaseSubject>(
 
   return vc as VerifiableCredential;
 };
+
+/**
+ * The user now picks one of these in the welfare system.
+ * Ideally, this should not be needed, but that requires
+ * more thinking than we have time
+ */
+export enum OpticianName {
+  Hansens_Brilleforetning = "Hansens Brilleforetning",
+  Brilleland = "Brilleland",
+  Specsavers = "Specsavers",
+}
