@@ -2,6 +2,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 const name = "Tornado";
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
+
   const { deployments, getNamedAccounts } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
@@ -63,6 +64,10 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     from: deployer,
     args: [verifier.address, hasher.address, 1, 20, erc20.address],
   });
+
+  
+  console.log(resErc20Tornado.address)
+  
 };
 
 export { name };

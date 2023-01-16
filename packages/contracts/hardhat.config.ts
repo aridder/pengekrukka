@@ -4,17 +4,17 @@ import * as dotenv from "dotenv";
 import "hardhat-deploy";
 import { HardhatUserConfig } from "hardhat/config";
 
-dotenv.config({ path: "./../../.env.development" });
+dotenv.config({ path: "./../../../.env.development" });
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      forking: {
+      /* forking: {
         url: process.env.RPC_URL!,
         //   //
         //   // blockNumber: 3329314, <- If you want to fork from a specific block
-      },
+      }, */
       allowUnlimitedContractSize: true,
     },
   },

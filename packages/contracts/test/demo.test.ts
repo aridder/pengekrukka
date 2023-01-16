@@ -1,20 +1,29 @@
-const fs = require("fs");
-const assert = require("assert");
-const { bigInt } = require("snarkjs");
-const crypto = require("crypto");
-const circomlib = require("circomlib");
-const merkleTree = require("fixed-merkle-tree");
-const Web3 = require("web3");
-const buildGroth16 = require("websnark/src/groth16");
-const websnarkUtils = require("websnark/src/utils");
-const { toWei } = require("web3-utils");
+import fs from "fs"
+import assert from "assert"
+import { bigInt } from "snarkjs"
+import crypto from "crypto"
+import circomlib from "circomlib"
+import merkleTree from "fixed-merkle-tree"
+import Web3 from "web3"
+import buildGroth16 from "websnark/src/groth16"
+import websnarkUtils from "websnark/src/utils"
+import { toWei } from "web3-utils"
+import { ethers } from "hardhat";
+import path from "path"
+import { something } from "./../contracts"
+import { ERC20Tornado__factory} from "./ERCTornado__factory"
+
 
 let web3, contract, netId, circuit, proving_key, groth16;
 const MERKLE_TREE_HEIGHT = 20;
-const RPC_URL = "https://kovan.infura.io/v3/0279e3bdf3ee49d0b547c643c2ef78ef";
-const PRIVATE_KEY = "ad5b6eb7ee88173fa43dedcff8b1d9024d03f6307a1143ecf04bea8ed40f283f"; // 0x94462e71A887756704f0fb1c0905264d487972fE
-const CONTRACT_ADDRESS = "0xD6a6AC46d02253c938B96D12BE439F570227aE8E";
+
+
+
+const { RPC_URL, FREDRIK_MNEMONIC } = process.env
+const USER_PRIVATE_KEY = ethers.Wallet.fromMnemonic(FREDRIK_MNEMONIC).privateKey
+const CONTRACT_ADDRESS = "0x04C89607413713Ec9775E14b954286519d836FEf";
 const AMOUNT = "1";
+
 // CURRENCY = 'ETH'
 
 /** Generate random number of specified byte length */
@@ -56,7 +65,7 @@ async function deposit() {
  * @param note Note to withdraw
  * @param recipient Recipient address
  */
-async function withdraw(note, recipient) {
+async function withdraw(note: string, recipient: string) {
   const deposit = parseNote(note);
   const { proof, args } = await generateSnarkProof(deposit, recipient);
   console.log("Sending withdrawal transaction...");
@@ -152,24 +161,30 @@ async function generateSnarkProof(deposit, recipient) {
 }
 
 async function main() {
-  web3 = new Web3(new Web3.providers.HttpProvider(RPC_URL, { timeout: 5 * 60 * 1000 }), null, {
-    transactionConfirmationBlocks: 1,
-  });
+  
+  
   circuit = require(__dirname + "/../build/circuits/withdraw.json");
   proving_key = fs.readFileSync(__dirname + "/../build/circuits/withdraw_proving_key.bin").buffer;
   groth16 = await buildGroth16();
-  netId = await web3.eth.net.getId();
-  contract = new web3.eth.Contract(require("../build/contracts/ETHTornado.json").abi, CONTRACT_ADDRESS);
-  const account = web3.eth.accounts.privateKeyToAccount("0x" + PRIVATE_KEY);
-  web3.eth.accounts.wallet.add("0x" + PRIVATE_KEY);
-  // eslint-disable-next-line require-atomic-updates
-  web3.eth.defaultAccount = account.address;
+
+  const account = await ethers.getSigner(USER_PRIVATE_KEY)
+  const netId  = (account).getChainId
+
+
+
+  const contract = ERC20Tornado__factory.connect(CONTRACT_ADDRESS, account)
+  
+  
 
   const note = await deposit();
   console.log("Deposited note:", note);
-  await withdraw(note, web3.eth.defaultAccount);
+  await withdraw(note, account.address);
   console.log("Done");
   process.exit();
 }
 
-main();
+describe("The Demo", () => {
+  it("Should run", () => {
+    main();
+  })
+})
