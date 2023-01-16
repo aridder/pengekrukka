@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { getConfig } from "../../../utils/config";
 import { PersonalCredential, schemas } from "../schemas";
 import { protectedProcedure, router } from "../trpc";
@@ -10,6 +11,10 @@ export const folkeregisteretRouter = router({
       {
         id: `did:ethr:${input.publicKey}`,
         ssn: "12345678901",
+        income: {
+          amount: faker.datatype.number({ min: 50_000, max: 1_200_000 }),
+          currency: "NOK",
+        },
       },
       [VerifiableCredentialType.PersonCredential, VerifiableCredentialType.VerifiableCredential],
       config
