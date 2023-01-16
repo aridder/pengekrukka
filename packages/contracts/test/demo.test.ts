@@ -1,62 +1,61 @@
-import fs from "fs"
-import assert from "assert"
-import { bigInt } from "snarkjs"
-import crypto from "crypto"
-import circomlib from "circomlib"
-import merkleTree from "fixed-merkle-tree"
-import Web3 from "web3"
-import buildGroth16 from "websnark/src/groth16"
-import websnarkUtils from "websnark/src/utils"
-import { toWei } from "web3-utils"
-import { ethers } from "hardhat";
-import path from "path"
-import { something } from "./../contracts"
-import { ERC20Tornado__factory} from "./ERCTornado__factory"
-
+import assert from "assert";
+import circomlib from "circomlib";
+import crypto from "crypto";
+import { Signer } from "ethers";
+import merkleTree from "fixed-merkle-tree";
+import fs from "fs";
+import { deployments, ethers } from "hardhat";
+import { bigInt } from "snarkjs";
+import buildGroth16 from "websnark/src/groth16";
+import websnarkUtils from "websnark/src/utils";
+import { ERC20Tornado } from "../typechain-types/contracts/ERC20Tornado";
+import { ERC20Tornado__factory } from "../typechain-types/factories/contracts/ERC20Tornado__factory";
 
 let web3, contract, netId, circuit, proving_key, groth16;
 const MERKLE_TREE_HEIGHT = 20;
 
+const { RPC_URL, FREDRIK_MNEMONIC } = process.env;
+const userSigner = ethers.Wallet.fromMnemonic(FREDRIK_MNEMONIC);
 
-
-const { RPC_URL, FREDRIK_MNEMONIC } = process.env
-const USER_PRIVATE_KEY = ethers.Wallet.fromMnemonic(FREDRIK_MNEMONIC).privateKey
-const CONTRACT_ADDRESS = "0x04C89607413713Ec9775E14b954286519d836FEf";
 const AMOUNT = "1";
 
 // CURRENCY = 'ETH'
 
 /** Generate random number of specified byte length */
-const rbigint = (nbytes) => bigInt.leBuff2int(crypto.randomBytes(nbytes));
+const rbigint = (nbytes: number) => bigInt.leBuff2int(crypto.randomBytes(nbytes));
 
 /** Compute pedersen hash */
-const pedersenHash = (data) => circomlib.babyJub.unpackPoint(circomlib.pedersenHash.hash(data))[0];
+const pedersenHash = (data: Buffer) => circomlib.babyJub.unpackPoint(circomlib.pedersenHash.hash(data))[0];
 
 /** BigNumber to hex string of specified length */
-const toHex = (number, length = 32) =>
+const toHex = (number: any, length = 32) =>
   "0x" + (number instanceof Buffer ? number.toString("hex") : bigInt(number).toString(16)).padStart(length * 2, "0");
 
 /**
  * Create deposit object from secret and nullifier
  */
-function createDeposit(nullifier, secret) {
-  let deposit = { nullifier, secret };
-  deposit.preimage = Buffer.concat([deposit.nullifier.leInt2Buff(31), deposit.secret.leInt2Buff(31)]);
-  deposit.commitment = pedersenHash(deposit.preimage);
-  deposit.nullifierHash = pedersenHash(deposit.nullifier.leInt2Buff(31));
-  return deposit;
+function createDeposit(nullifier: BigInt, secret: BigInt) {
+  const deposit = { nullifier, secret };
+  const preimage = Buffer.concat([(deposit.nullifier as any).leInt2Buff(31), (deposit.secret as any).leInt2Buff(31)]);
+
+  return {
+    ...deposit,
+    preimage: preimage,
+    commitment: pedersenHash(preimage),
+    nullifierHash: pedersenHash((deposit.nullifier as any).leInt2Buff(31)),
+  };
 }
 
 /**
  * Make an ETH deposit
  */
-async function deposit() {
+async function deposit(contract: ERC20Tornado, signer: Signer) {
+
+  const netId = (await ethers.getDefaultProvider().getNetwork()).chainId
   const deposit = createDeposit(rbigint(31), rbigint(31));
-  console.log("Sending deposit transaction...");
-  const tx = await contract.methods
-    .deposit(toHex(deposit.commitment))
-    .send({ value: toWei(AMOUNT), from: web3.eth.defaultAccount, gas: 2e6 });
-  console.log(`https://kovan.etherscan.io/tx/${tx.transactionHash}`);
+
+  await contract.connect(signer).deposit(toHex(deposit.commitment));
+
   return `tornado-eth-${AMOUNT}-${netId}-${toHex(deposit.preimage, 62)}`;
 }
 
@@ -161,30 +160,27 @@ async function generateSnarkProof(deposit, recipient) {
 }
 
 async function main() {
-  
-  
   circuit = require(__dirname + "/../build/circuits/withdraw.json");
   proving_key = fs.readFileSync(__dirname + "/../build/circuits/withdraw_proving_key.bin").buffer;
+
   groth16 = await buildGroth16();
 
-  const account = await ethers.getSigner(USER_PRIVATE_KEY)
-  const netId  = (account).getChainId
-
-
-
-  const contract = ERC20Tornado__factory.connect(CONTRACT_ADDRESS, account)
-  
   
 
-  const note = await deposit();
+  await deployments.fixture("Tornado");
+  const deployedTornadoContract = await deployments.get("ERC20Tornado");
+
+  const contract = ERC20Tornado__factory.connect(deployedTornadoContract.address, userSigner);
+
+  const note = await deposit(contract, userSigner);
   console.log("Deposited note:", note);
-  await withdraw(note, account.address);
+  await withdraw(note, userSigner.address);
   console.log("Done");
   process.exit();
 }
 
 describe("The Demo", () => {
-  it("Should run", () => {
-    main();
-  })
-})
+  it.only("Should run", async () => {
+    await main();
+  });
+});
