@@ -51,7 +51,7 @@ export default () => {
 
   return (
     <Layout>
-      <div className="mx-auto bg-orange-300">
+      <div className="">
         <h1 className="text-6xl">Hansens Brilleforetning</h1>
         <Glasses price={PRICE} />
         {!discountCredential && (
@@ -68,7 +68,7 @@ export default () => {
           </div>
         )}
         <div className="my-8 flex">
-          <p>Total: {total}</p>
+          <p className=""><b>Total:</b> {total}</p>
           <Button className="mx-4">Kjøp</Button>
         </div>
       </div>
