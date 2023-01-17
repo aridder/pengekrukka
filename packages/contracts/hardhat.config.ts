@@ -11,11 +11,11 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       accounts: {
-        mnemonic: process.env.DEPLOYER_MNEMONIC!,
+        mnemonic: process.env.WELFARE_MNEMONIC!,
       },
       forking: {
-        url: process.env.RPC_URL!,
-        blockNumber: 4205515,
+        url: process.env.FORKING_RPC_NODE!,
+        blockNumber: 4207655,
       },
       allowUnlimitedContractSize: true,
     },

@@ -9,9 +9,10 @@ import path from "path";
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
-
 // Setting environment to project root's .env file for the current environmnt (e.g. `development` or `production`)
-dotenv.config({ path: `${path.resolve(process.cwd(), '..', '..', `.env.${process.env.NODE_ENV}`)}`});
+dotenv.config({
+  path: `${path.resolve(process.cwd(), "..", "..", `.env.${process.env.NODE_ENV}`)}`,
+});
 
 /** @type {import("next").NextConfig} */
 const config = {

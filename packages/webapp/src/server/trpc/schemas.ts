@@ -75,6 +75,7 @@ const welfareCredential = verifiableCredential.extend({
   ),
   credentialSubject: baseSubjectSchema.extend({
     amount: z.number().min(0),
+    tornadoNote: z.string().describe("Encrypted note for withdrawing form Pengekrukka")
   }),
 });
 

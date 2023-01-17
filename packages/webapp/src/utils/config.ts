@@ -10,7 +10,7 @@ export const MnemonicConfig = [
 ] as const;
 
 export const getConfig = (mnemonicKey: typeof MnemonicConfig[number]): VCConfig => {
-  const fromEnv = [process.env[mnemonicKey], process.env.RPC_URL] as const;
+  const fromEnv = [process.env[mnemonicKey], process.env.RUNTIME_RPC_NODE] as const;
 
   if (fromEnv.some((variable) => variable === undefined)) {
     throw new TRPCError({

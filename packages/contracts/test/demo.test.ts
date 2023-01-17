@@ -54,7 +54,7 @@ const pedersenHash = (data: Buffer) => circomlib.babyJub.unpackPoint(circomlib.p
 const toHex = (number: any, length = 32) =>
   "0x" + (number instanceof Buffer ? number.toString("hex") : bigInt(number).toString(16)).padStart(length * 2, "0");
 
-async function deposit(amount: string, contract: ERC20Tornado, signer: Signer) {
+export async function deposit(amount: string, contract: ERC20Tornado, signer: Signer) {
   const netId = (await ethers.getDefaultProvider().getNetwork()).chainId;
   const deposit = createDeposit(amount, rbigint(31), rbigint(31));
   console.log("Deposit:", deposit);

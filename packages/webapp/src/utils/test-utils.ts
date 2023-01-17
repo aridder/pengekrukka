@@ -9,7 +9,7 @@ import {
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
 import { MnemonicConfig } from "./config";
 
-const envKeys = [...MnemonicConfig, "RPC_URL", "BASE_URL"] as const;
+const envKeys = [...MnemonicConfig, "RUNTIME_RPC_NODE", "FORKING_RPC_NODE", "BASE_URL"] as const;
 type TestEnvironment = { [key in typeof envKeys[number]]: string };
 
 export const withIssuerEnv =
@@ -25,7 +25,8 @@ export const withIssuerEnv =
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
       FOLKEREGISTERET_MNEMONIC:
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
-      RPC_URL: "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
+      RUNTIME_RPC_NODE: "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
+      FORKING_RPC_NODE: "https://eth-goerli.g.alchemy.com/v2/MpVc6bA01dS6MQbdBpqMA9fHxrGyYKQT",
       BASE_URL: "http://localhost:3000",
       ...overrides,
     };
