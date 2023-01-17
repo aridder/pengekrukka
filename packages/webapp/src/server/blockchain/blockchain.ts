@@ -1,5 +1,5 @@
 import { ERC20Tornado } from "@pengekrukka/contracts/lib/typechain";
-import { proving_key, withdraw as withdrawCircuit } from "@pengekrukka/contracts/src/circuits";
+import { proving_key, withdraw as withdrawCircuit } from "@pengekrukka/contracts/lib/circuits/index";
 import assert from "assert";
 //@ts-ignore
 import circomlib from "circomlib";
