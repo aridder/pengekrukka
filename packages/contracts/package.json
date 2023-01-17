@@ -24,8 +24,9 @@
     "start": "yarn run-p start:contracts start:lib ",
     "start:contracts": "yarn run deploy:local && yarn hardhat node --watch --export src/DeployLocal.json",
     "start:lib": "yarn tsc -w -p tsconfig.lib.json",
+    "build:lib": "yarn tsc -p tsconfig.lib.json",
     "download": "node scripts/downloadKeys.js",
-    "build": "npm run build:contract && tsc",
+    "build": "yarn build:lib && npm run build:contract && tsc",
     "browserify": "npm run build:browserify"
   },
   "devDependencies": {
