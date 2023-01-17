@@ -1,13 +1,19 @@
+//@ts-ignore
 import { ERC20Mock } from "./../src/typechain/contracts/ERC20Mock";
 import assert from "assert";
 import fs from "fs";
+//@ts-ignore
 import circomlib from "circomlib";
 import crypto from "crypto";
 import { BytesLike, Signer } from "ethers";
+//@ts-ignore
 import merkleTree from "fixed-merkle-tree";
 import { ethers, deployments } from "hardhat";
+//@ts-ignore
 import { bigInt } from "snarkjs";
+//@ts-ignore
 import buildGroth16, { Groth16 } from "websnark/src/groth16";
+//@ts-ignore
 import websnarkUtils from "websnark/src/utils";
 import { DepositEvent, ERC20Tornado } from "../typechain-types/contracts/ERC20Tornado";
 import { Tornado } from "./../typechain-types/contracts/Tornado.sol/Tornado";
