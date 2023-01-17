@@ -1,0 +1,25 @@
+```mermaid
+sequenceDiagram
+    actor Lege
+    actor Person as Privatperson
+    participant Optiker 
+    participant Pengekrukka 
+    participant Tornado as Tornado-kontrakt
+    
+    Note left of Person: Person-VC fra Folkeregisteret
+    Person ->> Lege : Jeg ser dårlig (Person-VC)
+    Lege --> Person : VC som dokumenterer dårlig syn 
+
+    Person ->> Pengekrukka : Brille-VC + Person-VC
+    Pengekrukka ->> Pengekrukka: Kalkulerer støtte til briller
+    Pengekrukka ->> Tornado: Legger inn støtten i kontrakten
+    Tornado --> Pengekrukka: "note" som kan hente verdiene ut igjen
+    Pengekrukka --> Pengekrukka: Krypterer "note" med _optikers_ public key
+    Pengekrukka ->> Person : støtte-VC med 1) støtte og 2) kryptert Tornado-note
+
+    Person ->> Optiker: Støtte-VC
+    Optiker ->> Optiker: Dekrypterer Tornado-note 
+    Optiker ->> Tornado: Dekryptert note 
+    Tornado --> Optiker: Midler er utløst fra tornado-kontrakt
+    Optiker --> Person: Briller :)
+```
