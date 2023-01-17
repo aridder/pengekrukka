@@ -2,6 +2,12 @@
   "name": "@pengekrukka/contracts",
   "version": "0.0.1",
   "private": true,
+  "workspaces": {
+    "nohoist": [
+      "circomlib", 
+      "websnark"
+    ]
+  },
   "scripts": {
     "test": "hardhat test",
     "clean": "hardhat clean",
@@ -9,11 +15,11 @@
     "console": "hardhat console",
     "typechain": "hardhat typechain",
     "deploy:local": "yarn hardhat deploy --export src/DeployLocal.json",
-    "build:circuit:compile": "npx circom circuits/withdraw.circom -o build/circuits/withdraw.json && npx snarkjs info -c build/circuits/withdraw.json",
-    "build:circuit:setup": "npx snarkjs setup --protocol groth -c build/circuits/withdraw.json --pk build/circuits/withdraw_proving_key.json --vk build/circuits/withdraw_verification_key.json",
-    "build:circuit:bin": "node node_modules/websnark/tools/buildpkey.js -i build/circuits/withdraw_proving_key.json -o build/circuits/withdraw_proving_key.bin",
-    "build:circuit:contract": "npx snarkjs generateverifier -v build/circuits/Verifier.sol --vk build/circuits/withdraw_verification_key.json",
-    "build:circuit": "mkdir -p build/circuits && npm run build:circuit:compile && npm run build:circuit:setup && npm run build:circuit:bin && hardhat compile",
+    "build:circuit:compile": "npx circom circuits/withdraw.circom -o src/circuits/withdraw.json && npx snarkjs info -c src/circuits/withdraw.json",
+    "build:circuit:setup": "npx snarkjs setup --protocol groth -c src/circuits/withdraw.json --pk src/circuits/withdraw_proving_key.json --vk src/circuits/withdraw_verification_key.json",
+    "build:circuit:bin": "node_modules/websnark/tools/buildpkey.js -i src/circuits/withdraw_proving_key.json -o src/circuits/withdraw_proving_key.bin",
+    "build:circuit:contract": "npx snarkjs generateverifier -v src/circuits/Verifier.sol --vk src/circuits/withdraw_verification_key.json",
+    "build:circuit": "mkdir -p src/circuits && npm run build:circuit:compile && npm run build:circuit:setup && npm run build:circuit:bin && hardhat compile",
     "build:contract": "hardhat compile",
     "start": "yarn run-p start:contracts start:lib ",
     "start:contracts": "yarn run deploy:local && yarn hardhat node --watch --export src/DeployLocal.json",
@@ -61,5 +67,8 @@
     "typescript": "^4.9.3",
     "web3-utils": "^1.8.1",
     "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
+  },
+  "dependencies": {
+    "y18n": "^5.0.8"
   }
 }

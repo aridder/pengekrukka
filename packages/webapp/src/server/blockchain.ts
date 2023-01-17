@@ -1,4 +1,4 @@
-import { ERC20Tornado } from "@pengekrukka/contracts/lib";
+import { ERC20Tornado } from "@pengekrukka/contracts";
 import { proving_key, withdraw as circuit } from "@pengekrukka/contracts/src/circuits";
 import assert from "assert";
 import circomlib from "circomlib";
