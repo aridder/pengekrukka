@@ -18,11 +18,11 @@ jobs:
       - name: Compile contracts
         run: yarn contracts compile
         env:
-          RPC_URL: ${{ secrets.RPC_URL }}
+          RUNTIME_RPC_NODE: ${{ secrets.RPC_URL }}
       - name: Build contracts
         run: yarn contracts build
         env:
-          RPC_URL: ${{ secrets.RPC_URL }}
+          FORKING_RPC_NODE: ${{ secrets.RPC_URL }}
 
   build-webapp:
     runs-on: ubuntu-latest
@@ -39,6 +39,7 @@ jobs:
       - name: Build contracts
         run: yarn contracts build
         env:
-          RPC_URL: ${{ secrets.RPC_URL }}
+          RUNTIME_RPC_NODE: ${{ secrets.RPC_URL }}
+          FORKING_RPC_NODE: ${{ secrets.RPC_URL }}
       - name: Build webapp
         run: yarn webapp build

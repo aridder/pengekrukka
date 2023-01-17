@@ -1,5 +1,5 @@
 import { ERC20Tornado } from "@pengekrukka/contracts/lib/typechain";
-import { proving_key, withdraw as circuit } from "@pengekrukka/contracts/src/circuits";
+import { proving_key, withdraw as withdrawCircuit } from "@pengekrukka/contracts/src/circuits";
 import assert from "assert";
 //@ts-ignore
 import circomlib from "circomlib";
@@ -13,7 +13,7 @@ import { bigInt } from "snarkjs";
 import { Groth16 } from "websnark/src/groth16";
 //@ts-ignore
 import { websnarkUtils } from "websnark/src/utils";
-import { DepositEvent } from "./../../../contracts/typechain-types/contracts/ERC20Tornado";
+import { DepositEvent } from "@pengekrukka/contracts/typechain-types/contracts/ERC20Tornado";
 
 type Deposit = {
   nullifier: BigInt;
@@ -57,7 +57,7 @@ const toHex = (number: any, length = 32) =>
     "0"
   );
 
-async function deposit(amount: string, contract: ERC20Tornado, signer: Signer) {
+export async function deposit(amount: number, contract: ERC20Tornado, signer: Signer) {
   const netId = (await ethers.getDefaultProvider().getNetwork()).chainId;
   const deposit = createDeposit(amount, rbigint(31), rbigint(31));
   console.log("Deposit:", deposit);
@@ -88,7 +88,7 @@ async function withdraw(
     deposit,
     recipient,
     groth16,
-    circuit,
+    withdrawCircuit,
     proving_key
   );
   console.log("Sending withdrawal transaction...");
@@ -106,8 +106,9 @@ async function withdraw(
 
 /**
  * Create deposit object from secret and nullifier
+ * FIXME: use amount if when it's no longer fixed in the contract
  */
-function createDeposit(amount: string, nullifier: BigInt, secret: BigInt): Deposit {
+function createDeposit(amount: number, nullifier: BigInt, secret: BigInt): Deposit {
   const deposit = { nullifier, secret };
   const preimage = Buffer.concat([
     (deposit.nullifier as any).leInt2Buff(31),
@@ -137,7 +138,7 @@ function parseNote(noteString: string): Deposit {
 
   // we are ignoring `currency`, `amount`, and `netId` for this minimal example
   const buf = Buffer.from(match.groups!!.note!!, "hex");
-  const amount = match.groups!!.amount!!;
+  const amount = parseInt(match.groups!!.amount!!);
   const nullifier = bigInt.leBuff2int(buf.slice(0, 31));
   const secret = bigInt.leBuff2int(buf.slice(31, 62));
   return createDeposit(amount, nullifier, secret);
@@ -146,7 +147,7 @@ function parseNote(noteString: string): Deposit {
 export async function generateMerkleProof(
   contract: ERC20Tornado,
   deposit: Deposit,
-  fromBlock: number = 0,
+  fromBlock: number = 4207655,
   treeHeight: number = 20
 ): Promise<MerkleProof> {
   const eventFilter = contract.filters.Deposit();

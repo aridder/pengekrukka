@@ -22,6 +22,7 @@
     "build:circuit": "mkdir -p src/circuits && npm run build:circuit:compile && npm run build:circuit:setup && npm run build:circuit:bin && hardhat compile",
     "build:contract": "hardhat compile",
     "start": "yarn run-p start:contracts start:lib ",
+    "start:local": "hardhat node",
     "start:contracts": "yarn run deploy:local && yarn hardhat node --watch --export src/DeployLocal.json",
     "start:lib": "yarn tsc -w -p tsconfig.lib.json",
     "build:lib": "yarn tsc -p tsconfig.lib.json",

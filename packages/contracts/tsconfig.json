@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
-    "outDir": "out"
+    "outDir": "out", 
+    "resolveJsonModule": true
   },
   "extends": "../../tsconfig.json",
   "include": [
