@@ -1,12 +1,17 @@
-import { ERC20Tornado } from "@pengekrukka/contracts";
+import { ERC20Tornado } from "@pengekrukka/contracts/lib/typechain";
 import { proving_key, withdraw as circuit } from "@pengekrukka/contracts/src/circuits";
 import assert from "assert";
+//@ts-ignore
 import circomlib from "circomlib";
 import crypto from "crypto";
 import { BytesLike, ethers, Signer } from "ethers";
+//@ts-ignore
 import merkleTree from "fixed-merkle-tree";
+//@ts-ignore
 import { bigInt } from "snarkjs";
+//@ts-ignore
 import { Groth16 } from "websnark/src/groth16";
+//@ts-ignore
 import { websnarkUtils } from "websnark/src/utils";
 import { DepositEvent } from "./../../../contracts/typechain-types/contracts/ERC20Tornado";
 
