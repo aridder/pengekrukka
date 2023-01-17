@@ -28,6 +28,7 @@
     "build:lib": "yarn tsc -p tsconfig.lib.json && cp src/circuits/withdraw_proving_key.bin lib/circuits",
     "download": "node scripts/downloadKeys.js",
     "build": "yarn typechain && yarn build:lib && npm run build:contract && tsc",
+    "build:ci": "yarn typechain && yarn build:lib && TS_NODE_TRANSPILE_ONLY=1 yarn build:contract && tsc",
     "browserify": "npm run build:browserify"
   },
   "devDependencies": {
