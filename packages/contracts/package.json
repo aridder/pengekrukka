@@ -4,14 +4,14 @@
   "private": true,
   "workspaces": {
     "nohoist": [
-      "circomlib", 
+      "circomlib",
       "websnark"
     ]
   },
   "scripts": {
     "test": "hardhat test",
-    "clean": "hardhat clean",
-    "compile": "hardhat compile",
+    "clean": "rm -rf lib",
+    "compile": "yarn clean && yarn tsc -p tsconfig.lib.json",
     "console": "hardhat console",
     "typechain": "hardhat typechain",
     "deploy:local": "yarn hardhat deploy --export src/DeployLocal.json",
@@ -26,7 +26,7 @@
     "start:lib": "yarn tsc -w -p tsconfig.lib.json",
     "build:lib": "yarn tsc -p tsconfig.lib.json",
     "download": "node scripts/downloadKeys.js",
-    "build": "yarn build:lib && npm run build:contract && tsc",
+    "build": "yarn typechain && yarn build:lib && npm run build:contract && tsc",
     "browserify": "npm run build:browserify"
   },
   "devDependencies": {

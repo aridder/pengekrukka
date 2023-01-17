@@ -2,6 +2,7 @@
 import fs from "fs";
 //@ts-ignore
 import assert from "assert";
+//@ts-ignore
 import circomlib from "circomlib";
 import crypto from "crypto";
 import { BytesLike, Signer } from "ethers";
