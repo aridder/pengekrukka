@@ -38,7 +38,9 @@ export const calculateGlassesVoucherAmount = (income: number) => {
  * Optician is always HANSENS_BRILLEFORETNING.
  */
 const depositWelfareMoney = async (optician: OpticianName, amount: number) => {
-  const signer = ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string);
+  const signer = ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string).connect(
+    new ethers.providers.JsonRpcProvider(process.env.RUNTIME_RPC_NODE as string)
+  );
   const contract = getTornadoContractFor(signer);
 
   //TODO: In a real scenario, this server would not have access to the mnenomic, and would have to get the public key elsewhere
@@ -81,7 +83,7 @@ export const welfareRouter = router({
         {
           id: credential.credentialSubject.id,
           amount,
-          tornadoNote
+          tornadoNote,
         },
         [VerifiableCredentialType.WelfareCredential, VerifiableCredentialType.VerifiableCredential],
         config

@@ -25,7 +25,7 @@
     "start:local": "hardhat node",
     "start:contracts": "yarn run deploy:local && yarn hardhat node --watch --export src/DeployLocal.json",
     "start:lib": "yarn tsc -w -p tsconfig.lib.json",
-    "build:lib": "yarn tsc -p tsconfig.lib.json",
+    "build:lib": "yarn tsc -p tsconfig.lib.json && cp src/circuits/withdraw_proving_key.bin lib/circuits",
     "download": "node scripts/downloadKeys.js",
     "build": "yarn typechain && yarn build:lib && npm run build:contract && tsc",
     "browserify": "npm run build:browserify"

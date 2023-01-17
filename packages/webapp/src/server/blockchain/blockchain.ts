@@ -1,5 +1,5 @@
 import { ERC20Tornado } from "@pengekrukka/contracts/lib/typechain";
-import { proving_key, withdraw as withdrawCircuit } from "@pengekrukka/contracts/lib/circuits/index";
+import { proving_key, withdraw as withdrawCircuit } from "./circuits";
 import assert from "assert";
 //@ts-ignore
 import circomlib from "circomlib";
@@ -62,7 +62,13 @@ export async function deposit(amount: number, contract: ERC20Tornado, signer: Si
   const deposit = createDeposit(amount, rbigint(31), rbigint(31));
   console.log("Deposit:", deposit);
 
-  const tx = await contract.connect(signer).deposit(toHex(deposit.commitment));
+  const gasEstimated = await contract.estimateGas.deposit(toHex(deposit.commitment));
+
+  
+  const tx = await contract.connect(signer).deposit(toHex(deposit.commitment), {
+    gasLimit: Math.ceil(gasEstimated.toNumber() * 1.2), gasPrice: await signer.getGasPrice(),
+    
+  });
   const receipt = await tx.wait();
   console.log("Deposit transaction:", receipt.transactionHash);
 
