@@ -1,10 +1,10 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+
+const NOK_ADDRESS = "0x6749374B18A571193138251EB52f7a9B4fC5524e";
+
 const name = "Tornado";
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
-
-  
-
   const { deployments, getNamedAccounts } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
@@ -57,18 +57,15 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     args: [],
   });
 
-  const erc20 = await deploy("ERC20Mock", {
-    from: deployer,
-    args: [],
-  });
+  // const erc20 = await deploy("ERC20Mock", {
+  //   from: deployer,
+  //   args: [],
+  // });
 
   const resErc20Tornado = await deploy("ERC20Tornado", {
     from: deployer,
-    args: [verifier.address, hasher.address, 1, 20, erc20.address],
+    args: [verifier.address, hasher.address, 1, 20, NOK_ADDRESS],
   });
-
-  
-  
 };
 
 export { name };

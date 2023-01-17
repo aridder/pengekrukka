@@ -10,11 +10,13 @@ const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      /* forking: {
+      accounts: {
+        mnemonic: process.env.DEPLOYER_MNEMONIC!,
+      },
+      forking: {
         url: process.env.RPC_URL!,
-        //   //
-        //   // blockNumber: 3329314, <- If you want to fork from a specific block
-      }, */
+        blockNumber: 4205515,
+      },
       allowUnlimitedContractSize: true,
     },
   },
