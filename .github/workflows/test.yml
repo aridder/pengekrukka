@@ -38,3 +38,6 @@ jobs:
         run: yarn
       - name: Run tests
         run: yarn webapp test
+        env: 
+          WELFARE_MNEMONIC: ${{ secrets.WELFARE_MNEMONIC }}
+          OPTICIAN_MNEMONIC: ${{ secrets.OPTICIAN_MNEMONIC }}
