@@ -21,6 +21,8 @@ jobs:
           RPC_URL: ${{ secrets.RPC_URL }}
       - name: Build contracts
         run: yarn contracts build
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
 
   build-webapp:
     runs-on: ubuntu-latest
