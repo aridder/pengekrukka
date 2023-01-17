@@ -10,15 +10,38 @@ const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
+      accounts: {
+        mnemonic: process.env.DEPLOYER_MNEMONIC!,
+      },
       forking: {
         url: process.env.RPC_URL!,
-        //
-        // blockNumber: 3329314, <- If you want to fork from a specific block
+        blockNumber: 4205515,
       },
       allowUnlimitedContractSize: true,
     },
   },
-  solidity: "0.8.9",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.0",
+      },
+      {
+        version: "0.8.17",
+      },
+      {
+        version: "0.8.6",
+      },
+      {
+        version: "0.7.0",
+      },
+      {
+        version: "0.5.17",
+      },
+    ],
+  },
+  typechain: {
+    outDir: "./src/typechain",
+  },
   namedAccounts: {
     deployer: 0,
   },

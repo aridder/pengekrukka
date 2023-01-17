@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@pengekrukka/contracts": "^0.0.1",
     "@faker-js/faker": "^7.6.0",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@rainbow-me/rainbowkit-siwe-next-auth": "^0.1.5",
@@ -34,7 +35,11 @@
     "superjson": "1.9.1",
     "vitest": "^0.25.8",
     "wagmi": "^0.9.5",
-    "zod": "^3.18.0"
+    "zod": "^3.18.0", 
+    "circomlib": "git+https://github.com/tornadocash/circomlib.git#c372f14d324d57339c88451834bf2824e73bbdbc", 
+    "fixed-merkle-tree": "^0.6.0",
+    "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
+    "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

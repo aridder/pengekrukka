@@ -2,15 +2,33 @@
   "name": "@pengekrukka/contracts",
   "version": "0.0.1",
   "private": true,
+  "workspaces": {
+    "nohoist": [
+      "circomlib",
+      "websnark"
+    ]
+  },
   "scripts": {
     "test": "hardhat test",
-    "clean": "hardhat clean",
-    "compile": "hardhat compile",
+    "clean": "rm -rf lib",
+    "compile": "yarn clean && yarn tsc -p tsconfig.lib.json",
     "console": "hardhat console",
-    "build": "tsc",
-    "typechain": "typechain --target ethers-v5 --out-dir build/types 'build/contracts/*.json'"
+    "typechain": "hardhat typechain",
+    "deploy:local": "yarn hardhat deploy --export src/DeployLocal.json",
+    "build:circuit:compile": "npx circom circuits/withdraw.circom -o src/circuits/withdraw.json && npx snarkjs info -c src/circuits/withdraw.json",
+    "build:circuit:setup": "npx snarkjs setup --protocol groth -c src/circuits/withdraw.json --pk src/circuits/withdraw_proving_key.json --vk src/circuits/withdraw_verification_key.json",
+    "build:circuit:bin": "node_modules/websnark/tools/buildpkey.js -i src/circuits/withdraw_proving_key.json -o src/circuits/withdraw_proving_key.bin",
+    "build:circuit:contract": "npx snarkjs generateverifier -v src/circuits/Verifier.sol --vk src/circuits/withdraw_verification_key.json",
+    "build:circuit": "mkdir -p src/circuits && npm run build:circuit:compile && npm run build:circuit:setup && npm run build:circuit:bin && hardhat compile",
+    "build:contract": "hardhat compile",
+    "start": "yarn run-p start:contracts start:lib ",
+    "start:contracts": "yarn run deploy:local && yarn hardhat node --watch --export src/DeployLocal.json",
+    "start:lib": "yarn tsc -w -p tsconfig.lib.json",
+    "build:lib": "yarn tsc -p tsconfig.lib.json",
+    "download": "node scripts/downloadKeys.js",
+    "build": "yarn typechain && yarn build:lib && npm run build:contract && tsc",
+    "browserify": "npm run build:browserify"
   },
-  "dependencies": {},
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
@@ -29,19 +47,29 @@
     "@types/node": "^18.11.9",
     "chai": "^4.3.7",
     "chai-ethers": "^0.0.1",
+    "circom": "^0.0.35",
+    "circomlib": "git+https://github.com/tornadocash/circomlib.git#c372f14d324d57339c88451834bf2824e73bbdbc",
     "did-resolver": "^4.0.1",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "ethr-did-resolver": "^8.0.0",
+    "fixed-merkle-tree": "^0.6.0",
     "hardhat": "^2.12.2",
     "hardhat-deploy": "^0.11.20",
     "hardhat-deploy-ethers": "^0.3.0-beta.13",
     "hardhat-gas-reporter": "^1.0.9",
     "mocha": "^10.1.0",
+    "npm-run-all": "^4.1.5",
+    "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
     "solidity-coverage": "^0.8.2",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "web3-utils": "^1.8.1",
+    "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
+  },
+  "dependencies": {
+    "y18n": "^5.0.8"
   }
 }

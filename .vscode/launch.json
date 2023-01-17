@@ -22,6 +22,16 @@
             "type": "node"
         },
         {
+            "type": "node",
+            "request": "launch",
+            "name": "Hardhat test",
+            "console": "integratedTerminal",
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/hardhat",
+            "args": ["test", "--network", "localhost"],
+            "cwd": "${fileDirname}",
+        },
+        {
             "name": "Next.js: debug full stack",
             "type": "node-terminal",
             "request": "launch",
