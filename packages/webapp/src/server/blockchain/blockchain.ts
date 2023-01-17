@@ -62,15 +62,8 @@ export async function deposit(amount: number, contract: ERC20Tornado, signer: Si
   const deposit = createDeposit(amount, rbigint(31), rbigint(31));
   console.log("Deposit:", deposit);
 
-  const gasEstimated = await contract.estimateGas.deposit(toHex(deposit.commitment));
-
-  
-  const tx = await contract.connect(signer).deposit(toHex(deposit.commitment), {
-    gasLimit: Math.ceil(gasEstimated.toNumber() * 1.2), gasPrice: await signer.getGasPrice(),
-    
-  });
+  const tx = await contract.connect(signer).deposit(toHex(deposit.commitment));
   const receipt = await tx.wait();
-  console.log("Deposit transaction:", receipt.transactionHash);
 
   return `tornado-eth-${amount}-${netId}-${toHex(deposit.preimage, 62)}`;
 }

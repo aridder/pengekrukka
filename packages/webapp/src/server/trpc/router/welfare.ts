@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { ethers } from "ethers";
 import { deposit } from "../../blockchain/blockchain";
-import { getTornadoContractFor } from "../../blockchain/tornado";
+import { getNokTokenFor, getTornadoContractFor } from "../../blockchain/tornado";
 import { addDidPrefix } from "../../../utils";
 import { getConfig } from "../../../utils/config";
 import { schemas, WelfareCredential } from "../schemas";
@@ -42,11 +42,16 @@ const depositWelfareMoney = async (optician: OpticianName, amount: number) => {
     new ethers.providers.JsonRpcProvider(process.env.RUNTIME_RPC_NODE as string)
   );
   const contract = getTornadoContractFor(signer);
+  const nokContract = getNokTokenFor(signer);
+  const allowance = await nokContract.allowance(signer.address, contract.address);
+  if (allowance.lt(ethers.utils.parseEther("100"))) {
+    await nokContract.approve(contract.address, ethers.utils.parseEther("100"));
+  }
 
   //TODO: In a real scenario, this server would not have access to the mnenomic, and would have to get the public key elsewhere
   const opticianPublicKey = ethers.Wallet.fromMnemonic(
     process.env.OPTICIAN_MNEMONIC as string
-  ).publicKey;
+  ).publicKey.slice(2);
 
   const note = await deposit(amount, contract, signer);
 
