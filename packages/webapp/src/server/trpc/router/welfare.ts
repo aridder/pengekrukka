@@ -11,6 +11,7 @@ import { router } from "../trpc";
 import { generateVC, OpticianName, VCConfig, VerifiableCredentialType } from "../vc-shared";
 import { protectedProcedure } from "./../trpc";
 import { encryption } from "../../blockchain/encryption";
+import { ConnectionInfo } from "ethers/lib/utils.js";
 
 /**
  * @param income yearly income in NOK
@@ -32,18 +33,37 @@ export const calculateGlassesVoucherAmount = (income: number) => {
   return 1000;
 };
 
+const getSignerAndProvider = (rpcUrl: String) => {
+  if (rpcUrl.includes("bergen")) {
+    const info: ConnectionInfo = {
+      url: process.env.RUNTIME_RPC_NODE!,
+      user: process.env.NORGESBANK_USER!,
+      password: process.env.NORGESBANK_PASSWORD!,
+    };
+    return ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string).connect(
+      new ethers.providers.JsonRpcProvider(info)
+    );
+  } else {
+    return ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string).connect(
+      new ethers.providers.JsonRpcProvider(process.env.RUNTIME_RPC_NODE!)
+    );
+  }
+};
+
 /**
  * NOTE: amount and optician are not used in this hackathon implementaiton.
  * The amount is fixed to 1,- NOK in the contract in order to not overspend the test account
  * Optician is always HANSENS_BRILLEFORETNING.
  */
 const depositWelfareMoney = async (optician: OpticianName, amount: number) => {
-  const signer = ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string).connect(
-    new ethers.providers.JsonRpcProvider(process.env.RUNTIME_RPC_NODE as string)
-  );
+  const signer = getSignerAndProvider(process.env.RUNTIME_RPC_NODE!);
+  console.log(process.env.RUNTIME_RPC_NODE);
   const contract = getTornadoContractFor(signer);
   const nokContract = getNokTokenFor(signer);
   const allowance = await nokContract.allowance(signer.address, contract.address);
+  const balance = await nokContract.balanceOf(signer.address);
+  console.log("Allowance:", allowance.toString());
+  console.log("Balance:", balance.toString());
   if (allowance.lt(ethers.utils.parseEther("100"))) {
     await nokContract.approve(contract.address, ethers.utils.parseEther("100"));
   }
@@ -53,7 +73,7 @@ const depositWelfareMoney = async (optician: OpticianName, amount: number) => {
     process.env.OPTICIAN_MNEMONIC as string
   ).publicKey.slice(2);
 
-  const note = await deposit(amount, contract, signer);
+  const note = await deposit(amount, contract);
 
   return encryption.encrypt({
     message: note,

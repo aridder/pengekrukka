@@ -12,7 +12,7 @@ import { bigInt } from "snarkjs";
 //@ts-ignore
 import { Groth16 } from "websnark/src/groth16";
 //@ts-ignore
-import { websnarkUtils } from "websnark/src/utils";
+import websnarkUtils from "websnark/src/utils";
 import { DepositEvent } from "@pengekrukka/contracts/typechain-types/contracts/ERC20Tornado";
 
 type Deposit = {
@@ -57,13 +57,16 @@ const toHex = (number: any, length = 32) =>
     "0"
   );
 
-export async function deposit(amount: number, contract: ERC20Tornado, signer: Signer) {
+export async function deposit(amount: number, contract: ERC20Tornado) {
   const netId = (await ethers.getDefaultProvider().getNetwork()).chainId;
   const deposit = createDeposit(amount, rbigint(31), rbigint(31));
-  console.log("Deposit:", deposit);
+  console.log("Deposit commitment:", deposit.commitment);
 
-  const tx = await contract.connect(signer).deposit(toHex(deposit.commitment));
+  // const tx = await contract.deposit(toHex(deposit.commitment));
+
+  const tx = await contract.deposit(toHex(deposit.commitment));
   const receipt = await tx.wait();
+  console.log("Deposit receipt:", receipt);
 
   return `tornado-eth-${amount}-${netId}-${toHex(deposit.preimage, 62)}`;
 }
@@ -73,12 +76,11 @@ export async function deposit(amount: number, contract: ERC20Tornado, signer: Si
  * @param note Note to withdraw
  * @param recipient Recipient address
  */
-async function withdraw(
+export async function withdraw(
   contract: ERC20Tornado,
   note: string,
   recipient: string,
-  groth16: Groth16,
-  rpcUrl: string
+  groth16: Groth16
 ) {
   const deposit = parseNote(note);
   console.log("Withdrawal deposit:", deposit);

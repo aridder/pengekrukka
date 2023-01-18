@@ -7,9 +7,10 @@ import { Button, ClientOnly } from "../components/utils";
 import {
   isWelfareCredential,
   VerifiableCredential,
-  WelfareCredential
+  WelfareCredential,
 } from "../server/trpc/schemas";
 import { VerifiableCredentialType } from "../server/trpc/vc-shared";
+import { trpc } from "../utils/trpc";
 
 const DiscountSection = (props: {
   address: string | undefined;
@@ -21,7 +22,7 @@ const DiscountSection = (props: {
 
   const onUpload = (credential: VerifiableCredential) => {
     if (!isWelfareCredential(credential)) {
-      alert("Kun brillestøtte tillat");
+      alert("Kun welfare VC tillat");
     } else {
       props.onDiscount(credential);
     }
@@ -38,6 +39,7 @@ const DiscountSection = (props: {
 
 export default () => {
   const { address, isConnected } = useAccount();
+  const utils = trpc.useContext();
   const [discountCredential, setDiscountCredential] = useState<WelfareCredential | null>(null);
 
   const PRICE = 2500;
@@ -48,6 +50,16 @@ export default () => {
       setTotal(PRICE - discountCredential.credentialSubject.amount);
     }
   }, [discountCredential?.credentialSubject.amount]);
+
+  const confirmPurchase = async () => {
+    if (!discountCredential) {
+      return;
+    }
+    const buyRes = await utils.client.optician.convertWelfareToken.mutate({
+      credential: discountCredential,
+    });
+    console.log(buyRes);
+  };
 
   return (
     <Layout>
@@ -68,8 +80,12 @@ export default () => {
           </div>
         )}
         <div className="my-8 flex">
-          <p className=""><b>Total:</b> {total}</p>
-          <Button className="mx-4">Kjøp</Button>
+          <p className="">
+            <b>Total:</b> {total}
+          </p>
+          <Button onClick={confirmPurchase} className="mx-4">
+            Kjøp
+          </Button>
         </div>
       </div>
     </Layout>
