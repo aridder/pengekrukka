@@ -1,24 +1,13 @@
 ## Hei 👋
-- Om oss
-- Pengekrukka 
-- Oversikt over løsningen
-- Bittelitt teknisk
-- Demo!
+- Asbjørn Riddervold og Olav Sundfør
 
 --- 
 
-## Om Oss 
-- Asbjoern Riddervold og Olav Sundfør
-- Lære! Og har lært.
-- Samfunnsnyttig
-
---- 
-
-## Pengekrukka 
-- utbetaling fra det offentlige 
-- fokus på bevaring av personvern 
-- bygger på Verifiable Credentials og Zero Knowledge Proofs  
-- betalinger via blokkjeden
+## Pengekrukka 👓
+- Utbetaling fra det offentlige 
+- Digitale Sentralbankpenger -> Samfunnsnyttig
+- Anonymt / Lav kobling
+- Bygger på Verifiable Credentials og Zero Knowledge Proofs 
 
 
 ---
@@ -28,8 +17,8 @@
 ---
 
 ## Tanker bak 1/3
-- ivaretar personvern 
-- både digital og fysisk 
+- ivaretar personvern 🕵️
+- både digital og fysisk 👵
 
 ![bg right](diagram.svg) 
 
@@ -69,30 +58,23 @@
 ## Fordeler med denne løsningen 
 - kan også fungere analogt!
 - lav kobling mellom aktørene; vanskelig å sette sammen data 
-- økt gjennomsiktighet uten å gå på bekostning av den enkeltes personvern 
+- gjennomsiktighet uten å gå på bekostning av den enkeltes personvern 
 - kan i prinsippet kjøres av hvem som helst i befolkningen
 - automatisk øremerket! ingen kvittering/bevisbyrde i etterkant
+- generel, anonym, løsning (skatt til gode, støtte fra Enova, elsykkel)
 
 ---
 
-## Ulempler med løsningen
-- genering av proofs tar tid og koster mye gas
-- fremmed for mange 
-- helt sikkert 100 ting til :) 
 
----
-
-## Ting som kunne gjort det kulere
+## Forbedringer og utfordringer
 - implementert validering av VC-er 
-- anonymisere credentials gjennom hashing 
 - trenger ikke velge optiker hos Pengekrukka 
+- generering av proofs er ressurskrevende
+- tornado cash / hvitvasking 
+- helt sikkert 100 ting til :) 
 
 ---
 
 ## Avslutningsvis 
 - Gleder oss til etterpå 
 - Takk for masse læring!
-- FJERN (lære mer i samtaler med dere)
-- FJERN (vi ser faktisk etter flere prosjetker om dagen, så vi er åpne for den type samtler også)
-
----
