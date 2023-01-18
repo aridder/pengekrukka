@@ -26,7 +26,7 @@ const DoctorPage: NextPage = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout className="bg-yellow-100">
       <Heading />
       {!vc && (
         <Button className="my-10" onClick={getVc}>

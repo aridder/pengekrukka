@@ -1,6 +1,6 @@
 type Props = { price: number };
 export const Glasses = (props: Props) => (
-  <div className="m-2 max-w-md rounded-2xl p-10 shadow-lg">
+  <div className="m-2 max-w-md rounded-2xl p-10 shadow-lg bg-white">
     <img
       className="rounded-2xl shadow-md transition-transform hover:scale-95"
       src="/glasses.jpg"

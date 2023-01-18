@@ -42,7 +42,6 @@ const decrypt = async (options: {
   );
 
   //TODO verify sender address against sender public key
-
   return decryptedPayload.message;
 };
 

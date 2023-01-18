@@ -66,7 +66,6 @@ export async function deposit(amount: number, contract: ERC20Tornado) {
 
   const tx = await contract.deposit(toHex(deposit.commitment));
   const receipt = await tx.wait();
-  console.log("Deposit receipt:", receipt);
 
   return `tornado-eth-${amount}-${netId}-${toHex(deposit.preimage, 62)}`;
 }
