@@ -1,5 +1,6 @@
 ## Hei 👋
-- Asbjørn Riddervold og Olav Sundfør
+- Asbjørn Riddervold -> aridder@pm.me
+- Olav Sundfør -> olav@sundfoer.com
 
 --- 
 
@@ -56,12 +57,9 @@
 ---
 
 ## Fordeler med denne løsningen 
-- kan også fungere analogt!
 - lav kobling mellom aktørene; vanskelig å sette sammen data 
-- gjennomsiktighet uten å gå på bekostning av den enkeltes personvern 
-- kan i prinsippet kjøres av hvem som helst i befolkningen
 - automatisk øremerket! ingen kvittering/bevisbyrde i etterkant
-- generel, anonym, løsning (skatt til gode, støtte fra Enova, elsykkel)
+- generel løsning (skatt til gode, støtte fra Enova, elsykkel)
 
 ---
 
@@ -69,7 +67,6 @@
 ## Forbedringer og utfordringer
 - implementert validering av VC-er 
 - trenger ikke velge optiker hos Pengekrukka 
-- generering av proofs er ressurskrevende
 - tornado cash / hvitvasking 
 - helt sikkert 100 ting til :) 
 
