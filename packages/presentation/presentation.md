@@ -61,6 +61,9 @@
 - automatisk øremerket! ingen kvittering/bevisbyrde i etterkant
 - generel løsning (skatt til gode, støtte fra Enova, elsykkel)
 
+![bg right contain](nok-network.png)
+![bg right contain](tornadocash.jpg)
+
 ---
 
 
