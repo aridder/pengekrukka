@@ -41,10 +41,7 @@ const decrypt = async (options: {
     EthCrypto.hash.keccak256(decryptedPayload.message)
   );
 
-  if (senderAddress !== options.senderPublicKey) {
-    throw "Fake sender -> Not who they claim to be";
-  }
-
+  //TODO verify sender address against sender public key
   return decryptedPayload.message;
 };
 

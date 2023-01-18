@@ -71,11 +71,11 @@ const welfareCredential = verifiableCredential.extend({
   type: z.array(
     z
       .literal(VerifiableCredentialType.VerifiableCredential)
-      .or(z.literal(VerifiableCredentialType.GlassesProofCredential))
+      .or(z.literal(VerifiableCredentialType.WelfareCredential))
   ),
   credentialSubject: baseSubjectSchema.extend({
     amount: z.number().min(0),
-    tornadoNote: z.string().describe("Encrypted note for withdrawing form Pengekrukka")
+    tornadoNote: z.string().describe("Encrypted note for withdrawing form Pengekrukka"),
   }),
 });
 
@@ -86,6 +86,7 @@ export const schemas = {
   personalCredential,
   verifiableCredential,
   glassesCredential,
+  welfareCredential,
 };
 
 export function isWelfareCredential(

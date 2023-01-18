@@ -2,6 +2,8 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-ethers";
 import * as dotenv from "dotenv";
 import "hardhat-deploy";
+import "hardhat-gas-reporter";
+import "@nomiclabs/hardhat-etherscan";
 import { HardhatUserConfig } from "hardhat/config";
 
 dotenv.config({ path: "./../../.env.development" });
@@ -44,6 +46,9 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: 0,
+  },
+  gasReporter: {
+    enabled: true,
   },
 };
 

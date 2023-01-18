@@ -1,3 +1,4 @@
+import { opticianRouter } from "./optician";
 import { router } from "../trpc";
 import { doctorRouter } from "./doctor";
 import { folkeregisteretRouter } from "./folkeregisteret";
@@ -9,6 +10,7 @@ export const appRouter = router({
   doctor: doctorRouter,
   welfare: welfareRouter,
   wallet: walletRouter,
+  optician: opticianRouter,
 });
 
 // export type definition of API
