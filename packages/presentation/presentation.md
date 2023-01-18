@@ -1,16 +1,16 @@
-## Hei!
+## Hei 👋
 - Om oss
-- Tekniske forklaringer 
+- Pengekrukka 
 - Oversikt over løsningen
+- Bittelitt teknisk
 - Demo!
 
 --- 
 
 ## Om Oss 
-- Asbjoern Riddervold 
-- Olav Sundfør
+- Asbjoern Riddervold og Olav Sundfør
 - Lære! Og har lært.
-- Samfunnsnyttige 
+- Samfunnsnyttig
 
 --- 
 
@@ -57,8 +57,7 @@
 
 ---
 
-## Tilbake til Løsningen 
-![diagram](diagram.svg)
+![bg contain](diagram.svg)
 
 ---
 
