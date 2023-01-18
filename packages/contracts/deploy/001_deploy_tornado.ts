@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
@@ -8,8 +9,12 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
-
+  const signer = await hre.ethers.getSigner(deployer);
   if (hre.network.name === "hardhat") {
+    await signer.sendTransaction({
+      to: "0xBF3c135b9e96c873265f8656199F6E90b5dD1912",
+      value: ethers.utils.parseEther("1"),
+    });
   } else {
     throw new Error("This network is not listed in hardhat.config.ts");
   }
