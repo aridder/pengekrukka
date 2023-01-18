@@ -16,7 +16,7 @@ const DiscountSection = (props: {
   onDiscount: (credential: WelfareCredential) => void;
 }) => {
   if (!props.address) {
-    return <p>Logg inn for å legge til støtte</p>;
+    return <p className="text-xl">Logg inn for å legge til støtte</p>;
   }
 
   const onUpload = (credential: VerifiableCredential) => {
@@ -50,8 +50,8 @@ export default () => {
   }, [discountCredential?.credentialSubject.amount]);
 
   return (
-    <Layout>
-      <div className="">
+    <Layout className="bg-cyan-100">
+      <div>
         <h1 className="text-6xl">Hansens Brilleforetning</h1>
         <Glasses price={PRICE} />
         {!discountCredential && (
@@ -68,7 +68,7 @@ export default () => {
           </div>
         )}
         <div className="my-8 flex">
-          <p className=""><b>Total:</b> {total}</p>
+          <p className="text-2xl"><b>Total:</b> {total}</p>
           <Button className="mx-4">Kjøp</Button>
         </div>
       </div>

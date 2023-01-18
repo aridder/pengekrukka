@@ -44,7 +44,7 @@ const WelfarePage: NextPage = () => {
   const [optician, setOptician] = React.useState<OpticianName | null>(null);
 
   return (
-    <Layout>
+    <Layout className="bg-green-100">
       <h1 className="text-6xl">Statens Støtteordnings System</h1>
       <div>
         <WelfareCredentials vcs={generatedVCs}></WelfareCredentials>
