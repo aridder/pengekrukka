@@ -1,4 +1,5 @@
 ## Hei 👋
+![bg right](us.jpg)
 - Asbjørn Riddervold -> aridder@pm.me
 - Olav Sundfør -> olav@sundfoer.com
 
