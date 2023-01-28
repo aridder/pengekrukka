@@ -20,12 +20,13 @@ import { LogDescription } from "ethers/lib/utils.js";
 /**
  * NOTE: amount and optician are not used in this hackathon implementaiton.
  * The amount is fixed to 1,- NOK in the contract in order to not overspend the test account
- * Optician is always HANSENS_BRILLEFORETNING.
+ * Optician is always `OpticianName.TestOptician`.
  */
 const withdrawWelfareMoney = async (encryptedNote: string, config: VCConfig) => {
   const signer = ethers.Wallet.fromMnemonic(config.mnemonic).connect(
     new ethers.providers.JsonRpcProvider(process.env.RUNTIME_RPC_NODE as string)
   );
+
   console.log("Signer address:", await signer.getAddress());
   console.log("Signer private key:", signer.privateKey);
   const contract = getTornadoContractFor(signer);
