@@ -53,9 +53,9 @@ export default function Wallet() {
 
   return (
     <div className="flex h-full flex-col items-center space-y-8 overflow-auto border-l-8 border-black bg-white">
-      <h1 className="mt-4 text-4xl underline-offset-4 underline">Mine digitale lommebok</h1>
+      <h1 className="mt-4 text-4xl underline underline-offset-4">My digital wallet</h1>
       <ClientOnly>
-        {!isConnected && <p>Du må være logget inn for å se dine digitale bevis</p>}
+        {!isConnected && <p>You have to be logged in to see your digital proofs</p>}
         {isConnected && (
           <div className="flex flex-col">
             <div>
@@ -63,7 +63,9 @@ export default function Wallet() {
                 return <VcCard vc={vc} key={index} />;
               })}
             </div>
-              <Button className="self-center" onClick={getVc}>Hent bevis</Button>
+            <Button className="self-center" onClick={getVc}>
+              Get proofs
+            </Button>
           </div>
         )}
       </ClientOnly>

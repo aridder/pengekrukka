@@ -30,7 +30,7 @@ const DoctorPage: NextPage = () => {
       <Heading />
       {!vc && (
         <Button className="my-10" onClick={getVc}>
-          Hent brillebevis
+          Get proof for glasses
         </Button>
       )}
       {vc && <VCSection vc={vc} />}
@@ -48,14 +48,14 @@ const VCSection = (props: { vc: VerifiableCredential }) => {
       <VcCard vc={props.vc} />
       <div className="mx-2 flex flex-col gap-2 place-self-end">
         <Button disabled onClick={() => {} /**FIXME: Something */}>
-          Last ned som PDF
+          Download as PDF
         </Button>
         <Button
           onClick={() => {
             utils.client.wallet.save.mutate(props.vc);
           }}
         >
-          Flytt til digital lommebok
+          Move to digital wallet
         </Button>
       </div>
     </div>
@@ -64,9 +64,7 @@ const VCSection = (props: { vc: VerifiableCredential }) => {
 
 const Heading = () => (
   <div className=" mx-auto max-w-xl">
-    <h1 className=" py-4 text-4xl underline underline-offset-4">
-      Din Journal hos legekontor Jensen
-    </h1>
-    <h2 className="flex-auto text-left">Du har mottat et digitalt bevis!</h2>
+    <h1 className=" py-4 text-4xl underline underline-offset-4">Your journal</h1>
+    <h2 className="flex-auto text-left">You've received a digital proof!</h2>
   </div>
 );

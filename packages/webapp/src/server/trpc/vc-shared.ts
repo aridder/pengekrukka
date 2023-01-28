@@ -55,7 +55,7 @@ export const generateVC = async <Subject extends BaseSubject>(
  * more thinking than we have time
  */
 export enum OpticianName {
-  Hansens_Brilleforetning = "Hansens Brilleforetning",
+  TestOptician = "Optician's Store",
   Brilleland = "Brilleland",
   Specsavers = "Specsavers",
 }

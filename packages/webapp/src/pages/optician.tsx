@@ -17,7 +17,7 @@ const DiscountSection = (props: {
   onDiscount: (credential: WelfareCredential) => void;
 }) => {
   if (!props.address) {
-    return <p className="text-xl">Logg inn for å legge til støtte</p>;
+    return <p className="text-xl">Log in to add government support</p>;
   }
 
   const onUpload = (credential: VerifiableCredential) => {
@@ -73,7 +73,7 @@ export default () => {
         )}
         {discountCredential && (
           <div className="text-gray-500">
-            <b>Støtte: </b>
+            <b>Government Support: </b>
             <span>
               {PRICE} - {discountCredential.credentialSubject.amount}
             </span>
@@ -84,7 +84,7 @@ export default () => {
             <b>Total:</b> {total}
           </p>
           <Button onClick={confirmPurchase} className="mx-4">
-            Kjøp
+            Buy
           </Button>
         </div>
       </div>

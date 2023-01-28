@@ -16,24 +16,24 @@ type Site = {
  */
 export const sites: Site[] = [
   {
-    name: "Jensens Legekontor",
+    name: "Doctor's Office",
     link: "/doctor",
-    description: "Besøk legen for å se om du trenger briller",
+    description: "Visit the doctor to see if you need glasses",
   },
   {
-    name: "Statens Pengekrukke",
+    name: "Government Moneyjar",
     link: "/welfare",
-    description: "Bruk bevis fra legen til å få et bevis for pengestøtte",
+    description: "Use the proof from the doctor to get support for buying glasses",
   },
   {
-    name: "Hansens Brilleforetning",
+    name: "Optician's Store",
     link: "/optician",
-    description: "Bruk bevis fra pengekrukka til å få avslag på nye briller",
+    description: "Use proof from the Moneyjar to get discount on glasses",
   },
   {
-    name: "Folkeregisteret",
+    name: "National Id Register",
     link: "/folkeregisteret",
-    description: "Skaff deg et identitetsbevis fra folkeregisteret",
+    description: "Get a personal ID from government",
   },
 ];
 

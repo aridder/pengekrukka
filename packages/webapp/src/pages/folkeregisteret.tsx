@@ -41,7 +41,7 @@ const FolkeregisteretPage: NextPage = () => {
           <div>
             <div className="flex flex-col">
               <p>VC issuanceDate: {vc.issuanceDate}</p>
-              <button onClick={() => addToWallet(vc)}>Legg til i din wallet</button>
+              <button onClick={() => addToWallet(vc)}>Add to your digital wallet</button>
             </div>
           </div>
         )}

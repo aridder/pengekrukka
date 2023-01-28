@@ -18,8 +18,8 @@ describe("the welfare router", async () => {
             id: addDidPrefix(address),
             needsGlasses: true,
           },
-        }, 
-        optician: OpticianName.Specsavers
+        },
+        optician: OpticianName.Specsavers,
       });
     })
   );
@@ -41,8 +41,8 @@ describe("the welfare router", async () => {
               id: secondAddress,
               needsGlasses: true,
             },
-          }, 
-          optician: OpticianName.Hansens_Brilleforetning
+          },
+          optician: OpticianName.TestOptician,
         })
       ).rejects.toThrow();
     })
@@ -61,8 +61,8 @@ describe("the welfare router", async () => {
             id: addDidPrefix(publicKey),
             needsGlasses: true,
           },
-        }, 
-        optician: OpticianName.Brilleland
+        },
+        optician: OpticianName.Brilleland,
       });
       expect(response.proof).not.to.be.null;
       expect(response.credentialSubject).not.to.be.undefined;

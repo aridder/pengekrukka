@@ -48,22 +48,22 @@ const getColor = (types: VerifiableCredentialType[]) => {
  */
 const getTitle = (types: VerifiableCredentialType[]) => {
   if (types.includes(VerifiableCredentialType.GlassesProofCredential)) {
-    return "Brillebevis :)";
+    return "Glasses proof :)";
   }
 
   if (types.includes(VerifiableCredentialType.WelfareCredential)) {
-    return "Støtte fra pengekrukka";
+    return "Support from The Moneypot";
   }
 
   if (types.includes(VerifiableCredentialType.PersonCredential)) {
-    return "Personlig ID";
+    return "Personal ID";
   }
 
   if (types.includes(VerifiableCredentialType.VerifiableCredential)) {
     return "Standard VC";
   }
 
-  return "Standard VC uten type";
+  return "Standard VC without type";
 };
 
 type Props = { vc: VerifiableCredential };
