@@ -20,7 +20,7 @@ export const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "The Moneypot",
+  appName: "Pengekrukka",
   chains,
 });
 
@@ -31,7 +31,7 @@ const client = createClient({
 });
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
-  statement: "Sign in to The Moneypot",
+  statement: "Sign in to Pengekrukka",
 });
 
 const MyApp = ({
