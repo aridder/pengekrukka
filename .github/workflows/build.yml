@@ -20,7 +20,7 @@ jobs:
         env:
           RUNTIME_RPC_NODE: ${{ secrets.RPC_URL }}
       - name: Build contracts
-        run: yarn contracts build
+        run: yarn contracts build:ci
         env:
           FORKING_RPC_NODE: ${{ secrets.RPC_URL }}
 
@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Build contracts
-        run: yarn contracts build
+        run: yarn contracts build:ci
         env:
           RUNTIME_RPC_NODE: ${{ secrets.RPC_URL }}
           FORKING_RPC_NODE: ${{ secrets.RPC_URL }}

@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Run tests
-        run: yarn contracts test
+        run: yarn contracts build:ci && yarn contracts test
         env:
           RUNTIME_RPC_NODE: ${{ secrets.RPC_URL }}
           FORKING_RPC_NODE: ${{ secrets.RPC_URL }}
@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Run tests
-        run: yarn webapp test
+        run: yarn contracts build:ci && yarn webapp test
         env: 
           WELFARE_MNEMONIC: ${{ secrets.WELFARE_MNEMONIC }}
           OPTICIAN_MNEMONIC: ${{ secrets.OPTICIAN_MNEMONIC }}
