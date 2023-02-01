@@ -4,9 +4,8 @@ import { database } from "./database/database";
 import { appRouter } from "./_app";
 
 export const walletRouter = router({
-
   /**
-   * NOTE: In additoin to retrieving the PersonCredentia, this also calls folkeregisteret
+   * NOTE: In addition to retrieving the PersonCredentia, this also calls folkeregisteret
    * directly to generate it if it is not present.
    * In a real scenario, the wallet would not do this and the VC would come from elsewhere.
    */
