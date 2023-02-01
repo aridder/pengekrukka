@@ -45,7 +45,7 @@ const WelfarePage: NextPage = () => {
 
   return (
     <Layout className="bg-green-100">
-      <h1 className="text-6xl">Moneypot</h1>
+      <h1 className="text-6xl">Pengekrukka</h1>
       <div>
         <WelfareCredentials vcs={generatedVCs}></WelfareCredentials>
       </div>

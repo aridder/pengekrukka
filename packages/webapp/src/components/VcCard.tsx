@@ -52,7 +52,7 @@ const getTitle = (types: VerifiableCredentialType[]) => {
   }
 
   if (types.includes(VerifiableCredentialType.WelfareCredential)) {
-    return "Support from The Moneypot";
+    return "Support from Pengekrukka";
   }
 
   if (types.includes(VerifiableCredentialType.PersonCredential)) {

@@ -51,9 +51,9 @@ const getSignerAndProvider = (rpcUrl: String) => {
 };
 
 /**
- * NOTE: amount and optician are not used in this hackathon implementaiton.
+ * NOTE: amount and optician are not used in this hackathon implementation.
  * The amount is fixed to 1,- NOK in the contract in order to not overspend the test account
- * Optician is always HANSENS_BRILLEFORETNING.
+ * Optician is always OpticianName.TestOptician.
  */
 const depositWelfareMoney = async (optician: OpticianName, amount: number) => {
   const signer = getSignerAndProvider(process.env.RUNTIME_RPC_NODE!);
