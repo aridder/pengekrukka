@@ -4,7 +4,7 @@ import {
   ERC20Tornado,
   ERC20Tornado__factory,
 } from "@pengekrukka/contracts/lib/typechain";
-import { ethers, Signer } from "ethers";
+import { Signer } from "ethers";
 
 export const getTornadoContractFor = (signer: Signer) => {
   const address = process.env.TORNADO_ADDRESS;
@@ -17,7 +17,7 @@ export const getTornadoContractFor = (signer: Signer) => {
 };
 
 export const getNokTokenFor = (signer: Signer) => {
-  const address = process.env.NOK_ADDRESS;
+  const address = process.env.ERC20_ADDRESS;
   if (!address) {
     throw new Error("NOK Address not found in environment");
   }

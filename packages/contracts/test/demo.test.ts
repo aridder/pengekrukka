@@ -1,3 +1,4 @@
+import { ERC20Mock } from "./../src/typechain/contracts/ERC20Mock";
 //@ts-ignore
 import fs from "fs";
 //@ts-ignore
@@ -54,16 +55,14 @@ const pedersenHash = (data: Buffer) => circomlib.babyJub.unpackPoint(circomlib.p
 const toHex = (number: any, length = 32) =>
   "0x" + (number instanceof Buffer ? number.toString("hex") : bigInt(number).toString(16)).padStart(length * 2, "0");
 
-export async function deposit(amount: string, contract: ERC20Tornado, signer: Signer) {
+export async function deposit(contract: ERC20Tornado, signer: Signer) {
   const netId = (await ethers.getDefaultProvider().getNetwork()).chainId;
-  const deposit = createDeposit(amount, rbigint(31), rbigint(31));
-  console.log("Deposit:", deposit);
+  const deposit = createDeposit(rbigint(31), rbigint(31));
 
   const tx = await contract.connect(signer).deposit(toHex(deposit.commitment));
   const receipt = await tx.wait();
-  console.log("Deposit transaction:", receipt.transactionHash);
 
-  return `tornado-eth-${amount}-${netId}-${toHex(deposit.preimage, 62)}`;
+  return `tornado-eth-${netId}-${toHex(deposit.preimage, 62)}`;
 }
 
 /**
@@ -75,9 +74,7 @@ async function withdraw(contract: ERC20Tornado, note: string, recipient: string,
   const circuit = require(__dirname + "/../build/circuits/withdraw.json");
   const proving_key = fs.readFileSync(__dirname + "/../build/circuits/withdraw_proving_key.bin").buffer;
   const deposit = parseNote(note);
-  console.log("Withdrawal deposit:", deposit);
   const { proof, args } = await generateSnarkProof(contract, deposit, recipient, groth16, circuit, proving_key);
-  console.log("Sending withdrawal transaction...");
   const tx = await contract.withdraw(
     proof,
     args.root,
@@ -93,7 +90,7 @@ async function withdraw(contract: ERC20Tornado, note: string, recipient: string,
 /**
  * Create deposit object from secret and nullifier
  */
-function createDeposit(amount: string, nullifier: BigInt, secret: BigInt): Deposit {
+function createDeposit(nullifier: BigInt, secret: BigInt): Deposit {
   const deposit = { nullifier, secret };
   const preimage = Buffer.concat([(deposit.nullifier as any).leInt2Buff(31), (deposit.secret as any).leInt2Buff(31)]);
 
@@ -119,10 +116,9 @@ function parseNote(noteString: string): Deposit {
 
   // we are ignoring `currency`, `amount`, and `netId` for this minimal example
   const buf = Buffer.from(match.groups!!.note!!, "hex");
-  const amount = match.groups!!.amount!!;
   const nullifier = bigInt.leBuff2int(buf.slice(0, 31));
   const secret = bigInt.leBuff2int(buf.slice(31, 62));
-  return createDeposit(amount, nullifier, secret);
+  return createDeposit(nullifier, secret);
 }
 
 export async function generateMerkleProof(
@@ -213,17 +209,13 @@ async function generateSnarkProof(
 
 async function main() {
   const groth16 = await buildGroth16();
-  const amount = "1";
-  const NOK_ADDRESS = process.env.NOK_ADDRESS!;
-  console.log("NOK_ADDRESS:", NOK_ADDRESS!);
+  const AMOUNT = process.env.AMOUNT!;
 
   await deployments.fixture("Tornado");
   const deployedTornadoContract = await deployments.get("ERC20Tornado");
+  const mockERC20Contract = await deployments.get("ERC20Mock");
   const userSigner = await (await ethers.getSigners())[0];
   const recipient = await (await ethers.getSigners())[1];
-  console.log("userSigner:", userSigner.address);
-  const nokToken = await ethers.getContractAt("contracts/CBContract.sol:CBToken", NOK_ADDRESS);
-  console.log("nokContract:", nokToken.address);
 
   const tornado = new ethers.Contract(
     deployedTornadoContract.address,
@@ -231,26 +223,21 @@ async function main() {
     userSigner
   ) as ERC20Tornado;
 
+  const nokToken = new ethers.Contract(mockERC20Contract.address, mockERC20Contract.abi, userSigner) as ERC20Mock;
+
   // const erc20 = new ethers.Contract(erc20Contract.address, erc20Contract.abi, userSigner) as ERC20Mock;
 
-  // await erc20.mint(userSigner.address, ethers.utils.parseEther(amount));
+  await nokToken.mint(userSigner.address, ethers.utils.parseEther(AMOUNT));
   const balanceKrukkaBefore = await nokToken.balanceOf(userSigner.address);
-  console.log("Balance before:", balanceKrukkaBefore.toString());
-  await nokToken.connect(userSigner).approve(tornado.address, ethers.utils.parseEther(amount));
+  await nokToken.connect(userSigner).approve(tornado.address, ethers.utils.parseEther(AMOUNT));
 
-  const note = await deposit(amount, tornado, userSigner);
-  console.log("Deposited note:", note);
+  const note = await deposit(tornado, userSigner);
   await withdraw(tornado, note, recipient.address, groth16, "http://localhost:8545");
-
-  const balance = await nokToken.balanceOf(userSigner.address);
-  const recipientBalance = await nokToken.balanceOf(recipient.address);
-  console.log("Balance:", balance.toString());
-  console.log("Recipient balance:", recipientBalance.toString());
   console.log("Done");
 }
 
 describe("The Demo", () => {
-  it.only("Should run", async () => {
+  it("Should run", async () => {
     await main();
   });
 });

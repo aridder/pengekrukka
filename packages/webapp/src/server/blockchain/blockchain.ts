@@ -59,7 +59,7 @@ const toHex = (number: any, length = 32) =>
 
 export async function deposit(amount: number, contract: ERC20Tornado) {
   const netId = (await ethers.getDefaultProvider().getNetwork()).chainId;
-  const deposit = createDeposit(amount, rbigint(31), rbigint(31));
+  const deposit = createDeposit(rbigint(31), rbigint(31));
   console.log("Deposit commitment:", deposit.commitment);
 
   // const tx = await contract.deposit(toHex(deposit.commitment));
@@ -108,7 +108,7 @@ export async function withdraw(
  * Create deposit object from secret and nullifier
  * FIXME: use amount if when it's no longer fixed in the contract
  */
-function createDeposit(amount: number, nullifier: BigInt, secret: BigInt): Deposit {
+function createDeposit(nullifier: BigInt, secret: BigInt): Deposit {
   const deposit = { nullifier, secret };
   const preimage = Buffer.concat([
     (deposit.nullifier as any).leInt2Buff(31),
@@ -131,6 +131,8 @@ function parseNote(noteString: string): Deposit {
   const noteRegex =
     /tornado-(?<currency>\w+)-(?<amount>[\d.]+)-(?<netId>\d+)-0x(?<note>[0-9a-fA-F]{124})/g;
   const match = noteRegex.exec(noteString);
+  console.log("noteString", noteString);
+  console.log("match", match);
 
   if (!match) {
     throw new Error("Invalid note");
@@ -141,7 +143,7 @@ function parseNote(noteString: string): Deposit {
   const amount = parseInt(match.groups!!.amount!!);
   const nullifier = bigInt.leBuff2int(buf.slice(0, 31));
   const secret = bigInt.leBuff2int(buf.slice(31, 62));
-  return createDeposit(amount, nullifier, secret);
+  return createDeposit(nullifier, secret);
 }
 
 export async function generateMerkleProof(

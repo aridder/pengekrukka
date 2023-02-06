@@ -30,7 +30,6 @@ const withdrawWelfareMoney = async (encryptedNote: string, config: VCConfig) => 
   console.log("Signer address:", await signer.getAddress());
   console.log("Signer private key:", signer.privateKey);
   const contract = getTornadoContractFor(signer);
-  const nokContract = getNokTokenFor(signer);
   const opticianPublicKey = ethers.Wallet.fromMnemonic(
     process.env.WELFARE_MNEMONIC as string
   ).publicKey.slice(2);
