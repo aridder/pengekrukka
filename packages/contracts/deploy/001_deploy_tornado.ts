@@ -79,7 +79,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
   const resErc20Tornado = await deploy("ERC20Tornado", {
     from: deployer,
-    args: [verifier.address, hasher.address, AMOUNT, 20, erc20Address],
+    args: [verifier.address, hasher.address, ethers.utils.parseEther(AMOUNT), 20, erc20Address],
   });
 };
 

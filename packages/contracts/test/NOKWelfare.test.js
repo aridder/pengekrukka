@@ -41,7 +41,7 @@ function snarkVerify(proof) {
 }
 
 describe("NOKWelfare", () => {
-  let tokenDenomination = process.env.AMOUNT;
+  let tokenDenomination = ethers.utils.parseEther(process.env.AMOUNT);
 
   async function fixture() {
     let tree = new MerkleTree(20);
@@ -63,8 +63,6 @@ describe("NOKWelfare", () => {
 
     let verifierDeployment = await deployments.get("Verifier");
     let verifier = await ethers.getContractAt(verifierDeployment.abi, verifierDeployment.address);
-
-    await token.mint(sender, process.env.AMOUNT);
 
     return {
       tree,
@@ -111,9 +109,6 @@ describe("NOKWelfare", () => {
       const receiverBalanceBefore = await token.balanceOf(recipient);
       const senderBalanceBefore = await token.balanceOf(sender);
 
-      expect(senderBalanceBefore).to.be.equal(process.env.AMOUNT);
-      expect(receiverBalanceBefore).to.be.equal(0);
-
       await token.approve(tornado.address, tokenDenomination, {
         from: sender,
       });
@@ -122,7 +117,7 @@ describe("NOKWelfare", () => {
         from: sender,
       });
       const balanceSenderAfterDeposit = await token.balanceOf(sender);
-      expect(balanceSenderAfterDeposit).to.be.equal(0);
+      expect(balanceSenderAfterDeposit).to.be.equal(senderBalanceBefore - tokenDenomination);
 
       const { pathElements, pathIndices } = tree.path(0);
       const input = stringifyBigInts({
@@ -183,9 +178,9 @@ describe("NOKWelfare", () => {
       const balanceRelayerAfter = await token.balanceOf(relayer.address);
       const balanceReceiverAfter = await token.balanceOf(toFixedHex(recipient, 20));
 
-      expect(balanceTornadoAfter).to.be.equal(balanceTornadoBefore - process.env.AMOUNT);
+      expect(balanceTornadoAfter).to.be.equal(balanceTornadoBefore - tokenDenomination);
       expect(balanceRelayerAfter).to.be.equal(balanceRelayerBefore + fee);
-      expect(balanceReceiverAfter).to.be.equal(balanceReceiverBefore + process.env.AMOUNT);
+      expect(balanceReceiverAfter).to.be.equal(balanceReceiverBefore + tokenDenomination);
 
       isSpent = await tornado.isSpent(toFixedHex(input.nullifierHash));
       expect(isSpent).to.be.true;
