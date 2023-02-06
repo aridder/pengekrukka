@@ -20,9 +20,8 @@ jobs:
         env:
           RUNTIME_RPC_NODE: ${{ secrets.RPC_URL }}
           FORKING_RPC_NODE: ${{ secrets.RPC_URL }}
-          NOK_ADDRESS: ${{ secrets.NOK_ADDRESS }}
+          ERC20_ADDRESS: ${{ secrets.ERC20_ADDRESS }}
           ME_ADDRESS: ${{ secrets.ME_ADDRESS }}
-          WHALE_ADDRESS: ${{ secrets.WHALE_ADDRESS }}
 
   test-webapp:
     runs-on: ubuntu-latest
