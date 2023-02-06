@@ -37,9 +37,15 @@ sequenceDiagram
 - issuer of VC's not cryptographically validated (trivial to implement)
 - have to choose service supplier (i.e. optician) beforehand
 - a pure tornado cash implementation would lend itself to money laundring  
+- anonymity is only as good as the anonymity set (i.e. the number of people using the system)
+  - 1 deposit and 1 withdrawal creates a 1-1 mapping between the deposit and the withdrawal
+- anonymity is based on same amount in and out for all deposits and withdrawals. This creates a constraint on the system
 - probably lots more :) 
 
-
+// TODO fix this(fill envs automatically)
+## Local Development
+- Start a local blockchain with `yarn contracts start`
+- Extract ERC20 address and Tornado address from `DeployLocal.json` into `env.development`
 
 ## Testing 
 - Strive towards adding tests when writing new features 
