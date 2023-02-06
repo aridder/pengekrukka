@@ -15,11 +15,6 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: process.env.WELFARE_MNEMONIC!,
       },
-      forking: {
-        url: process.env.FORKING_RPC_NODE!,
-        blockNumber: 4207655,
-      },
-      allowUnlimitedContractSize: true,
     },
   },
   solidity: {

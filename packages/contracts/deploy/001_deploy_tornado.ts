@@ -1,21 +1,36 @@
-import { ethers } from "ethers";
+import { ERC20Mock } from "./../src/typechain/contracts/ERC20Mock";
+import { getContractFactory } from "@nomiclabs/hardhat-ethers/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-const NOK_ADDRESS = "0x6749374B18A571193138251EB52f7a9B4fC5524e";
+const ERC20_ADDRESS = process.env.ERC20_ADDRESS;
+const AMOUNT = process.env.AMOUNT!;
 
 const name = "Tornado";
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
-  const { deployments, getNamedAccounts } = hre;
+  const { deployments, getNamedAccounts, ethers } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
-  const signer = await hre.ethers.getSigner(deployer);
-  if (hre.network.name === "hardhat") {
-    await signer.sendTransaction({
-      to: "0xBF3c135b9e96c873265f8656199F6E90b5dD1912",
-      value: ethers.utils.parseEther("1"),
+  const signer = await ethers.getSigner(deployer);
+  let erc20Address;
+
+  if (hre.network.name === "hardhat" || hre.network.name === "localhost") {
+    const deployederc20 = await deploy("ERC20Mock", {
+      from: deployer,
+      args: [],
     });
+    erc20Address = deployederc20.address;
+
+    // transfer 1 eth to x address
+    const welfareAddress = ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC!).address;
+    const opticianAddress = ethers.Wallet.fromMnemonic(process.env.OPTICIAN_MNEMONIC!).address;
+    await signer.sendTransaction({ to: welfareAddress, value: ethers.utils.parseEther("1") });
+    await signer.sendTransaction({ to: opticianAddress, value: ethers.utils.parseEther("1") });
+    const erc20 = (await ethers.getContractAt("ERC20Mock", erc20Address, signer)) as ERC20Mock;
+    await erc20.mint(welfareAddress, ethers.utils.parseEther("1000000"));
   } else {
+    erc20Address = ERC20_ADDRESS;
+    // list your network in hardhat.config.ts and add an else if statement for it
     throw new Error("This network is not listed in hardhat.config.ts");
   }
 
@@ -62,14 +77,9 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     args: [],
   });
 
-  // const erc20 = await deploy("ERC20Mock", {
-  //   from: deployer,
-  //   args: [],
-  // });
-
   const resErc20Tornado = await deploy("ERC20Tornado", {
     from: deployer,
-    args: [verifier.address, hasher.address, 1, 20, NOK_ADDRESS],
+    args: [verifier.address, hasher.address, AMOUNT, 20, erc20Address],
   });
 };
 
