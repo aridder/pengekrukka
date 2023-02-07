@@ -33,21 +33,10 @@ export const calculateGlassesVoucherAmount = (income: number) => {
   return 1000;
 };
 
-const getSignerAndProvider = (rpcUrl: String) => {
-  if (rpcUrl.includes("bergen")) {
-    const info: ConnectionInfo = {
-      url: process.env.RUNTIME_RPC_NODE!,
-      user: process.env.NORGESBANK_USER!,
-      password: process.env.NORGESBANK_PASSWORD!,
-    };
-    return ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string).connect(
-      new ethers.providers.JsonRpcProvider(info)
-    );
-  } else {
-    return ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string).connect(
-      new ethers.providers.JsonRpcProvider(process.env.RUNTIME_RPC_NODE!)
-    );
-  }
+const getSignerAndProvider = () => {
+  return ethers.Wallet.fromMnemonic(process.env.WELFARE_MNEMONIC as string).connect(
+    new ethers.providers.JsonRpcProvider(process.env.RUNTIME_RPC_NODE!)
+  );
 };
 
 /**
@@ -56,7 +45,7 @@ const getSignerAndProvider = (rpcUrl: String) => {
  * Optician is always OpticianName.TestOptician.
  */
 const depositWelfareMoney = async (optician: OpticianName, amount: number) => {
-  const signer = getSignerAndProvider(process.env.RUNTIME_RPC_NODE!);
+  const signer = getSignerAndProvider();
   console.log(process.env.RUNTIME_RPC_NODE);
   const contract = getTornadoContractFor(signer);
   const nokContract = getNokTokenFor(signer);

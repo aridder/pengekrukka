@@ -6,7 +6,7 @@ export const MnemonicConfig = [
   "WELFARE_MNEMONIC",
   "DOCTOR_MNEMONIC",
   "OPTICIAN_MNEMONIC",
-  "FREDRIK_MNEMONIC",
+  "USER_MNEMONIC",
 ] as const;
 
 export const getConfig = (mnemonicKey: typeof MnemonicConfig[number]): VCConfig => {

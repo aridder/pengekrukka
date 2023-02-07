@@ -21,7 +21,7 @@ export const withIssuerEnv =
         "engage impulse federal index journey muffin hunt recall smile amateur betray sport",
       OPTICIAN_MNEMONIC:
         "naive apple embrace two gossip current crucial ivory typical toe walk canal",
-      FREDRIK_MNEMONIC:
+      USER_MNEMONIC:
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",
       FOLKEREGISTERET_MNEMONIC:
         "gauge swift critic choose churn message avoid dust drive inherit wrestle steel",

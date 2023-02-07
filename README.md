@@ -1,7 +1,7 @@
 # Pengekrukka - Hackathon 
 Pengekrukka (tongue in cheek name roughly translating to "Moneypot") is a Proof of Concept solution demonstrating an anonymous and decoupled transfer mechanism between the welfare state and an individual. It's implemented as part of a hackathon arranged by Norwegian Central Bank. The aim of the hackathon was to explore different opportunities, pitfalls and challenges offered by blockchain-based digital currency. 
 
-[Utilizing Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/) (VC's) and [Zero Knowledge Proofs](https://en.wikipedia.org/wiki/Zero-knowledge_proof) (ZKP's) we're demonstrating how a government server can issue money to a citizen entitled to financial support for a specific service. In our case, this is financial support for buying glasses, e.g. due to low income or similar. This example is however completely arbitrary. 
+[Utilizing Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/) (VC's) and [Zero Knowledge Proofs](https://en.wikipedia.org/wiki/Zero-knowledge_proof) (ZKP's) we're demonstrating how a government server can issue money to a citizen entitled to financial support for a specific service. In our case, this is financial support for buying glasses, e.g. due to low income or similar. This example is however completely arbitrary. Our ZKP implementation is heavily based on [Tornado Cash](https://github.com/tornadocash/tornado-core). If your goal is to learn more on how to implement this part of the system, we recommend you to check out their repo.
 
 We've attempted to show the flow of the system in the below sequence diagram. In short, the citizen receives a VC from the doctor claiming that s/he needs glasses. The citizen then provides this to the government, along with an assumed ID-VC and gets a government backed VC with a secret that, crucially, only a specific optician can use to redeem the allotted money. This made possible through [Asymmetric Encryption](https://en.wikipedia.org/wiki/Public-key_cryptography), encrypting the secret with the opticians public key. 
 
@@ -37,9 +37,15 @@ sequenceDiagram
 - issuer of VC's not cryptographically validated (trivial to implement)
 - have to choose service supplier (i.e. optician) beforehand
 - a pure tornado cash implementation would lend itself to money laundring  
+- anonymity is only as good as the anonymity set (i.e. the number of people using the system)
+  - 1 deposit and 1 withdrawal creates a 1-1 mapping between the deposit and the withdrawal
+- anonymity is based on same amount in and out for all deposits and withdrawals. This creates a constraint on the system
 - probably lots more :) 
 
-
+// TODO fix this(fill envs automatically)
+## Local Development
+- Start a local blockchain with `yarn contracts start`
+- Extract ERC20 address and Tornado address from `DeployLocal.json` into `env.development`
 
 ## Testing 
 - Strive towards adding tests when writing new features 

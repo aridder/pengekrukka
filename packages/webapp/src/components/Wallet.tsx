@@ -55,7 +55,7 @@ export default function Wallet() {
     <div className="flex h-full flex-col items-center space-y-8 overflow-auto border-l-8 border-black bg-white">
       <h1 className="mt-4 text-4xl underline underline-offset-4">My digital wallet</h1>
       <ClientOnly>
-        {!isConnected && <p>You have to be logged in to see your digital proofs</p>}
+        {!isConnected && <p>You have to be logged in to see your digital credentials</p>}
         {isConnected && (
           <div className="flex flex-col">
             <div>
@@ -64,7 +64,7 @@ export default function Wallet() {
               })}
             </div>
             <Button className="self-center" onClick={getVc}>
-              Get proofs
+              Get credentials
             </Button>
           </div>
         )}
