@@ -59,7 +59,7 @@ export const UploadSection = (props: {
 
   return (
     <div className="flex flex-col">
-      <h2 className="my-4 text-lg underline">Upload your credentials</h2>
+      <h2 className="my-4 text-lg underline">Upload your credential</h2>
       <div className="flex max-w-lg space-x-4">
         <Button
           onClick={() => {
